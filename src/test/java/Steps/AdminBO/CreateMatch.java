@@ -67,7 +67,7 @@ public class CreateMatch extends BaseUtil {
         HomePageAdmin page = new HomePageAdmin(base.Driver);
 
         //Verify if user account is display
-        base.Driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+        base.Driver.manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
         page.userAccountDisplay();
     }
 
@@ -85,7 +85,7 @@ public class CreateMatch extends BaseUtil {
     }
 
     @And("i click matches")
-    public void iInputTheDateFilter() {
+    public void iClickMatches() {
 
         HomePageAdmin page = new HomePageAdmin(base.Driver);
 

@@ -9,7 +9,7 @@
 
     Scenario: go to create match
         And i click the games header dropdown
-        And i click the available sports
+        And i click matches
         And i click the search button
         And i query on the DB if CM is available
         # Pinnacle CM
