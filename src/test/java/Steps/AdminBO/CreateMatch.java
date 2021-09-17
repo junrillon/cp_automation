@@ -131,6 +131,8 @@ public class CreateMatch extends BaseUtil {
         Date currentDatePlusOne = c.getTime();
         String dateToday = dateFormat.format(currentDatePlusOne);
 
+      //  System.out.println("111111111111111" + dateToday);
+
 
         page.inputDate(dateToday);
 
@@ -173,24 +175,6 @@ public class CreateMatch extends BaseUtil {
 
     }
 
-    @And("i query volume on the DB")
-    public void iQueryVolumeOnTheDB(){
-
-
-    }
-
-
-    @And("i click CM1")
-    public void iClickCM1() {
-
-
-    }
-
-    @And("i see all agents underling")
-    public void iSeeAllAgentsUnderling() throws SQLException {
-
-
-    }
 
 
 }
