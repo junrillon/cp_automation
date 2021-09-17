@@ -4,6 +4,7 @@ import Base.BaseUtil;
 import Database.DataBaseConnection;
 import Pages.AdminBO.HomePageAdmin;
 import Pages.AdminBO.LoginPageAdmin;
+import Pages.AdminBO.MatchesDetails;
 import Pages.AdminBO.MatchesPage;
 import Pages.Frontend.HomePage;
 import Pages.Frontend.LoginPage;
@@ -22,6 +23,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -80,9 +85,6 @@ public class CreateMatch extends BaseUtil {
         HomePageAdmin page = new HomePageAdmin(base.Driver);
         page.clickGamesDropdown();
 
-        //matches button is display
-        page.MatchesDisplay();
-
 
     }
 
@@ -93,9 +95,6 @@ public class CreateMatch extends BaseUtil {
         HomePageAdmin page = new HomePageAdmin(base.Driver);
         page.clickMatches();
 
-        // create match display
-        MatchesPage page2 = new MatchesPage(base.Driver);
-        page2.createMatchDisplay();
 
     }
 
@@ -107,49 +106,75 @@ public class CreateMatch extends BaseUtil {
         MatchesPage page = new MatchesPage(base.Driver);
         page.clickCreateMatch();
 
-        page.sportDropDownDisplay();
     }
 
 
     @And("^i input match details")
     public void iSelectSports(DataTable matchDetails){
 
+        //get the value list from feature file
         List<List<String>> data = matchDetails.asLists(String.class);
         String selectedSports = data.get(1).get(0);
         String selectedLeague = data.get(1).get(1);
         String matchCountInput = data.get(1).get(2);
 
+        //input match details
         MatchesPage page = new MatchesPage(base.Driver);
         page.selectSports(selectedSports);
         page.selectLeague(selectedLeague);
+
+        // generate date today
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        Date referenceDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(referenceDate);
+        Date currentDatePlusOne = c.getTime();
+        String dateToday = dateFormat.format(currentDatePlusOne);
+
+
+        page.inputDate(dateToday);
+
         page.inputMatchCount(matchCountInput);
 
     }
 
-    List<String> ac = Lists.newArrayList();
-    @And("i see all CM is present")
-    public void iSeeAllCMIsPresent() {
+
+    @And("i click submit button")
+    public void iClickSubmitBtn() {
+
+        //click submit button
+        MatchesPage page = new MatchesPage(base.Driver);
+        page.clickSubmitBtn();
+
+    }
+
+
+    @And("i select view match details from action dropdown")
+    public void iSelectViewMatchDetails() {
+
+        //view match details
+        MatchesPage page = new MatchesPage(base.Driver);
+        page.selectFromActionDrpDown();
+
+    }
+
+    @And("i click open bet status")
+    public void iClickOpenBetStatus() {
+
+        //view match details
+        for(String winHandle : base.Driver.getWindowHandles()){
+            base.Driver.switchTo().window(winHandle);
+        }
+        MatchesDetails page = new MatchesDetails(base.Driver);
+        page.clickOpenMatch();
+        page.clickConfirmOpen();
+
 
 
     }
 
-    String cm1Stake, cm2Stake, cm3Stake, cm4Stake;
-    @And("i query stake on the DB")
-    public void iQueryStakeOnTheDB() throws SQLException{
-
-
-    }
-
-    @And("i see the correct stake for all CM")
-    public void iSeeTheCorrectTotalForAllCM() {
-
-
-
-    }
-
-    String cm1volume, cm2volume, cm3volume, cm4volume;
     @And("i query volume on the DB")
-    public void iQueryVolumeOnTheDB() throws SQLException {
+    public void iQueryVolumeOnTheDB(){
 
 
     }
@@ -165,16 +190,6 @@ public class CreateMatch extends BaseUtil {
     public void iSeeAllAgentsUnderling() throws SQLException {
 
 
-        DataBaseConnection db = new DataBaseConnection();
-        ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_availableCMBets(2,'dg')");
-
-
-        int count = rs.getInt(1);
-        System.out.println(count);
-
-        rs.next();
-        cm2Stake = rs.getString("agent_username");
-        //System.out.println(cm2Stake);
     }
 
 

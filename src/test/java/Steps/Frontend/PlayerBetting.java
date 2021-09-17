@@ -129,7 +129,6 @@ public class PlayerBetting extends BaseUtil {
         //click sports
         page.clickLolGame();
 
-
     }
 
 

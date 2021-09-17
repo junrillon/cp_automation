@@ -5,11 +5,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 public class MatchesPage {
     public MatchesPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
+
 
     /**
      * Object repository
@@ -23,34 +25,71 @@ public class MatchesPage {
     public WebElement sportsDropdown;
 
     //league dropdown from create matches
-    @FindBy(how = How.CSS, using =  "#league-list")
+    @FindBy(how = How.ID, using =  "league-list")
     public WebElement leagueDropdown;
 
+    //input match date from create matches
+    @FindBy(how = How.ID, using =  "datepicker")
+    public WebElement datePicker;
+
     //input match count from create matches
-    @FindBy(how = How.CSS, using =  "#match-count-create")
+    @FindBy(how = How.ID, using =  "match-count-create")
     public WebElement matchCountTxt;
+
+    //Submit button
+    @FindBy(how = How.ID, using =  "create-match-btn")
+    public WebElement submitBtn;
+
+
+    //Submit button
+    @FindBy(how = How.CSS, using =  "select.custom-select.match-action")
+    public WebElement actionDrpdown;
 
 
     /**
      * Object action
      */
-    //create match button is display
-    public void createMatchDisplay() {createMatchBtn.isDisplayed();}
 
     //click create match button
-    public void clickCreateMatch() {createMatchBtn.click();}
-
-    //matches is display
-    public void sportDropDownDisplay() {sportsDropdown.isDisplayed();}
+    public void clickCreateMatch()
+    {
+        createMatchBtn.isDisplayed();
+        createMatchBtn.click();
+    }
 
     //select sport
-    public void selectSports(String selectedSports) {sportsDropdown.sendKeys(selectedSports);}
+    public void selectSports(String selectedSports)
+    {
+        sportsDropdown.isDisplayed();
+        sportsDropdown.sendKeys(selectedSports);
+    }
 
     //select league
-    public void selectLeague(String selectedLeague) {leagueDropdown.sendKeys(selectedLeague);}
+    public void selectLeague(String selectedLeague)
+    {
+        Select drpDownLeague = new Select(leagueDropdown);
+        drpDownLeague.selectByVisibleText(selectedLeague);
+    }
+
+    //select sport
+    public void inputDate(String dateToday) {datePicker.sendKeys(dateToday);}
 
     //select league
     public void inputMatchCount(String matchCountInput) {matchCountTxt.sendKeys(matchCountInput);}
+
+
+    //click submit button
+    public void clickSubmitBtn() {submitBtn.click();}
+
+    //matches is display
+    public void selectFromActionDrpDown()
+    {
+        actionDrpdown.isDisplayed();
+        Select actionDrpDown = new Select(actionDrpdown);
+        actionDrpDown.selectByVisibleText("View Match Details");
+    }
+
+
 
 
 }

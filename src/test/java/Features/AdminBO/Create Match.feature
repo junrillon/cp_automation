@@ -15,14 +15,10 @@
             | Sport | League      | Match count |
             | Test  | Test League | 1           |
 
-        And i see all CM is present
-        And i query stake on the DB
-        And i see the correct stake for all CM
-        And i query volume on the DB
+        And i click submit button
+        And i select view match details from action dropdown
+        And i click open bet status
 
-            #Master Agent
-            And i click CM1
-            And i see all agents underling
 
 
 

@@ -23,7 +23,7 @@ public class HomePageAdmin {
     public WebElement gamesDropdown;
 
     //games>matches
-    @FindBy(how = How.XPATH, using =  "//div[@id='navbarSupportedContent']/ul/li[3]/ul/li[3]/a")
+    @FindBy(how = How.XPATH, using =  "//*[@href = 'https://admin.cpp555.com/matches' and (text() = 'Matches' or . = 'Matches')]")
     public WebElement matches;
 
 
@@ -37,7 +37,11 @@ public class HomePageAdmin {
     public void clickGamesDropdown() {gamesDropdown.click();}
 
     //click matches
-    public void clickMatches() {matches.click();}
+    public void clickMatches()
+    {
+        matches.isDisplayed();
+        matches.click();
+    }
 
     //matches is display
     public void MatchesDisplay() {matches.isDisplayed();}
