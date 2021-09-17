@@ -10,13 +10,11 @@
     Scenario: go to create match
         And i click the games header dropdown
         And i click matches
-        And i click the search button
-        And i query on the DB if CM is available
-        # Pinnacle CM
-            | dg |
-            | gg |
-            | hd |
-            | ks |
+        And i click the create match button
+        And i input match details
+            | Sport | League      | Match count |
+            | Test  | Test League | 1           |
+
         And i see all CM is present
         And i query stake on the DB
         And i see the correct stake for all CM
