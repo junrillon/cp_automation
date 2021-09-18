@@ -1,9 +1,7 @@
 package Steps.Hooks;
 
 import Base.BaseUtil;
-import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.Scenario;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class Hook extends BaseUtil {
@@ -12,18 +10,13 @@ public class Hook extends BaseUtil {
 
     public Hook(BaseUtil base){
         this.base = base;
-
-
     }
 
 
     @Before()
-    public void beforeScenarioStart()
-    {
-
-        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
+    public void beforeScenarioStart() {
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\QA02\\Downloads\\Selenium\\chromedriver.exe");
         base.Driver = new ChromeDriver();
-
     }
 
 
@@ -32,4 +25,4 @@ public class Hook extends BaseUtil {
     {
         System.out.println("Closing the browser: hook");
     }*/
-    }
+}
