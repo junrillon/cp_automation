@@ -4,8 +4,11 @@ import Base.BaseUtil;
 import Database.DataBaseConnection;
 import Pages.Frontend.HomePage;
 import Pages.Frontend.LoginPage;
+import Pages.Frontend.MatchDetails;
 import Pages.WinLossPage;
 import com.google.common.collect.Lists;
+import com.sun.jdi.IntegerValue;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -15,6 +18,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -45,11 +50,10 @@ public class PlayerBetting extends BaseUtil {
         try {
 
             //Click Banner Exit button
-            WebDriverWait wait = new WebDriverWait(base.Driver, 3);
+            WebDriverWait wait = new WebDriverWait(base.Driver, 2);
             WebElement bannerExitBtn;
-            base.Driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+          //  base.Driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             bannerExitBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//i[@class = 'fa fa-times-circle fa-2x']")));
-            // bannerExitBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(new By.ByCssSelector("i.fa.fa-times-circle.fa-2x")));
             bannerExitBtn.click();
 
             }
@@ -73,7 +77,7 @@ public class PlayerBetting extends BaseUtil {
 
     }
 
-    @And("i click the login button")
+    @And("i click the login button to access the betting page")
     public void iClickTheLoginButton() {
 
         LoginPage page = new LoginPage(base.Driver);
@@ -85,8 +89,9 @@ public class PlayerBetting extends BaseUtil {
         page.clickLoginBtn();
     }
 
-    @Then("i can access the homepage")
-    public boolean iCanAccessTheHomepage() {
+
+    @Then("i can access the betting page")
+    public boolean iCanAccessTheHomepage() throws InterruptedException {
 
         HomePage page = new HomePage(base.Driver);
 
@@ -99,9 +104,7 @@ public class PlayerBetting extends BaseUtil {
             return false;
         }
 
-        //Verify if user account is display
-        base.Driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
-        page.userAccountDisplay();
+
         return false;
     }
 
@@ -109,337 +112,120 @@ public class PlayerBetting extends BaseUtil {
     public void iClickThePoolHeaderBtn() {
 
         //Click pool header button
+        //HomePage page = new HomePage(base.Driver);
+        //page.clickPoolBtn();
+
+
+    }
+    String balanceBeforeBet;
+    @And("i click the available sports")
+    public void ICLickTheAvailableSports() throws InterruptedException {
+
         HomePage page = new HomePage(base.Driver);
-        page.clickPoolBtn();
 
         // verify if More games is display
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
         WebElement sportsModal;
         sportsModal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("iframe.border-none")));
+
+        //get wallet balance display
+        balanceBeforeBet = page.walletBalance();
+        System.out.println(" balance before betting: " + balanceBeforeBet);
+
         base.Driver.switchTo().frame(sportsModal);
         page.selectGameTxtDisplay();
 
-    }
-
-    @And("i click the available sports")
-    public void iInputTheDateFilter() {
-
-        HomePage page = new HomePage(base.Driver);
-
         //click sports
-        page.clickLolGame();
+        Thread.sleep(1000);
+        base.Driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        page.clickTestSport();
 
     }
 
+    String BetAmount;
+    @And("i select team and input bet amount")
+    public void iSelectTeamToPlaceBet(DataTable matchDetails) {
 
-    @And("i click the search button")
-    public void iClickTheSearchButton() {
+        MatchDetails page = new MatchDetails(base.Driver);
 
-        WinLossPage page = new WinLossPage(base.Driver);
-        page.Search();
-    }
-
-
-     String rcm1, rcm2, rcm3, rcm4, cm1, cm2, cm3, cm4;
-    @And("^i query on the DB if CM is available")
-    public void iQueryOnTheDBIfCMIsAvailable(List<String> cmList) throws SQLException {
-
-        //cm1
-         cm1 = (cmList.get(0));
-        DataBaseConnection db = new DataBaseConnection();
-        ResultSet cm1st = db.execDBQuery("CALL DBAdmin.sp_availableCMBets(0,'" + cm1 + "')");
-         rcm1 = cm1st.getString("result");
-        System.out.println(rcm1);
-
-        //cm2
-         cm2 = (cmList.get(1));
-        ResultSet cm2nd = db.execDBQuery("CALL DBAdmin.sp_availableCMBets(0,'" + cm2 + "')");
-         rcm2 = cm2nd.getString("result");
-        System.out.println(rcm2);
-
-        //cm3
-         cm3 = (cmList.get(2));
-        ResultSet cm3rd = db.execDBQuery("CALL DBAdmin.sp_availableCMBets(0,'" + cm3 + "')");
-         rcm3 = cm3rd.getString("result");
-        System.out.println(rcm3);
-
-        //cm4
-         cm4 = (cmList.get(3));
-        ResultSet cm4th = db.execDBQuery("CALL DBAdmin.sp_availableCMBets(0,'" + cm4 + "')");
-         rcm4 = cm4th.getString("result");
-        System.out.println(rcm4);
-
-    }
-
-    List<String> ac = Lists.newArrayList();
-    @And("i see all CM is present")
-    public void iSeeAllCMIsPresent() {
-
-        //cm1
-        if (rcm1.equals("NULL")) {
-            System.out.println("dg is not available");
-        } else {
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.checkCmdg();
-            System.out.println(rcm1 + " is displayed");
-            ac.add(rcm1);
-        }
-
-        //cm2
-        if (rcm2.equals("NULL")) {
-            System.out.println("gg is not available");
-        } else {
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.checkCmgg();
-            System.out.println(rcm2 + " is displayed");
-            ac.add(rcm2);
-        }
-
-        //cm3
-        if (rcm3.equals("NULL")) {
-            System.out.println("ggp is not available");
-        } else {
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.checkCmhd();
-            System.out.println(rcm3 + " is displayed");
-            ac.add(rcm3);
-        }
-
-        //cm4
-        if (rcm4.equals("NULL")) {
-            System.out.println("hd is not available");
-        } else {
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.checkCmks();
-            System.out.println(rcm4 + " is displayed");
-            ac.add(rcm4);
-        }
-        System.out.println("Active CM " + ac);
-    }
-
-    String cm1Stake, cm2Stake, cm3Stake, cm4Stake;
-    @And("i query stake on the DB")
-    public void iQueryStakeOnTheDB() throws SQLException{
-
-        //Query cm1 stake
-        if(ac.contains(cm1)){
-            System.out.println(cm1 + " stake query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetCM_TotalStake('"+cm1+"')");
-             cm1Stake = rs.getString("Total Stake");
-            System.out.println(cm1+" stake from DB " + cm1Stake);
-        } else {
-            System.out.println("NO stake found for "+ cm1);
-        }
-
-        //Query cm2 stake
-        if(ac.contains(cm2)){
-            System.out.println(cm2+" stake query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetCM_TotalStake('"+cm2+"')");
-             cm2Stake = rs.getString("Total Stake");
-            System.out.println(cm2+" stake from DB " + cm2Stake);
-        } else {
-            System.out.println("NO stake found for "+ cm2);
-        }
-
-        //Query cm3 stake
-        if(ac.contains(cm3)){
-            System.out.println(cm3+" stake query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetCM_TotalStake('"+cm3+"')");
-             cm3Stake = rs.getString("Total Stake");
-            System.out.println(cm3+" stake from DB " + cm3Stake);
-        } else {
-            System.out.println("NO stake found for hd "+cm3);
-        }
-
-        //Query cm4 stake
-        if(ac.contains(cm4)){
-            System.out.println(cm4+" stake query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetCM_TotalStake('"+cm4+"')");
-            cm4Stake = rs.getString("Total Stake");
-            System.out.println(cm4+" stake from DB " + cm4Stake);
-        } else {
-            System.out.println("NO stake found for "+ cm4);
-        }
-    }
-
-    @And("i see the correct stake for all CM")
-    public void iSeeTheCorrectTotalForAllCM() {
+        //get the value list from feature file
+        List<List<String>> data = matchDetails.asLists(String.class);
+        int BetSelection = Integer.parseInt(data.get(1).get(0));
+         BetAmount = data.get(1).get(1);
 
 
-        //cm1
-        if (rcm1.equals("NULL")) {
-
-            System.out.println("No stake display for " + cm1);
-
-        } else {
-
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.dgStake();
-            Assert.assertEquals(cm1Stake, page.dgStake());
-            System.out.println(rcm1+" Stake from winLoss page " + page.dgStake());
-            System.out.println(rcm1+" Stake from DB " + cm1Stake);
-        }
-
-        //cm2
-        if (rcm2.equals("NULL")) {
-
-            System.out.println("No stake display for " + cm2);
-
-        } else{
-
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.dgStake();
-
-            Assert.assertEquals(cm2Stake, page.dgStake());
-            System.out.println(rcm2+" Stake from winLoss page " + page.dgStake());
-            System.out.println(rcm2+" Stake from DB " + cm2Stake);
-
-            }
-
-        //cm3
-        if (rcm3.equals("NULL")) {
-
-            System.out.println("No stake display for " + cm3);
-
-        } else {
-
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.hdStake();
-
-            Assert.assertEquals(cm3Stake, page.hdStake());
-            System.out.println(rcm3+" Stake from winLoss page " + page.hdStake());
-            System.out.println(rcm3+" Stake from DB " + cm3Stake);
-
-        }
-
-        //cm4
-        if (rcm4.equals("NULL")) {
-
-            System.out.println("No stake display for " + cm4);
-
-        } else {
-
-            WinLossPage page = new WinLossPage(base.Driver);
-            page.ksStake();
-
-            Assert.assertEquals(cm4Stake, page.ksStake());
-            System.out.println(rcm4+" Stake from winLoss page" + page.ksStake());
-            System.out.println(rcm4+" Stake from DB " + cm4Stake);
-
-        }
-    }
-
-    String cm1volume, cm2volume, cm3volume, cm4volume;
-    @And("i query volume on the DB")
-    public void iQueryVolumeOnTheDB() throws SQLException {
-
-        //Query cm1 stake
-        if(ac.contains(cm1)){
-            System.out.println(cm1 + " volume query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetAgentVolume('"+cm1+"')");
-            cm1volume = rs.getString("Total Volume");
-            System.out.println(cm1+" volume from DB " + cm1volume);
-        } else {
-            System.out.println("NO volume found for "+ cm1);
-        }
-
-        //Query cm2 stake
-        if(ac.contains(cm2)){
-            System.out.println(cm2+" volume query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetAgentVolume('"+cm2+"')");
-            cm2volume = rs.getString("Total Volume");
-            System.out.println(cm2+" volume from DB " + cm2volume);
-        } else {
-            System.out.println("NO volume found for "+ cm2);
-        }
-
-        //Query cm3 stake
-        if(ac.contains(cm3)){
-            System.out.println(cm3+" volume query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetAgentVolume('"+cm3+"')");
-            cm3volume = rs.getString("Total Volume");
-            System.out.println(cm3+" volume from DB " + cm3volume);
-        } else {
-            System.out.println("NO volume found for hd "+cm3);
-        }
-
-        //Query cm4 stake
-        if(ac.contains(cm4)){
-            System.out.println(cm4+" volume query in progress...");
-            DataBaseConnection db = new DataBaseConnection();
-            ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_GetAgentVolume('"+cm4+"')");
-            cm4volume = rs.getString("Total Volume");
-            System.out.println(cm4+" volume from DB " + cm4volume);
-        } else {
-            System.out.println("NO volume found for "+ cm4);
-        }
-    }
-
-    String CM1;
-    @And("i click CM1")
-    public void iClickCM1() {
-
-        WinLossPage page = new WinLossPage(base.Driver);
-
-        int iSwitch = 0; //default value for dg
-
-        if (ac.get(0).equals("gg")){iSwitch = 1;}
-        if (ac.get(0).equals("hd")){iSwitch = 2;}
-        if (ac.get(0).equals("ks")){iSwitch = 3;}
-
-
-        System.out.println("switch to "+ iSwitch);
-        switch(iSwitch){
-
-            case 0:
-                page.clickCmdg();
-                System.out.println(rcm1 + " is clicked");
-
-                break;
-
+        switch(BetSelection) {
             case 1:
-                page.clickCmgg();
-                System.out.println(rcm2 + " is clicked");
+                page.ClickTeamA();
                 break;
 
             case 2:
-                page.clickCmhd();
-                System.out.println(rcm3 + " is clicked");
+                page.ClickTeamB();
                 break;
 
             case 3:
-                page.clickCmks();
-                System.out.println(rcm4 + " is clicked");
+                page.ClickDraw();
                 break;
 
             default:
-                System.out.println("Not in the list");
+                System.out.println("WRONG SELECTION FORMAT!");
                 break;
         }
 
+        base.Driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        page.inputAmount(BetAmount);
+
+
     }
 
-    @And("i see all agents underling")
-    public void iSeeAllAgentsUnderling() throws SQLException {
+    @And("i click place bet button")
+    public void iClickPlaceBetButton() {
+
+        MatchDetails page = new MatchDetails(base.Driver);
+        page.clickPlaceBetBtn();
+    }
+
+    @And("i confirm my place bet")
+    public void iConfirmMyPlaceBet() throws InterruptedException {
 
 
-        DataBaseConnection db = new DataBaseConnection();
-        ResultSet rs = db.execDBQuery("CALL DBAdmin.sp_availableCMBets(2,'dg')");
+        MatchDetails page = new MatchDetails(base.Driver);
+
+            Thread.sleep(1000);
+            page.clickConfirmPlaceBetBtn();
 
 
-        int count = rs.getInt(1);
-        System.out.println(count);
+    }
 
-        rs.next();
-        cm2Stake = rs.getString("agent_username");
-        //System.out.println(cm2Stake);
+    @Then("place bet success")
+    public void placeBetSuccess() throws NumberFormatException, InterruptedException{
+
+
+
+        base.Driver.switchTo().defaultContent();
+
+
+        // compute new balance after bet
+        var trimbalB4Bet = balanceBeforeBet.replace(",","");
+        var BB = Double.valueOf(trimbalB4Bet);
+        var BA = Double.valueOf(BetAmount);
+        var balanceAfterbet = (BB - BA);
+        var balanceAfterbet1 = new BigDecimal(balanceAfterbet).setScale(2);
+        System.out.println("Expected New balance: " + balanceAfterbet1);
+
+
+        //get wallet balance display after bet
+        Thread.sleep(3000);
+        base.Driver.switchTo().defaultContent();
+        HomePage page = new HomePage(base.Driver);
+        var actualBalanceAfterBet = page.walletBalance();
+        actualBalanceAfterBet = balanceBeforeBet.replace(",","");
+        System.out.println("Actual balance After Bet: " + actualBalanceAfterBet);
+
+
+        Assert.assertEquals(balanceAfterbet1, actualBalanceAfterBet);
+
+
     }
 
 

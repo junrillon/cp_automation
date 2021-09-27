@@ -51,7 +51,7 @@ public class CreateMatch extends BaseUtil {
 
     }
 
-    @When("^i input the Username ([^\"]*) and Password ([^\"]*)$")
+    @When("^i input the admin Username ([^\"]*) and Password ([^\"]*)$")
     public void iInputTheUsernameAndPassword(String usernameAdmin, String passwordAdmin) {
 
         //Input username and password
@@ -160,7 +160,7 @@ public class CreateMatch extends BaseUtil {
 
     }
 
-    @And("i click open bet status")
+    @Then("i click open bet status")
     public void iClickOpenBetStatus() {
 
         //view match details

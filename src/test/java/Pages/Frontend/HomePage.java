@@ -5,6 +5,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HomePage {
     public HomePage(WebDriver driver) {
@@ -15,8 +17,8 @@ public class HomePage {
      * Object repository
      */
     //User account name
-    @FindBy(how = How.ID, using =  "navbarDropdownMenuLinkUserAccount")
-    public WebElement userAccount;
+    @FindBy(how = How.XPATH, using =  "//div[@id='navbarSupportedContent']/ul[2]/li/a/span")
+    public WebElement walletBalance;
 
     //Active session continue button
     @FindBy(how = How.XPATH, using =  "//*/text()[normalize-space(.)='Continue']/parent::*")
@@ -32,8 +34,12 @@ public class HomePage {
 
 
     //test
-    @FindBy(how = How.XPATH, using =  "//*[@src = 'https://stage-cdn01.cpp555.com/stage/sports-uploads/uploaded_lol_1623115949.png']")
-    public WebElement lolGame;
+    @FindBy(how = How.XPATH, using =  "//*[@src = 'https://cdn01.cpp555.com/prod/sports-uploads/uploaded__1631775777.jpeg']")
+    public WebElement TestSport;
+
+    //Cancel more game modal
+    @FindBy(how = How.ID, using =  "modalClose")
+    public WebElement cancelMoreGamesModal;
 
   //
 
@@ -41,8 +47,12 @@ public class HomePage {
     /**
      * Object action
      */
+
+
     //User account is display
-    public void userAccountDisplay() {userAccount.isDisplayed();}
+    public String walletBalance() {
+         String wallet = walletBalance.getText();return wallet;
+    }
 
     //click continue button
     public void clickContinueBtn() {alertContinueBtn.click();}
@@ -51,10 +61,9 @@ public class HomePage {
     public void clickPoolBtn() {poolHeaderBtn.click();}
 
     //click pool header button
-    public void selectGameTxtDisplay() {selectGameTxt.isDisplayed();}
-
+    public void selectGameTxtDisplay() {selectGameTxt.isDisplayed();selectGameTxt.click();}
 
     //click pool header button
-    public void clickLolGame() {lolGame.click();}
+    public void clickTestSport() {TestSport.click();}
 
 }
