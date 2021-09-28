@@ -36,6 +36,10 @@ Feature: Admin Create match and player betting
 
     @SettleMatch
     Scenario: go to create match details
+    Given i access admin backoffice login page https://admin.cpp555.com/login
+    When input the Username andre and Password 123123
+    And click the login button
+    Then access the homepage
       And get match id from DB
       And redirect to match details
       And checking the current settlement status and match status
