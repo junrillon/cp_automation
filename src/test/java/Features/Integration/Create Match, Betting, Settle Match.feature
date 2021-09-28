@@ -40,8 +40,12 @@ Feature: Admin Create match and player betting
     When input the Username andre and Password 123123
     And click the login button
     Then access the homepage
-      And get match id from DB
-      And redirect to match details
+      And click the games header dropdown
+      And click matches
+      And click the search field
+        | Sport |
+        | Test  |
+      And view match details
       And checking the current settlement status and match status
       And closing the match
       And select winner

@@ -23,8 +23,10 @@ public class HomePageAdmin {
     public WebElement gamesDropdown;
 
     //games>matches
-    @FindBy(how = How.XPATH, using =  "//*[@href = 'https://admin.cpp555.com/matches' and (text() = 'Matches' or . = 'Matches')]")
+    @FindBy(how = How.XPATH, using =  "//ul[@class='dropdown-menu show']/li/a[contains(text(), 'Matches')]")
     public WebElement matches;
+    //*[@href = 'https://admin.cpp555.com/matches' and (text() = 'Matches' or . = 'Matches')] <-- old xpath
+
 
 
     /**

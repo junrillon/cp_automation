@@ -45,6 +45,9 @@ public class MatchesPage {
     @FindBy(how = How.CSS, using =  "select.custom-select.match-action")
     public WebElement actionDrpdown;
 
+    @FindBy(how = How.XPATH, using = "//input[@type='search']")
+    public WebElement searchField;
+
 
 
 
@@ -91,6 +94,11 @@ public class MatchesPage {
         actionDrpDown.selectByVisibleText("View Match Details");
     }
 
+    //search field is displayed
+    public void clickSearchField(){
+        searchField.isDisplayed();
+        searchField.click();
+    }
 
 
 

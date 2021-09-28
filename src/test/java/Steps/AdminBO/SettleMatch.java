@@ -1,10 +1,11 @@
 package Steps.AdminBO;
 
 import Base.BaseUtil;
-import Database.DataBaseConnection;
 import Pages.AdminBO.HomePageAdmin;
 import Pages.AdminBO.LoginPageAdmin;
 import Pages.AdminBO.MatchDetails;
+import Pages.AdminBO.MatchesPage;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -16,11 +17,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 
@@ -66,63 +65,72 @@ public class SettleMatch extends BaseUtil {
         HomePageAdmin page = new HomePageAdmin(base.Driver);
         page.clickGamesDropdown();
 
-        //matches button is display
-        page.MatchesDisplay();
     }
 
-    String matchID;
-    @And("get match id from DB")
-    public void getMatchIdFromDB() throws SQLException {
+//    String matchID;
+//    @And("get match id from DB")
+//    public void getMatchIdFromDB() throws SQLException {
+//
+//        // generate date today
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//        Date referenceDate = new Date();
+//        Calendar c = Calendar.getInstance();
+//        c.setTime(referenceDate);
+//        Date currentDatePlusOne = c.getTime();
+//        String dateToday = dateFormat.format(currentDatePlusOne);
+//        //System.out.println(dateToday);
+//
+//        //cm1
+//        DataBaseConnection db = new DataBaseConnection();
+//        String sql = "SELECT * FROM p_match WHERE sport_id = 2 AND league_id = 2 order by match_date desc ";
+//        ResultSet cm1st = db.execDBQuery(sql);
+//        matchID = cm1st.getString("id");
+//        System.out.println(matchID);
+//
+//    }
 
-        // generate date today
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date referenceDate = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(referenceDate);
-        Date currentDatePlusOne = c.getTime();
-        String dateToday = dateFormat.format(currentDatePlusOne);
-        //System.out.println(dateToday);
+//    @And("redirect to match details")
+//    public void redirectToMatchDetails() throws InterruptedException {
+//        Thread.sleep(1000);
+//        String mdUrl = "https://admin.cpp555.com/match-details/" + matchID;
+//        base.Driver.navigate().to(mdUrl);
+//    }
 
-        //cm1
-        DataBaseConnection db = new DataBaseConnection();
-        String sql = "SELECT * FROM p_match WHERE sport_id = 2 AND league_id = 2 order by match_date desc ";
-        ResultSet cm1st = db.execDBQuery(sql);
-        matchID = cm1st.getString("id");
-        System.out.println(matchID);
+    @And("click matches")
+    public void clickMatches() {
+        HomePageAdmin page = new HomePageAdmin(base.Driver);
 
+        //click Matches
+        page.clickMatches();
     }
 
-    @And("redirect to match details")
-    public void redirectToMatchDetails() throws InterruptedException {
-        Thread.sleep(1000);
-        String mdUrl = "https://admin.cpp555.com/match-details/" + matchID;
-        base.Driver.navigate().to(mdUrl);
+    @And("click the search field")
+    public void iClickTheSearchButton(DataTable matchDetails) {
+        MatchesPage page = new MatchesPage(base.Driver);
+
+        //get the value list from feature file
+        List<List<String>> data = matchDetails.asLists(String.class);
+        String selectedSports = data.get(1).get(0);
+
+        page.clickSearchField();
+        page.searchField.sendKeys(selectedSports);
     }
 
-//    @And("click matches")
-//    public void clickMatches() {
-//        HomePageAdmin page = new HomePageAdmin(base.Driver);
-//
-//        //click Matches
-//        page.clickMatches();
-//    }
-//
-//    @And("click the search field")
-//    public void iClickTheSearchButton() {
-//        HomePageAdmin page = new HomePageAdmin(base.Driver);
-//        page.clickSearchField();
-//    }
-//
-//    @And("^input the match ID ([^\"]*)")
-//    public void iInputTheMatchId(String matchId) {
-//        //Input username and password
-//        HomePageAdmin page = new HomePageAdmin(base.Driver);
-//        page.enterMatchId(matchId);
-//    }
+    @And("view match details")
+    public void viewMatchDetails() {
+        ///view match details
+        MatchesPage page = new MatchesPage(base.Driver);
+        page.selectFromActionDrpDown();
+    }
 
     @And("checking the current settlement status and match status")
     public void checkMatchStatus(){
-        Thread targetThread = Thread.currentThread();
+
+        //view match details
+        for(String winHandle : base.Driver.getWindowHandles()){
+            base.Driver.switchTo().window(winHandle);
+        }
+
         MatchDetails matchDetails = new MatchDetails(base.Driver);
         //match status is display
         matchDetails.matchStatusDisplay();
@@ -204,6 +212,8 @@ public class SettleMatch extends BaseUtil {
         Thread.sleep(1000);
         MatchDetails matchDetails = new MatchDetails(base.Driver);
         matchDetails.settleMatchButton();
+
+        base.Driver.navigate().refresh();
 
         //Wait
         WebDriverWait wait = new WebDriverWait(base.Driver, 10);
