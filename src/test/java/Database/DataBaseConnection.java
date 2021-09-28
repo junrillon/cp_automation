@@ -13,7 +13,7 @@ public class DataBaseConnection {
         if (conn != null && !conn.isClosed()) {
             conn.close();
         }
-        conn = DriverManager.getConnection("jdbc:mysql://34.97.125.96:3306/", "prod_jerald", "f_Mf+b8gDqQ6S4Z-");
+        conn = DriverManager.getConnection("jdbc:mysql://18.142.94.161:3306/prod_pool_betting", "prod.jun.rillon", "hEUN5dI8UN5dI894s");
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery(queryString);
         rs.next();

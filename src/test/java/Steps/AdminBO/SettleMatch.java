@@ -1,6 +1,7 @@
 package Steps.AdminBO;
 
 import Base.BaseUtil;
+import Database.DataBaseConnection;
 import Pages.AdminBO.HomePageAdmin;
 import Pages.AdminBO.LoginPageAdmin;
 import Pages.AdminBO.MatchDetails;
@@ -8,25 +9,29 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
 public class SettleMatch extends BaseUtil {
     String cMatchStatus;
-
     private BaseUtil base;
     public SettleMatch(BaseUtil base) {
         this.base = base;
     }
 
-    @Given("^access admin backoffice login page ([^\"]*)$")
+    @Given("^i access admin backoffice login page ([^\"]*)$")
     public void canAccessAdminBackofficeLoginPage(String feUrl) {
         //Open Chrome with URL
         base.Driver.navigate().to(feUrl);
@@ -46,7 +51,7 @@ public class SettleMatch extends BaseUtil {
 
     }
 
-    @Then("can access the homepage")
+    @Then("access the homepage")
     public void canAccessTheHomepage() {
         HomePageAdmin page = new HomePageAdmin(base.Driver);
 
@@ -65,8 +70,32 @@ public class SettleMatch extends BaseUtil {
         page.MatchesDisplay();
     }
 
-    @And("^redirect to match details ([^\"]*)")
-    public void redirectToMatchDetails(String mdUrl) {
+    String matchID;
+    @And("get match id from DB")
+    public void getMatchIdFromDB() throws SQLException {
+
+        // generate date today
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date referenceDate = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(referenceDate);
+        Date currentDatePlusOne = c.getTime();
+        String dateToday = dateFormat.format(currentDatePlusOne);
+        //System.out.println(dateToday);
+
+        //cm1
+        DataBaseConnection db = new DataBaseConnection();
+        String sql = "SELECT * FROM p_match WHERE sport_id = 2 AND league_id = 2 order by match_date desc ";
+        ResultSet cm1st = db.execDBQuery(sql);
+        matchID = cm1st.getString("id");
+        System.out.println(matchID);
+
+    }
+
+    @And("redirect to match details")
+    public void redirectToMatchDetails() throws InterruptedException {
+        Thread.sleep(1000);
+        String mdUrl = "https://admin.cpp555.com/match-details/" + matchID;
         base.Driver.navigate().to(mdUrl);
     }
 
@@ -91,49 +120,62 @@ public class SettleMatch extends BaseUtil {
 //        page.enterMatchId(matchId);
 //    }
 
-    @And("checking the current match status")
+    @And("checking the current settlement status and match status")
     public void checkMatchStatus(){
+        Thread targetThread = Thread.currentThread();
         MatchDetails matchDetails = new MatchDetails(base.Driver);
         //match status is display
         matchDetails.matchStatusDisplay();
 
-        String matchStatus = matchDetails.matchStatus.getText();
-            if(matchStatus.equals("NOT STARTED")){
-                cMatchStatus = "NOT STARTED";
-                System.out.println("Match has not yet started.");
+        String matchStatus = matchDetails.matchStatusColumn.getText();
+        String settleStatus = matchDetails.matchSettleStatusColumn.getText();
+            if(!settleStatus.equals("Settled")){
+                Assert.assertNotEquals("Settled", settleStatus);
+                if (matchStatus.equalsIgnoreCase("NOT STARTED")) {
+                    Assert.assertEquals("NOT STARTED", matchStatus);
+                    cMatchStatus = "NOT STARTED";
+                    System.out.println("Match has not yet started.");
 
-            } else if(matchStatus.equals("OPEN")) {
-                cMatchStatus = "OPEN";
-                System.out.println("Match is currently open.");
+                } else if (matchStatus.equalsIgnoreCase("OPEN")) {
+                    Assert.assertEquals("OPEN", matchStatus);
+                    cMatchStatus = "OPEN";
+                    System.out.println("Match is currently open.");
 
+                } else {
+                    Assert.assertEquals("CLOSE", matchStatus);
+                    cMatchStatus = "CLOSE";
+                    System.out.println("Match is currently closed.");
+                }
             } else {
-                cMatchStatus = "CLOSED";
-                System.out.println("Match is currently closed.");
+                Assert.fail("No need to settle. The match is already settled.");
             }
         }
 
     @And("closing the match")
     public void closingMatch() throws InterruptedException {
         MatchDetails matchDetails = new MatchDetails(base.Driver);
-            if(cMatchStatus.equalsIgnoreCase("NOT STARTED")){
-                Thread.sleep(1500);
+
+            if (cMatchStatus.equalsIgnoreCase("NOT STARTED")) {
+                Assert.assertEquals("NOT STARTED", cMatchStatus);
                 matchDetails.matchOpenButton();
                 matchDetails.matchCloseButton();
-                System.out.println("The match is now open.");
-            } else if(cMatchStatus.equalsIgnoreCase("OPEN")){
-                Thread.sleep(1500);
+                System.out.println("The match is now closed.");
+
+            } else if (cMatchStatus.equalsIgnoreCase("OPEN")) {
+                Assert.assertEquals("OPEN", cMatchStatus);
                 matchDetails.matchCloseButton();
                 System.out.println("The match is now closed.");
+
             } else {
-//                Thread.sleep(1500);
-//                page.selectMatchWinner();
+                Assert.assertEquals("CLOSE", cMatchStatus);
                 System.out.println("Set match winner.");
             }
         }
 
+        String winningTeam;
     @And("select winner")
     public void selectWinner() throws InterruptedException {
-        Thread.sleep(1500);
+        Thread.sleep(1000);
         MatchDetails matchDetails = new MatchDetails(base.Driver);
         matchDetails.selectMatchWinner(); //<-Open select match winner modal
 
@@ -147,12 +189,36 @@ public class SettleMatch extends BaseUtil {
         texts.remove(0); //<-Remove the first index which is "Select Winner"
         Random r = new Random(); //<-Select Random Text/Index in a List<String>
         int selection = r.nextInt(texts.size()); //<-Get the size/length of List<String> Texts
-        String winningTeam = texts.get(selection); //<-Assign the random selection to the variable winning team
+        winningTeam = texts.get(selection); //<-Assign the random selection to the variable winning team
         base.Driver.findElement(By.xpath("//div[@id='modal-select-winner']//select[@id='winner']//option[contains(text(),'"+winningTeam+"')]")).click();
-        System.out.println(texts + ": " + winningTeam);
+        System.out.println("Bet Selections: " + texts);
+        System.out.println("Selected Match Winner: " + winningTeam);
 
+        //Assert if the selected random winning team is not the "Select a Winner" option
+        Assert.assertNotEquals("Select Winner", winningTeam);
         matchDetails.confirmMatchWinner(); //<-Confirm match winner selection
-        }
+    }
+
+    @And("settle match")
+    public void settleMatch() throws InterruptedException {
+        Thread.sleep(1000);
+        MatchDetails matchDetails = new MatchDetails(base.Driver);
+        matchDetails.settleMatchButton();
+
+        //Wait
+        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
+        WebElement mdTable = matchDetails.matchDetailsTable;
+        wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//div[@class='table-responsive']//table[@class='table table-striped table-hover table-sm pt-2']"))));
+
+        String selectedWinner = winningTeam.toString();
+        String currentSettleStatus = matchDetails.matchSettleStatusColumn.getText();
+        String currentWinningTeam = matchDetails.matchWinnerColumn.getText();
+        String currentMatchStatus = matchDetails.matchStatusColumn.getText();
+
+        Assert.assertEquals(selectedWinner, currentWinningTeam);
+        Assert.assertEquals("Settled", currentSettleStatus);
+        Assert.assertEquals("CLOSE", currentMatchStatus);
 
     }
+}
 

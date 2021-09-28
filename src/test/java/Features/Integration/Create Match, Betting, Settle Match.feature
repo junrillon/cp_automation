@@ -33,3 +33,12 @@ Feature: Admin Create match and player betting
     And i click place bet button
     And i confirm my place bet
     Then place bet success
+
+    @SettleMatch
+    Scenario: go to create match details
+      And get match id from DB
+      And redirect to match details
+      And checking the current settlement status and match status
+      And closing the match
+      And select winner
+      And settle match

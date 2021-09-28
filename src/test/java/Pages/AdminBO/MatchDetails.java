@@ -14,13 +14,33 @@ public class MatchDetails {
     /**
      * Object repository
      */
+    //matches > match details column
+    @FindBy(how = How.XPATH, using = "//div[@class='table-responsive']//table[@class='table table-striped table-hover table-sm pt-2']")
+    public WebElement matchDetailsTable;
+
+    //matches > match winner column
+    @FindBy(how = How.XPATH, using = "//td[@id='col-match-winner']")
+    public WebElement matchWinnerColumn;
+
+    //matches > match settle status column
+    @FindBy(how = How.XPATH, using = "//td[@id='col-match-settlement']")
+    public WebElement matchSettleStatusColumn;
 
     //matches > match status column
     @FindBy(how = How.XPATH, using = "//td[@id='col-match-status']")
-    public WebElement matchStatus;
+    public WebElement matchStatusColumn;
 
+    //matches > match winner column
+    public void matchWinnerDisplay() {
+        matchWinnerColumn.isDisplayed();
+    }
+    //matches > match settle status column
+    public void matchSettleStatusDisplay() {
+        matchSettleStatusColumn.isDisplayed();
+    }
+    //matches > match status column
     public void matchStatusDisplay() {
-        matchStatus.isDisplayed();
+        matchStatusColumn.isDisplayed();
     }
 
     //Match Open Button
@@ -39,15 +59,31 @@ public class MatchDetails {
     @FindBy(how = How.XPATH, using = "//div[@class='swal2-actions']/button[contains(text(), 'Ok')]")
     public WebElement openMatchSuccessModalOkButton;
 
+    @FindBy(how = How.XPATH, using = "//div[@class='swal2-popup swal2-modal swal2-icon-error swal2-show']")
+    public WebElement modalItself;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='swal2-header']//h2[@class='swal2-title']")
+    public WebElement modalTitle;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='swal2-header']//h2[@class='swal2-title']")
+    public WebElement modalContent;
+
     //Match Open Button
     public void matchOpenButton(){
         matchOpenButton.isDisplayed();
+        matchOpenButton.isEnabled();
         matchOpenButton.click();
         openMatchConfirmationModal.isDisplayed();
         confirmOpenMatch.click();
         openMatchSuccessMessage.isDisplayed();
         openMatchSuccessModalOkButton.click();
     }
+
+    //Match Open Confirmation
+//    public void matchOpenConfirmation(){
+//        openMatchSuccessMessage.isDisplayed();
+//        openMatchSuccessModalOkButton.click();
+//    }
 
     //Match Close Button
     @FindBy(how = How.XPATH, using = "//div[@class='col-auto mx-2']/button[@class='w-100 btn btn-danger mb-2 btn-match-close']")
@@ -68,6 +104,7 @@ public class MatchDetails {
     //Match Close Button
     public void matchCloseButton(){
         matchCloseButton.isDisplayed();
+        matchCloseButton.isEnabled();
         matchCloseButton.click();
         closeMatchConfirmationModal.isDisplayed();
         confirmCloseMatch.click();
@@ -102,6 +139,7 @@ public class MatchDetails {
 
     public void selectMatchWinner(){
         matchSelectWinnerButton.isDisplayed();
+        matchSelectWinnerButton.isEnabled();
         matchSelectWinnerButton.click();
         matchSelectWinnerModal.isDisplayed();
         matchSelectWinnerDropdown.click();
@@ -115,5 +153,31 @@ public class MatchDetails {
         matchSelectWinnerSuccessMessage.isDisplayed();
         matchSelectWinnerSuccessModalOkButton.click();
     }
+
+    @FindBy(how = How.XPATH, using = "//button[@id='match-settle-btn']")
+    public WebElement settleMatchButton;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='swal2-content']//div[@id='swal2-content' and contains(text(), 'Are you sure you want to settle this match?')]")
+    public WebElement settleMatchConfirmationMessage;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='swal2-actions']/button[contains(text(), 'Yes')]")
+    public WebElement settleMatchConfirmationYesButton;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='swal2-header']//h2[contains(text(), 'Success')]")
+    public WebElement settleMatchSuccessMessage;
+
+    @FindBy(how = How.XPATH, using = "//div[@class='swal2-actions']/button[contains(text(), 'Ok')]")
+    public WebElement settleMatchSuccessModalOkButton;
+
+    public void settleMatchButton(){
+        settleMatchButton.isDisplayed();
+        settleMatchButton.isEnabled();
+        settleMatchButton.click();
+        settleMatchConfirmationMessage.isDisplayed();
+        settleMatchConfirmationYesButton.click();
+        settleMatchSuccessMessage.isDisplayed();
+        settleMatchSuccessModalOkButton.click();
+    }
+
 }
 
