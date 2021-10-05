@@ -20,7 +20,7 @@ Feature: Admin Create match and player betting
 
   @PlayerBetting
   Scenario: Select sports
-    Given i can access frontend login page https://www.es3838.com/login/
+    Given i can access frontend login page https://es3838.com/login/
     When i input the Username jeraldnew and Password 123123
     And i click the login button to access the betting page
     Then i can access the betting page
@@ -36,15 +36,17 @@ Feature: Admin Create match and player betting
 
     @SettleMatch
     Scenario: go to create match details
-    Given i access admin backoffice login page https://admin.cpp555.com/login
-    When input the Username andre and Password 123123
-    And click the login button
-    Then access the homepage
+    Given i access admin backoffice login page https://admin.cpp555.com/dashboard
+#    When input the Username andre and Password 123123
+#    And click the login button
+#    Then access the homepage
       And click the games header dropdown
       And click matches
       And click the search field
         | Sport |
         | Test  |
+      And verify if has match
+      And verify if has bets
       And view match details
       And checking the current settlement status and match status
       And closing the match

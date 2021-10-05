@@ -1,10 +1,7 @@
 package Steps.AdminBO;
 
 import Base.BaseUtil;
-import Pages.AdminBO.HomePageAdmin;
-import Pages.AdminBO.LoginPageAdmin;
-import Pages.AdminBO.MatchesDetails;
-import Pages.AdminBO.MatchesPage;
+import Pages.AdminBO.*;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -155,11 +152,8 @@ public class CreateMatch extends BaseUtil {
         for(String winHandle : base.Driver.getWindowHandles()){
             base.Driver.switchTo().window(winHandle);
         }
-        MatchesDetails page = new MatchesDetails(base.Driver);
-        page.clickOpenMatch();
-        page.clickConfirmOpen();
-
-
+        MatchDetails page = new MatchDetails(base.Driver);
+        page.matchOpenButton();
 
     }
 

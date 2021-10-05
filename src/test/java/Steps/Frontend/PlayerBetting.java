@@ -1,13 +1,9 @@
 package Steps.Frontend;
 
 import Base.BaseUtil;
-import Database.DataBaseConnection;
 import Pages.Frontend.HomePage;
 import Pages.Frontend.LoginPage;
 import Pages.Frontend.MatchDetails;
-import Pages.WinLossPage;
-import com.google.common.collect.Lists;
-import com.sun.jdi.IntegerValue;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -16,12 +12,10 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -44,7 +38,7 @@ public class PlayerBetting extends BaseUtil {
 
         //Open Chrome with URL
         base.Driver.navigate().to(feUrl);
-        base.Driver.manage().window().maximize();
+        //base.Driver.manage().window().maximize();
 
 
         try {

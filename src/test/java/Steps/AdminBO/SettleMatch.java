@@ -1,6 +1,7 @@
 package Steps.AdminBO;
 
 import Base.BaseUtil;
+import Database.DataBaseConnection;
 import Pages.AdminBO.HomePageAdmin;
 import Pages.AdminBO.LoginPageAdmin;
 import Pages.AdminBO.MatchDetails;
@@ -17,6 +18,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,10 +34,24 @@ public class SettleMatch extends BaseUtil {
     }
 
     @Given("^i access admin backoffice login page ([^\"]*)$")
-    public void canAccessAdminBackofficeLoginPage(String feUrl) {
-        //Open Chrome with URL
-        base.Driver.navigate().to(feUrl);
-        base.Driver.manage().window().maximize();
+    public void canAccessAdminBackofficeLoginPage(String feUrl){
+
+//        //To check the details of the browser (Version, sessionId, debuggerAddress)
+//            Capabilities c = ((HasCapabilities) base.Driver).getCapabilities();
+//            System.out.println(c);
+
+//        Dimension dm = base.Driver.manage().window().getSize();
+//        int relativemaxwidth = 946;
+//
+//        //Check if the current window is maximized
+//        if(dm.width < relativemaxwidth){
+//            //Open Chrome with URL
+//            base.Driver.manage().window().maximize();
+//            System.out.println("Max");
+//
+//        }
+            //Open Chrome with URL
+            base.Driver.navigate().to(feUrl);
     }
 
     @When("^input the Username ([^\"]*) and Password ([^\"]*)$")
@@ -108,12 +125,65 @@ public class SettleMatch extends BaseUtil {
     public void iClickTheSearchButton(DataTable matchDetails) {
         MatchesPage page = new MatchesPage(base.Driver);
 
-        //get the value list from feature file
+        //get the value from feature file
         List<List<String>> data = matchDetails.asLists(String.class);
         String selectedSports = data.get(1).get(0);
 
+        //Wait
+        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@type='search']")));
+
         page.clickSearchField();
         page.searchField.sendKeys(selectedSports);
+    }
+
+    @And("verify if has match")
+    public void verifyIfHasMatch() throws InterruptedException {
+        MatchesPage page = new MatchesPage(base.Driver);
+        Thread.sleep(1000);
+        if (page.matchPageMatchesTable.getText().contains("No matching records found")) {
+            Assert.fail("Datatable is empty, possible no match available.");
+        } else {
+            System.out.println("Match Found");
+        }
+    }
+
+    @And("verify if has bets")
+    public void verifyIfHasBets() throws SQLException, InterruptedException {
+        DataBaseConnection db = new DataBaseConnection();
+
+        int r1;
+
+        //get match id
+        String sql = "SELECT * FROM p_match WHERE sport_id = 5 AND league_id = 5 order by match_date desc";
+        ResultSet p_match = db.execDBQuery(sql);
+        String matchID = p_match.getString("id");
+
+            do{
+                //esdev_bet_slip
+                String sql1 = "SELECT count(id) FROM `esdev_bet_slip` WHERE match_id = "+ matchID;
+                ResultSet esdev = db.execDBQuery(sql1);
+                String result1 = esdev.getString("count(id)");
+                System.out.println("esdev_bet_slip: " + result1);
+
+                //bpc_bet_slip
+                String sql2 = "SELECT count(id) FROM `bpc_bet_slip` WHERE match_id = "+ matchID;
+                ResultSet bpc = db.execDBQuery(sql2);
+                String result2 = bpc.getString("count(id)");
+                System.out.println("bpc_bet_slip: " + result2);
+
+                r1 = Integer.valueOf(result1) + Integer.valueOf(result2);
+                System.out.println("Bet(s) found in match " + matchID + " is " + r1 + "\n_______________");
+                Thread.sleep(5000);
+
+            } while(r1 != 6);
+            System.out.println("Total bet(s) found in match " + matchID + " is " + r1);
+
+//        if(result1.equals("0") && result2.equals("0")){
+//            Assert.fail("No bet(s) found in match: " + matchID);
+//        } else {
+//            System.out.println("Bet(s) found in match: " +matchID);
+//        }
     }
 
     @And("view match details")
@@ -160,7 +230,7 @@ public class SettleMatch extends BaseUtil {
         }
 
     @And("closing the match")
-    public void closingMatch() throws InterruptedException {
+    public void closingMatch(){
         MatchDetails matchDetails = new MatchDetails(base.Driver);
 
             if (cMatchStatus.equalsIgnoreCase("NOT STARTED")) {
@@ -187,7 +257,9 @@ public class SettleMatch extends BaseUtil {
         MatchDetails matchDetails = new MatchDetails(base.Driver);
         matchDetails.selectMatchWinner(); //<-Open select match winner modal
 
-        WebElement mySelectElm = base.Driver.findElement(By.xpath("//div[@id='modal-select-winner']//select[@id='winner']"));
+       // WebElement mySelectElm = base.Driver.findElement(By.xpath("//div[@id='modal-select-winner']//select[@id='winner']"));
+        WebElement mySelectElm = matchDetails.matchSelectWinnerDropdown;
+
         Select mySelect= new Select(mySelectElm);
         List<String> texts = new ArrayList<>();
         List<WebElement> options = mySelect.getOptions();
@@ -217,10 +289,13 @@ public class SettleMatch extends BaseUtil {
 
         //Wait
         WebDriverWait wait = new WebDriverWait(base.Driver, 10);
-        WebElement mdTable = matchDetails.matchDetailsTable;
+        //WebElement mdTable = matchDetails.matchDetailsTable;
         wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//div[@class='table-responsive']//table[@class='table table-striped table-hover table-sm pt-2']"))));
+//        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("(//div[@id='brandSlider']/div[1]/div/div/div/img)[50]")));
+//        element.click();
 
-        String selectedWinner = winningTeam.toString();
+
+        String selectedWinner = winningTeam;
         String currentSettleStatus = matchDetails.matchSettleStatusColumn.getText();
         String currentWinningTeam = matchDetails.matchWinnerColumn.getText();
         String currentMatchStatus = matchDetails.matchStatusColumn.getText();
@@ -230,5 +305,6 @@ public class SettleMatch extends BaseUtil {
         Assert.assertEquals("CLOSE", currentMatchStatus);
 
     }
+
 }
 

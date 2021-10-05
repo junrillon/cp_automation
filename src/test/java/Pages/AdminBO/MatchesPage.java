@@ -40,8 +40,11 @@ public class MatchesPage {
     @FindBy(how = How.ID, using =  "create-match-btn")
     public WebElement submitBtn;
 
+    //Match page empty table
+    @FindBy(how = How.XPATH, using = "//table[@id='DataTables_Table_0']//tbody")
+    public WebElement matchPageMatchesTable;
 
-    //Submit button
+    //Action button
     @FindBy(how = How.CSS, using =  "select.custom-select.match-action")
     public WebElement actionDrpdown;
 
