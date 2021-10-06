@@ -3,7 +3,7 @@
 
     Background: Login
         Given i can access admin backoffice login page https://admin.cpp555.com/login
-        When i input the Username andre and Password 123123
+        When i input the admin Username andre and Password 123123
         And i click the login button
         Then i can access the homepage
 

@@ -1,6 +1,6 @@
 package Steps.AdminBO;
 
-import Base.BaseUtil;
+import base.BaseUtil;
 import Pages.AdminBO.*;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
@@ -40,7 +40,7 @@ public class CreateMatch extends BaseUtil {
     public void iInputTheUsernameAndPassword(String usernameAdmin, String passwordAdmin) {
 
         //Input username and password
-        LoginPageAdmin page = new LoginPageAdmin(base.Driver);
+        Pages.AdminBO.LoginPageAdmin page = new Pages.AdminBO.LoginPageAdmin(base.Driver);
         page.LoginAdmin(usernameAdmin, passwordAdmin);
 
 
@@ -56,7 +56,7 @@ public class CreateMatch extends BaseUtil {
     @Then("i can access the homepage")
     public void iCanAccessTheHomepage() {
 
-        HomePageAdmin page = new HomePageAdmin(base.Driver);
+        Pages.AdminBO.HomePageAdmin page = new Pages.AdminBO.HomePageAdmin(base.Driver);
 
         //Verify if user account is display
         base.Driver.manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
@@ -67,7 +67,7 @@ public class CreateMatch extends BaseUtil {
     public void iClickTheGamesHeaderDropdown() {
 
         //Click pool header button
-        HomePageAdmin page = new HomePageAdmin(base.Driver);
+        Pages.AdminBO.HomePageAdmin page = new Pages.AdminBO.HomePageAdmin(base.Driver);
         page.clickGamesDropdown();
 
 
@@ -77,7 +77,7 @@ public class CreateMatch extends BaseUtil {
     public void iClickMatches() {
 
         //click Matches
-        HomePageAdmin page = new HomePageAdmin(base.Driver);
+        Pages.AdminBO.HomePageAdmin page = new Pages.AdminBO.HomePageAdmin(base.Driver);
         page.clickMatches();
 
 
@@ -88,7 +88,7 @@ public class CreateMatch extends BaseUtil {
     public void iClickTheCreateMatchBtn() {
 
         // create match display
-        MatchesPage page = new MatchesPage(base.Driver);
+        Pages.AdminBO.MatchesPage page = new Pages.AdminBO.MatchesPage(base.Driver);
         page.clickCreateMatch();
 
     }
@@ -104,7 +104,7 @@ public class CreateMatch extends BaseUtil {
         String matchCountInput = data.get(1).get(2);
 
         //input match details
-        MatchesPage page = new MatchesPage(base.Driver);
+        Pages.AdminBO.MatchesPage page = new Pages.AdminBO.MatchesPage(base.Driver);
         page.selectSports(selectedSports);
         page.selectLeague(selectedLeague);
 
@@ -130,7 +130,7 @@ public class CreateMatch extends BaseUtil {
     public void iClickSubmitBtn() {
 
         //click submit button
-        MatchesPage page = new MatchesPage(base.Driver);
+        Pages.AdminBO.MatchesPage page = new Pages.AdminBO.MatchesPage(base.Driver);
         page.clickSubmitBtn();
 
     }
@@ -140,7 +140,7 @@ public class CreateMatch extends BaseUtil {
     public void iSelectViewMatchDetails() {
 
         //view match details
-        MatchesPage page = new MatchesPage(base.Driver);
+        Pages.AdminBO.MatchesPage page = new Pages.AdminBO.MatchesPage(base.Driver);
         page.selectFromActionDrpDown();
 
     }

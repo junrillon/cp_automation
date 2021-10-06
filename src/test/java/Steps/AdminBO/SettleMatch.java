@@ -1,6 +1,6 @@
 package Steps.AdminBO;
 
-import Base.BaseUtil;
+import base.BaseUtil;
 import Database.DataBaseConnection;
 import Pages.AdminBO.HomePageAdmin;
 import Pages.AdminBO.LoginPageAdmin;
@@ -155,16 +155,16 @@ public class SettleMatch extends BaseUtil {
         int r1;
 
         //get match id
-        String sql = "SELECT * FROM p_match WHERE sport_id = 5 AND league_id = 5 order by match_date desc";
+        String sql = "SELECT * FROM p_match WHERE sport_id = 2 AND league_id = 2 order by match_date desc";
         ResultSet p_match = db.execDBQuery(sql);
         String matchID = p_match.getString("id");
 
             do{
                 //esdev_bet_slip
-                String sql1 = "SELECT count(id) FROM `esdev_bet_slip` WHERE match_id = "+ matchID;
+                String sql1 = "SELECT count(id) FROM `esprod_bet_slip` WHERE match_id = "+ matchID;
                 ResultSet esdev = db.execDBQuery(sql1);
                 String result1 = esdev.getString("count(id)");
-                System.out.println("esdev_bet_slip: " + result1);
+                System.out.println("esprod_bet_slip: " + result1);
 
                 //bpc_bet_slip
                 String sql2 = "SELECT count(id) FROM `bpc_bet_slip` WHERE match_id = "+ matchID;
