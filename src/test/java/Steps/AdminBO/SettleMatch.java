@@ -148,7 +148,7 @@ public class SettleMatch extends BaseUtil {
     }
 
     @And("verify if has bets")
-    public void verifyIfHasBets(DataTable matchDetails) throws InterruptedException {
+    public void verifyIfHasBets(DataTable matchDetails){
         //get the value from feature file
         List<List<String>> sportsDetails = matchDetails.asLists(String.class);
         String sport_id = sportsDetails.get(1).get(0);
