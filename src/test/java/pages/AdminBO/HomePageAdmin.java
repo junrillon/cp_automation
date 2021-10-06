@@ -1,4 +1,4 @@
-package pages.AdminBO;
+package Pages.AdminBO;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
