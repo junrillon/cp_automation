@@ -19,7 +19,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -149,41 +148,132 @@ public class SettleMatch extends BaseUtil {
     }
 
     @And("verify if has bets")
-    public void verifyIfHasBets() throws SQLException, InterruptedException {
-        DataBaseConnection db = new DataBaseConnection();
+    public void verifyIfHasBets(DataTable matchDetails) throws InterruptedException {
+        //get the value from feature file
+        List<List<String>> sportsDetails = matchDetails.asLists(String.class);
+        String sport_id = sportsDetails.get(1).get(0);
+        String league_id = sportsDetails.get(1).get(1);
+        String stotalBetCount = sportsDetails.get(1).get(2);
+        String SbetSelection1 = sportsDetails.get(1).get(3);
+        String SbetSelection2 = sportsDetails.get(1).get(4);
+        String SbetSelection3 = sportsDetails.get(1).get(5);
 
-        int r1;
+        //convert string value to Int
+        int totalBetCount = Integer.parseInt(stotalBetCount);
+        int betSelection1 = Integer.parseInt(SbetSelection1);
+        int betSelection2 = Integer.parseInt(SbetSelection2);
+        int betSelection3 = Integer.parseInt(SbetSelection3);
 
-        //get match id
-        String sql = "SELECT * FROM p_match WHERE sport_id = 2 AND league_id = 2 order by match_date desc";
-        ResultSet p_match = db.execDBQuery(sql);
-        String matchID = p_match.getString("id");
+        try {
+            //get match id
+            String sql = "SELECT * FROM p_match WHERE sport_id = "+sport_id+" AND league_id = "+league_id+" order by match_date desc";
+            ResultSet p_match = DataBaseConnection.execDBQuery(sql);
+            String matchID = p_match.getString("id");
+
+            int totalBets;
+            int bpSelection1; int bpSelection2; int bpSelection3;
+            int esSelection1 = 0; int esSelection2 = 0; int esSelection3 = 0;
+            boolean end = false;
 
             do{
-                //esdev_bet_slip
-                String sql1 = "SELECT count(id) FROM `esprod_bet_slip` WHERE match_id = "+ matchID;
-                ResultSet esdev = db.execDBQuery(sql1);
-                String result1 = esdev.getString("count(id)");
-                System.out.println("esprod_bet_slip: " + result1);
+                //esdev_bet_slip =========================
+                String esdevBetSlip = "SELECT count(id) FROM `esdev_bet_slip` WHERE match_id = "+ matchID;
+                ResultSet esdev = DataBaseConnection.execDBQuery(esdevBetSlip);
+                String esdevResult = esdev.getString("count(id)");
+                System.out.println("*esdev_bet_slip: " + esdevResult);
+                //esdev_bet_slip bet count per bet selection
+                String esdevBC = "SELECT c.label, COUNT(a.bet_selection) AS BetCount " +
+                "FROM `esdev_bet_slip` a " +
+                "LEFT JOIN `p_sport` b " +
+                    "ON a.sport_id = b.id " +
+                "LEFT JOIN `p_bet_selection` c " +
+                    "ON a.bet_selection = c.result_key " +
+                    "AND a.sport_id = c.sport_id " +
+                "WHERE a.match_id = "+matchID+" " +
+                "GROUP BY a.bet_selection " +
+                "ORDER BY a.bet_selection ASC";
 
-                //bpc_bet_slip
-                String sql2 = "SELECT count(id) FROM `bpc_bet_slip` WHERE match_id = "+ matchID;
-                ResultSet bpc = db.execDBQuery(sql2);
-                String result2 = bpc.getString("count(id)");
-                System.out.println("bpc_bet_slip: " + result2);
+                ResultSet rs = DataBaseConnection.execDBQuery(esdevBC);
+                if(!rs.next()) {
+                    System.out.println("--- No bets available.");
+                } else {
+                    rs.absolute(1); //<-- row 1
+                        String esdevb1 = rs.getString(1);
+                        String esdevbc1 = rs.getString(2);
+                    rs.absolute(2); //<-- row 2
+                        String esdevb2 = rs.getString(1);
+                        String esdevbc2 = rs.getString(2);
+                    rs.absolute(3); //<-- row 2
+                    String esdevb3 = rs.getString(1);
+                    String esdevbc3 = rs.getString(2);
 
-                r1 = Integer.valueOf(result1) + Integer.valueOf(result2);
-                System.out.println("Bet(s) found in match " + matchID + " is " + r1 + "\n_______________");
+                    esSelection1 = Integer.parseInt(esdevbc1);
+                    esSelection2 = Integer.parseInt(esdevbc2);
+                    esSelection3 = Integer.parseInt(esdevbc3);
+                    //esdev == Display the count per bet selection
+                    System.out.println("--- " + esdevb1 + ": " + esdevbc1 + "" +
+                            "\n--- " + esdevb2 + ": " + esdevbc2 + "" +
+                            "\n--- " + esdevb3 + ": " + esdevbc3 + "");
+                }
+
+                //bpc_bet_slip ======================
+                String bpcBetSlip = "SELECT count(id) FROM `bpc_bet_slip` WHERE match_id = "+ matchID;
+                ResultSet bpc = DataBaseConnection.execDBQuery(bpcBetSlip);
+                String bpcResult = bpc.getString("count(id)");
+                System.out.println("*bpc_bet_slip: " + bpcResult);
+
+                String bpBC = "SELECT c.label, COUNT(a.bet_selection) AS BetCount " +
+                        "FROM `bpc_bet_slip` a " +
+                        "LEFT JOIN `p_sport` b " +
+                        "ON a.sport_id = b.id " +
+                        "LEFT JOIN `p_bet_selection` c " +
+                        "ON a.bet_selection = c.result_key " +
+                        "AND a.sport_id = c.sport_id " +
+                        "WHERE a.match_id = "+matchID+" " +
+                        "GROUP BY a.bet_selection " +
+                        "ORDER BY a.bet_selection ASC";
+
+                ResultSet rs2 = DataBaseConnection.execDBQuery(bpBC);
+                if(!rs2.next()) {
+                    System.out.println("--- No bets available.");
+                } else {
+                    rs2.absolute(1); //<-- row 1
+                        String bpb1 = rs2.getString(1);
+                        String bpbc1 = rs2.getString(2);
+                    rs2.absolute(2); //<-- row 2
+                        String bpb2 = rs2.getString(1);
+                        String bpbc2 = rs2.getString(2);
+                    rs2.absolute(3); //<-- row 2
+                        String bpb3 = rs2.getString(1);
+                        String bpbc3 = rs2.getString(2);
+
+                    bpSelection1 = Integer.parseInt(bpbc1);
+                    bpSelection2 = Integer.parseInt(bpbc2);
+                    bpSelection3 = Integer.parseInt(bpbc3);
+                    //esdev == Display the count per bet selection
+                    System.out.println("    " + bpb1 + ": " + bpbc1 + "" +
+                            "\n " + bpb2 + ": " + bpbc2 + "" +
+                            "\n " + bpb3 + ": " + bpbc3 + "");
+                }
+                //total bet count of es and bpc
+                totalBets = Integer.parseInt(esdevResult) + Integer.parseInt(bpcResult);
+                System.out.println("Bet(s) found in match " + matchID + ": " + totalBets + "\n_______________");
                 Thread.sleep(5000);
 
-            } while(r1 != 6);
-            System.out.println("Total bet(s) found in match " + matchID + " is " + r1);
+                //check the total bet count & total bet count per selection
+                    if(totalBets >= totalBetCount &&
+                            esSelection1 >= betSelection1 &&
+                                esSelection2 >= betSelection2 &&
+                                    esSelection3 >= betSelection3){
+                        end = true;
+                    }
 
-//        if(result1.equals("0") && result2.equals("0")){
-//            Assert.fail("No bet(s) found in match: " + matchID);
-//        } else {
-//            System.out.println("Bet(s) found in match: " +matchID);
-//        }
+                } while(!end);
+                System.out.println("Total bet(s) found in match " + matchID + ": " + totalBets);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     @And("view match details")

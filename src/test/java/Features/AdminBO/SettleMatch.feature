@@ -14,14 +14,16 @@
         And click matches
         And click the search field
             | Sport |
-            | Valorant  |
+            | Sabong International  |
         And verify if has match
+        And view match details
         And verify if has bets
-#        And view match details
-#        And checking the current settlement status and match status
-#        And closing the match
-#        And select winner
-#        And settle match
+            | sport_id | league_id| totalBetCount | betSelection1 | betSelection2 | betSelection3 |
+            | 6        | 6        | 8             | 6             | 6             | 6             |
+        And checking the current settlement status and match status
+        And closing the match
+        And select winner
+        And settle match
 
 
 
