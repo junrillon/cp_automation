@@ -22,6 +22,5 @@ public class Login {
         //Input username and password
         Backoffice page = new Backoffice(base.Driver);
         page.inputCredentials(usernameAdmin, passwordAdmin);
-        //aaa
     }
 }

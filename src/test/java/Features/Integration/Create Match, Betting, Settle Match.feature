@@ -46,9 +46,11 @@ Feature: Admin Create match and player betting
         | Sport |
         | Test  |
       And verify if has match
-      And verify if has bets
       And view match details
-      And checking the current settlement status and match status
-      And closing the match
-      And select winner
-      And settle match
+      And verify if has bets
+        | sport_id | league_id| totalBetCount | betSelection1 | betSelection2 | betSelection3 | selectionCount |
+        | 2        | 2        | 8             | 6             | 6             | 6             | 3              |
+        And checking the current settlement status and match status
+        And closing the match
+        And select winner
+        And settle match

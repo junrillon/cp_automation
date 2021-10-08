@@ -19,6 +19,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -148,16 +149,22 @@ public class SettleMatch extends BaseUtil {
     }
 
     @And("verify if has bets")
-    public void verifyIfHasBets(DataTable matchDetails){
+    public void verifyIfHasBets(DataTable matchDetails) throws SQLException {
         //get the value from feature file
-        List<List<Integer>> sportsDetails = matchDetails.asLists(Integer.class);
-        int sport_id = sportsDetails.get(1).get(0);
-        int league_id = sportsDetails.get(1).get(1);
-        int totalBetCount = sportsDetails.get(1).get(2);
-        int betSelection1 = sportsDetails.get(1).get(3);
-        int betSelection2 = sportsDetails.get(1).get(4);
-        int betSelection3 = sportsDetails.get(1).get(5);
-        int selectionCount = sportsDetails.get(1).get(6);
+        List<List<String>> sportsDetails = matchDetails.asLists(String.class);
+        String sport_id = sportsDetails.get(1).get(0);
+        String league_id = sportsDetails.get(1).get(1);
+        String xtotalBetCount = sportsDetails.get(1).get(2);
+        String xbetSelection1 = sportsDetails.get(1).get(3);
+        String xbetSelection2 = sportsDetails.get(1).get(4);
+        String xbetSelection3 = sportsDetails.get(1).get(5);
+        String xselectionCount = sportsDetails.get(1).get(6);
+
+        int totalBetCount = Integer.parseInt(xtotalBetCount);
+        int betSelection1 = Integer.parseInt(xbetSelection1);
+        int betSelection2 = Integer.parseInt(xbetSelection2);
+        int betSelection3 = Integer.parseInt(xbetSelection3);
+        int selectionCount = Integer.parseInt(xselectionCount);
 
         try {
             //get match id
@@ -166,9 +173,9 @@ public class SettleMatch extends BaseUtil {
             String matchID = p_match.getString("id");
 
 //            get the count for bet selection per sports (to check if sport 2 or 3 selection)
-//            String sportSelectionCount = "SELECT COUNT(result_key) AS selectionCount FROM p_bet_selection WHERE sport_id = "+sport_id+"";
-//            ResultSet p_bet_selection = DataBaseConnection.execDBQuery(sportSelectionCount);
-//            String count = p_bet_selection.getString("selectionCount");
+            String sportSelectionCount = "SELECT COUNT(result_key) AS selectionCount FROM p_bet_selection WHERE sport_id = "+sport_id+"";
+            ResultSet p_bet_selection = DataBaseConnection.execDBQuery(sportSelectionCount);
+            int count = p_bet_selection.getInt("selectionCount");
 
             int totalBets;
             int bpSelection1; int bpSelection2; int bpSelection3;
@@ -205,7 +212,7 @@ public class SettleMatch extends BaseUtil {
                         String esdevb2 = rs.getString(1);
                         String esdevbc2 = rs.getString(2);
 
-                    if(selectionCount == 3) {
+                    if(count == 3) {
                         rs.absolute(3); //<-- row 3
                         String esdevb3 = rs.getString(1);
                         String esdevbc3 = rs.getString(2);
