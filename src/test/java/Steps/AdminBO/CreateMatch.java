@@ -1,6 +1,6 @@
 package Steps.AdminBO;
 
-import base.BaseUtil;
+import Base.BaseUtil;
 import Pages.AdminBO.*;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;

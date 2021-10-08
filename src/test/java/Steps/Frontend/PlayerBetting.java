@@ -1,6 +1,6 @@
 package Steps.Frontend;
 
-import base.BaseUtil;
+import Base.BaseUtil;
 import Pages.Frontend.HomePage;
 import Pages.Frontend.LoginPage;
 import Pages.Frontend.MatchDetails;
@@ -38,7 +38,7 @@ public class PlayerBetting extends BaseUtil {
 
         //Open Chrome with URL
         base.Driver.navigate().to(feUrl);
-        //base.Driver.manage().window().maximize();
+        base.Driver.manage().window().maximize();
 
 
         try {
@@ -61,7 +61,7 @@ public class PlayerBetting extends BaseUtil {
 
     }
 
-    @When("^i input the Username ([^\"]*) and Password ([^\"]*)$")
+    @When("^i input the Username ([^\"]*) and ([^\"]*)$")
     public void iInputTheUsernameAndPassword(String username, String password) {
 
         //Input username and password
@@ -138,7 +138,7 @@ public class PlayerBetting extends BaseUtil {
 
     String BetAmount;
     @And("i select team and input bet amount")
-    public void iSelectTeamToPlaceBet(DataTable matchDetails) {
+    public void iSelectTeamToPlaceBet(DataTable matchDetails) throws InterruptedException {
 
         MatchDetails page = new MatchDetails(base.Driver);
 
@@ -167,6 +167,7 @@ public class PlayerBetting extends BaseUtil {
         }
 
         base.Driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        Thread.sleep(1000);
         page.inputAmount(BetAmount);
 
 
