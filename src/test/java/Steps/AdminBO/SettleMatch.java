@@ -150,25 +150,25 @@ public class SettleMatch extends BaseUtil {
     @And("verify if has bets")
     public void verifyIfHasBets(DataTable matchDetails){
         //get the value from feature file
-        List<List<String>> sportsDetails = matchDetails.asLists(String.class);
-        String sport_id = sportsDetails.get(1).get(0);
-        String league_id = sportsDetails.get(1).get(1);
-        String stotalBetCount = sportsDetails.get(1).get(2);
-        String SbetSelection1 = sportsDetails.get(1).get(3);
-        String SbetSelection2 = sportsDetails.get(1).get(4);
-        String SbetSelection3 = sportsDetails.get(1).get(5);
-
-        //convert string value to Int
-        int totalBetCount = Integer.parseInt(stotalBetCount);
-        int betSelection1 = Integer.parseInt(SbetSelection1);
-        int betSelection2 = Integer.parseInt(SbetSelection2);
-        int betSelection3 = Integer.parseInt(SbetSelection3);
+        List<List<Integer>> sportsDetails = matchDetails.asLists(Integer.class);
+        int sport_id = sportsDetails.get(1).get(0);
+        int league_id = sportsDetails.get(1).get(1);
+        int totalBetCount = sportsDetails.get(1).get(2);
+        int betSelection1 = sportsDetails.get(1).get(3);
+        int betSelection2 = sportsDetails.get(1).get(4);
+        int betSelection3 = sportsDetails.get(1).get(5);
+        int selectionCount = sportsDetails.get(1).get(6);
 
         try {
             //get match id
             String sql = "SELECT * FROM p_match WHERE sport_id = "+sport_id+" AND league_id = "+league_id+" order by match_date desc";
             ResultSet p_match = DataBaseConnection.execDBQuery(sql);
             String matchID = p_match.getString("id");
+
+//            get the count for bet selection per sports (to check if sport 2 or 3 selection)
+//            String sportSelectionCount = "SELECT COUNT(result_key) AS selectionCount FROM p_bet_selection WHERE sport_id = "+sport_id+"";
+//            ResultSet p_bet_selection = DataBaseConnection.execDBQuery(sportSelectionCount);
+//            String count = p_bet_selection.getString("selectionCount");
 
             int totalBets;
             int bpSelection1; int bpSelection2; int bpSelection3;
@@ -181,6 +181,7 @@ public class SettleMatch extends BaseUtil {
                 ResultSet esdev = DataBaseConnection.execDBQuery(esdevBetSlip);
                 String esdevResult = esdev.getString("count(id)");
                 System.out.println("*esdev_bet_slip: " + esdevResult);
+
                 //esdev_bet_slip bet count per bet selection
                 String esdevBC = "SELECT c.label, COUNT(a.bet_selection) AS BetCount " +
                 "FROM `esdev_bet_slip` a " +
@@ -203,17 +204,25 @@ public class SettleMatch extends BaseUtil {
                     rs.absolute(2); //<-- row 2
                         String esdevb2 = rs.getString(1);
                         String esdevbc2 = rs.getString(2);
-                    rs.absolute(3); //<-- row 2
-                    String esdevb3 = rs.getString(1);
-                    String esdevbc3 = rs.getString(2);
 
-                    esSelection1 = Integer.parseInt(esdevbc1);
-                    esSelection2 = Integer.parseInt(esdevbc2);
-                    esSelection3 = Integer.parseInt(esdevbc3);
-                    //esdev == Display the count per bet selection
-                    System.out.println("--- " + esdevb1 + ": " + esdevbc1 + "" +
-                            "\n--- " + esdevb2 + ": " + esdevbc2 + "" +
-                            "\n--- " + esdevb3 + ": " + esdevbc3 + "");
+                    if(selectionCount == 3) {
+                        rs.absolute(3); //<-- row 3
+                        String esdevb3 = rs.getString(1);
+                        String esdevbc3 = rs.getString(2);
+
+                        esSelection3 = Integer.parseInt(esdevbc3);
+                        //esdev == Display the count per bet selection
+                        System.out.println("--- " + esdevb1 + ": " + esdevbc1 + "" +
+                                "\n--- " + esdevb2 + ": " + esdevbc2 + "" +
+                                "\n--- " + esdevb3 + ": " + esdevbc3 + "");
+                    } else {
+                        esSelection1 = Integer.parseInt(esdevbc1);
+                        esSelection2 = Integer.parseInt(esdevbc2);
+                        //esdev == Display the count per bet selection
+                        System.out.println("--- " + esdevb1 + ": " + esdevbc1 + "" +
+                                "\n--- " + esdevb2 + ": " + esdevbc2 + "");
+
+                    }
                 }
 
                 //bpc_bet_slip ======================
@@ -243,7 +252,7 @@ public class SettleMatch extends BaseUtil {
                     rs2.absolute(2); //<-- row 2
                         String bpb2 = rs2.getString(1);
                         String bpbc2 = rs2.getString(2);
-                    rs2.absolute(3); //<-- row 2
+                    rs2.absolute(3); //<-- row 3
                         String bpb3 = rs2.getString(1);
                         String bpbc3 = rs2.getString(2);
 
