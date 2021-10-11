@@ -2,6 +2,7 @@ package Steps.Hooks;
 
 import Base.BaseUtil;
 import io.cucumber.java.Before;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -20,7 +21,7 @@ public class Hook extends BaseUtil {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-debugging-port=9223");
         options.addArguments("--start-maximized");
-        //WebDriver browser = new ChromeDriver(options);
+        WebDriver browser = new ChromeDriver(options);
         options.setExperimentalOption("debuggerAddress", "127.0.0.1:9223");
         base.Driver = new ChromeDriver(options);
     }
