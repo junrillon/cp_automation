@@ -20,24 +20,30 @@ public class Backoffice {
     @FindBy(how = How.XPATH, using = "//input[@id='password']")
     public WebElement password;
 
-    @FindBy(how = How.XPATH, using = "//button[@class='btn red btn-block uppercase']")
+    @FindBy(how = How.XPATH, using = "//button[@type='submit']")
     public WebElement loginButton;
 
 
     public void inputCredentials(String usernameAdmin,String passwordAdmin){
         username.isDisplayed();
         password.isDisplayed();
-        loginButton.isDisplayed();
-
         username.sendKeys(usernameAdmin);
         password.sendKeys(passwordAdmin);
+    }
+
+    public void clickLoginButton(){
+        loginButton.isDisplayed();
         loginButton.click();
     }
 
     @FindBy(how = How.XPATH, using = "//span[@class='username btn btn-default']")
     public WebElement adminUsername;
 
-    @FindBy(how = How.XPATH, using = "//a[@id='nav_Casino']")
+    public void adminUsernameDisplay(){
+        adminUsername.isDisplayed();
+    }
+    //a[@id='nav_Casino']
+    @FindBy(how = How.XPATH, using = "//li[@class='menu-dropdown classic-menu-dropdown '][5]")
     public WebElement navCasino;
 
     @FindBy(how = How.XPATH, using = "//a[@id='nav_Game List Management']")
