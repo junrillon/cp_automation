@@ -6,7 +6,7 @@
         Given I access b2c backoffice https://staging-admin.clickplaysports.net/login
         When input the Username adminjun and Password P@ssw0rd
         And click the login button
-        Then access the homepage
+        Then access the BO dashboard
         And go to gamelist
         And check all the games without image under provider using excel
         | provider | fileType | location |

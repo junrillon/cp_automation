@@ -53,8 +53,8 @@ public class Login {
 
     }
 
-    @Then("access the homepage")
-    public void canAccessTheHomepage() {
+    @Then("access the BO dashboard")
+    public void accessTheBODashboard() {
         Backoffice page = new Backoffice(base.Driver);
 
         //Verify if user account is display
@@ -240,6 +240,8 @@ public class Login {
             casinoRoomDrpDown.selectByVisibleText(provider); //<-- Select provider in casino room dropdown
             applyFilter.click(); //<-- Click apply filter button
 
+            Thread.sleep(1000);
+
             //Check if modalCloseButton isPresent
             wait.until(ExpectedConditions.visibilityOf(page.modalCloseButton));
             boolean modalCloseButton_isPresent = gDetailsCloseButton.isDisplayed();
@@ -247,6 +249,8 @@ public class Login {
                 wait.until(ExpectedConditions.elementToBeClickable(page.modalCloseButton));
                 page.modalCloseButton.click();
             }
+
+            Thread.sleep(1000);
 
             //Check if gameImage isPresent
             wait.until(ExpectedConditions.visibilityOf(gameImage));
