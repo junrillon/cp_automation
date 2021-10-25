@@ -93,7 +93,7 @@ public class CreatePlayer extends BaseUtil {
 
 
 
-    //    @When("I click the submit button")
+    @When("I click the submit button")
     public void iClickTheSubmitButton() {
         Pages.AgentSite.CreateUserPage page = new Pages.AgentSite.CreateUserPage(base.Driver);
         page.clickSubmit();
