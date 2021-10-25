@@ -15,7 +15,7 @@ public class LoginPageAgents {
      * Object repository
      */
 
-    // Username field
+    // Agent Username field
     @FindBy(how = How.ID, using =  "agent_username")
     public WebElement txtAgentUserName;
 

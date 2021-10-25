@@ -97,7 +97,7 @@ public class CreateUserPage {
     //Click Create Customer
     public void clickCreateCustomer() {createCustomer.click();}
 
-    //Select Referral Agents
+    //Select Referral Agents (MA-AG)
     public void referralAgents() {
         selectMasterAgent.isDisplayed();
         Select selectMA = new Select(selectMasterAgent);
