@@ -15,5 +15,5 @@ Feature: Create Player
     And I input player "username" ,"password" and "confirm password"
     And I copy the the player username
     And I transfer 1000 balance to player
-    #When I click the submit button
+    When I click the submit button
     Then I should be able to find the created player in Customer List

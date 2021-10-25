@@ -65,8 +65,8 @@ public class CreateUserPage {
     public WebElement fundTransfer;
 
     //Submit Player Creation form
-   // @FindBy (how = How.CSS, using = "button#submitButton.btn.green-jungle")
-   // public WebElement clickSubmit;
+    @FindBy (how = How.CSS, using = "button#submitButton.btn.green-jungle")
+    public WebElement clickSubmit;
 
     //Navigate to Customer List
     @FindBy (how = How.CSS, using = "a.nav-link.dropdown-toggle")
@@ -140,7 +140,7 @@ public class CreateUserPage {
     }
 
     //Click Submit button
-    //public void clickSubmit () {clickSubmit.click();}
+    public void clickSubmit () {clickSubmit.click();}
 
     //Customer List
     public void customerListPage () throws IOException, UnsupportedFlavorException {

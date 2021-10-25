@@ -94,10 +94,10 @@ public class CreatePlayer extends BaseUtil {
 
 
     //    @When("I click the submit button")
- //   public void iClickTheSubmitButton() {
- //       Pages.AgentSite.CreateUserPage page = new Pages.AgentSite.CreateUserPage(base.Driver);
- //       page.clickSubmit();
- //   }
+    public void iClickTheSubmitButton() {
+        Pages.AgentSite.CreateUserPage page = new Pages.AgentSite.CreateUserPage(base.Driver);
+        page.clickSubmit();
+    }
 
 
     @Then("I should be able to find the created player in Customer List")
