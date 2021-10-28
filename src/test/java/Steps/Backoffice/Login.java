@@ -243,10 +243,10 @@ public class Login {
             Thread.sleep(1000);
 
             //Check if modalCloseButton isPresent
-            wait.until(ExpectedConditions.visibilityOf(page.modalCloseButton));
+//            wait.until(ExpectedConditions.visibilityOf(gDetailsCloseButton));
             boolean modalCloseButton_isPresent = gDetailsCloseButton.isDisplayed();
             if (modalCloseButton_isPresent) {
-                wait.until(ExpectedConditions.elementToBeClickable(page.modalCloseButton));
+                wait.until(ExpectedConditions.elementToBeClickable(gDetailsCloseButton));
                 page.modalCloseButton.click();
             }
 

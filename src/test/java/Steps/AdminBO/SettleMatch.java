@@ -168,7 +168,7 @@ public class SettleMatch extends BaseUtil {
 
         try {
             //get match id
-            String sql = "SELECT * FROM p_match WHERE sport_id = "+sport_id+" AND league_id = "+league_id+" order by match_date desc";
+            String sql = "SELECT * FROM p_match WHERE sport_id = "+sport_id+" AND league_id = "+league_id+" order by created_at desc";
             ResultSet p_match = DataBaseConnection.execDBQuery(sql);
             String matchID = p_match.getString("id");
 
@@ -202,32 +202,26 @@ public class SettleMatch extends BaseUtil {
                 "ORDER BY a.bet_selection ASC";
 
                 ResultSet rs = DataBaseConnection.execDBQuery(esdevBC);
-                if(!rs.next()) {
-                    System.out.println("--- No bets available.");
-                } else {
-                    rs.absolute(1); //<-- row 1
-                        String esdevb1 = rs.getString(1);
-                        String esdevbc1 = rs.getString(2);
-                    rs.absolute(2); //<-- row 2
-                        String esdevb2 = rs.getString(1);
-                        String esdevbc2 = rs.getString(2);
+                rs.beforeFirst();
 
-                    if(count == 3) {
-                        rs.absolute(3); //<-- row 3
-                        String esdevb3 = rs.getString(1);
-                        String esdevbc3 = rs.getString(2);
+                List<Integer> gs = new ArrayList<Integer>();
+                while(rs.next()){
+                    String label = rs.getString("label");
+                    int xcount = rs.getInt("BetCount");
+                    gs.add(xcount);
+                    System.out.println("--- " + label + ": " + xcount);
 
-                        esSelection3 = Integer.parseInt(esdevbc3);
-                        //esdev == Display the count per bet selection
-                        System.out.println("--- " + esdevb1 + ": " + esdevbc1 + "" +
-                                "\n--- " + esdevb2 + ": " + esdevbc2 + "" +
-                                "\n--- " + esdevb3 + ": " + esdevbc3 + "");
-                    } else {
-                        esSelection1 = Integer.parseInt(esdevbc1);
-                        esSelection2 = Integer.parseInt(esdevbc2);
-                        //esdev == Display the count per bet selection
-                        System.out.println("--- " + esdevb1 + ": " + esdevbc1 + "" +
-                                "\n--- " + esdevb2 + ": " + esdevbc2 + "");
+                    if(gs.size() == 1){
+                        esSelection1 = gs.get(0);
+
+                    } else if (gs.size() == 2){
+                        esSelection1 = gs.get(0);
+                        esSelection2 = gs.get(1);
+
+                    } else if (gs.size() == 3) {
+                        esSelection1 = gs.get(0);
+                        esSelection2 = gs.get(1);
+                        esSelection3 = gs.get(2);
 
                     }
                 }
