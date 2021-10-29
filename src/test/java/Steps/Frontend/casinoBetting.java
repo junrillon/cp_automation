@@ -211,7 +211,7 @@ public class casinoBetting {
                 System.out.println("Done clicking the inner play button.");
             }
 
-           //base.Driver.switchTo().defaultContent();
+           base.Driver.switchTo().defaultContent();
 
         }
     }
