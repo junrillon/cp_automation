@@ -99,6 +99,6 @@ public class LoginPage {
     @FindBy(how = How.XPATH, using =  "//div[@class='statistics-field-value']")
     public WebElement balanceValue;
 
-//
+
 
 }
