@@ -8,7 +8,7 @@
         And navigate to games casino
         And select provider
         | provider |
-        | Evolution|
+        | Red Tiger|
         Then play available games
 #        And i click the pool header button
 #        And i click the available sports

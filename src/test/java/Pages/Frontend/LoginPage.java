@@ -87,6 +87,9 @@ public class LoginPage {
         playButton.click();
     }
 
+    @FindBy(how = How.XPATH, using =  "//section[@class='game-view']")
+    public WebElement maintenanceNotif;
+
     @FindBy(how = How.XPATH, using =  "//iframe[@class='w-100 h-100 border-none']")
     public WebElement gameIframe;
 
@@ -98,6 +101,15 @@ public class LoginPage {
 
     @FindBy(how = How.XPATH, using =  "//div[@class='statistics-field-value']")
     public WebElement balanceValue;
+
+    @FindBy(how = How.XPATH, using =  "//div[@class='stake-value']")
+    public WebElement stakeValue;
+
+    @FindBy(how = How.XPATH, using =  "//div[@class='win-text']")
+    public WebElement winIndicator;
+
+    @FindBy(how = How.XPATH, using =  "//div[@class='win-text']/canvas")
+    public WebElement winIndicator2;
 
 
 
