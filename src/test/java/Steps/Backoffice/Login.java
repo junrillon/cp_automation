@@ -244,11 +244,11 @@ public class Login {
 
             //Check if modalCloseButton isPresent
 //            wait.until(ExpectedConditions.visibilityOf(gDetailsCloseButton));
-            boolean modalCloseButton_isPresent = gDetailsCloseButton.isDisplayed();
-            if (modalCloseButton_isPresent) {
-                wait.until(ExpectedConditions.elementToBeClickable(gDetailsCloseButton));
-                page.modalCloseButton.click();
-            }
+//            boolean modalCloseButton_isPresent = gDetailsCloseButton.isDisplayed();
+//            if (modalCloseButton_isPresent) {
+//                wait.until(ExpectedConditions.elementToBeClickable(gDetailsCloseButton));
+//                page.modalCloseButton.click();
+//            }
 
             Thread.sleep(1000);
 

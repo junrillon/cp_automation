@@ -43,7 +43,7 @@ public class Backoffice {
         adminUsername.isDisplayed();
     }
     //a[@id='nav_Casino']
-    @FindBy(how = How.XPATH, using = "//li[@class='menu-dropdown classic-menu-dropdown '][5]")
+    @FindBy(how = How.XPATH, using = "//li[@class='menu-dropdown classic-menu-dropdown ']/a[@id='nav_Casino']")
     public WebElement navCasino;
 
     @FindBy(how = How.XPATH, using = "//a[@id='nav_Game List Management']")

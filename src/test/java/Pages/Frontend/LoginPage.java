@@ -60,6 +60,12 @@ public class LoginPage {
 
 
     //CASINO ELEMENTS
+    @FindBy(how = How.XPATH, using =  "//div[@class='react-confirm-alert-body']")
+    public WebElement activeSessionAlert;
+
+    @FindBy(how = How.XPATH, using =  "//div[@class='react-confirm-alert-button-group']/button[1]")
+    public WebElement activeSessionContinuebtn;
+
     // Games Casino
     @FindBy(how = How.XPATH, using =  "//ul[@class='navbar-nav mr-auto']/li/a[@href='/casino/casino']")
     public WebElement navGamesCasino;
