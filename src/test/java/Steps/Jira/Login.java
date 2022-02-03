@@ -12,11 +12,30 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class Login extends BaseUtil{
 
+    public static void main(String[] args){
+        try {
+            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+            telegramBotsApi.registerBot(new JiraBot());
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static HttpURLConnection connection;
     private final BaseUtil base;
 
     public Login(BaseUtil base) {
@@ -36,23 +55,31 @@ public class Login extends BaseUtil{
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
         WebDriverWait wait = new WebDriverWait(base.Driver, 5);
 
-        WebElement usernameField = jiraObjects.username;
-        WebElement pwField = jiraObjects.password;
-        WebElement loginBtn = jiraObjects.loginButton;
+        int homeBanner = base.Driver.findElements(By.xpath("//header[@role='banner']")).size();
+        if(homeBanner == 0){
+            WebElement usernameField = jiraObjects.username;
+            WebElement pwField = jiraObjects.password;
+            WebElement loginBtn = jiraObjects.loginButton;
 
-        wait.until(ExpectedConditions.visibilityOf(usernameField));
-        usernameField.sendKeys(username);
+            wait.until(ExpectedConditions.visibilityOf(usernameField));
+            usernameField.sendKeys(username);
 
-        wait.until(ExpectedConditions.elementToBeClickable(loginBtn));
-        loginBtn.click();
+            wait.until(ExpectedConditions.elementToBeClickable(loginBtn));
+            loginBtn.click();
 
-        wait.until(ExpectedConditions.visibilityOf(pwField));
-        pwField.sendKeys(password);
+            wait.until(ExpectedConditions.visibilityOf(pwField));
+            pwField.sendKeys(password);
 
-        wait.until(ExpectedConditions.elementToBeClickable(loginBtn));
-        loginBtn.click();
+            wait.until(ExpectedConditions.elementToBeClickable(loginBtn));
+            loginBtn.click();
 
-        System.out.println("Input credentials then logged in.");
+            System.out.println("Input credentials then logged in.");
+
+        } else {
+            System.out.println("You're already logged in.");
+        }
+
+
     }
 
     @And("^I select project ([^\"]*)$")
@@ -83,16 +110,22 @@ public class Login extends BaseUtil{
         System.out.println("Clicked backlog.");
     }
 
+    StringBuffer resultContent = new StringBuffer();
+    String advanceSprint = null;
+
     @And("^I search ([^\"]*) in backlog")
     public void searchBacklog(String sprint, DataTable testrailCreds) throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
         TestRailObjects testRailObjects = new TestRailObjects(base.Driver);
+        JiraBot jiraBot = new JiraBot();
         Locator locator = new Locator(base.Driver);
 
         WebDriverWait wait = new WebDriverWait(base.Driver, 5);
         WebDriverWait longwait = new WebDriverWait(base.Driver, 15);
 
-        String advanceSprint = sprint.replace('_',' ');
+        SendMessage message = new SendMessage();
+
+        advanceSprint = sprint.replace('_',' ');
 
         List<List<String>> data = testrailCreds.asLists(String.class);
         String username = data.get(1).get(0);
@@ -105,7 +138,7 @@ public class Login extends BaseUtil{
         ((JavascriptExecutor) base.Driver).executeScript("arguments[0].scrollIntoView(true);", sprintHeader);
         Thread.sleep(500);
         System.out.println("Searched " + advanceSprint + " in backlog. \n");
-        System.out.println(advanceSprint + "\n");
+        System.out.println(advanceSprint);
 
         String issueCount = base.Driver.findElement(By.xpath("//div[@class='header-left']/div[contains(text(),'"+ advanceSprint +"')]/following-sibling::div[@class='ghx-issue-count']")).getText();
         String count = issueCount.replace(" issues","");
@@ -122,17 +155,25 @@ public class Login extends BaseUtil{
         String testCases_stats;
         String testRuns_stats;
 
+        String result = null;
+        String token = "5266678102:AAFdXQxtUGGhRn14vWmXISQMZh2dK3dwkRg";
+
         for(int i = 1; i <= converted_issueCount; i++){
+            //locate card status element and get text
             WebElement cardStatus = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardStatus));
             String extractedCardStatus = cardStatus.getText();
 
+            //locate card title element and get text
             WebElement cardTitle = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTitleXpath));
             String extractedCardTitle = cardTitle.getText();
 
+            //check if card has tester
             int cardTester_isNull = base.Driver.findElements(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).size();
             String extractedCardTester;
             if(cardTester_isNull > 0){
+                //locate card title element and get text
                 extractedCardTester = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).getText();
+                String testerName = extractedCardTester;
                 String[] splitStr = extractedCardTester.split("\\s+");
 
                 // Switch statement over above string
@@ -165,10 +206,15 @@ public class Login extends BaseUtil{
                         extractedCardTester = "@yangcavelez ";
                         break;
                     case "Arvin":
-                        if(splitStr[1] == "Dacio"){
-                            extractedCardTester = "@daysofdash";
-                        } else {
-                            extractedCardTester = "@threem06";
+                        switch(splitStr[1])
+                        {
+                            case "Dacio":
+                                extractedCardTester = "@daysofdash";
+                                break;
+                            case "Oliva":
+                                extractedCardTester = "@threem06";
+                                break;
+                            default:
                         }
                         break;
                     case "sysadmin":
@@ -182,29 +228,40 @@ public class Login extends BaseUtil{
                 extractedCardTester = "None";
             }
 
-            WebElement cardAssignee = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardAssignee));
-            String extractedCardAssignee = cardAssignee.getAttribute("alt");
+            //check if card has assignee/dev
+            int cardAssignee_isNull = base.Driver.findElements(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardAssignee)).size();
+            String extractedCardAssignee;
+            if(cardAssignee_isNull > 0){
+                //locate card assignee element and get text
+                extractedCardAssignee = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardAssignee)).getAttribute("alt");
+            } else {
+                extractedCardAssignee = "Assignee: None";
+            }
 
+            //check cards inside sprint and then click
             WebElement cardNumber = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardNumberXpath));
             String extractedCardNumber = cardNumber.getAttribute("title");
             cardNumber.click();
 
             Thread.sleep(1000);
 
+            //check sprint element inside detailed view then scroll to it
             WebElement sprintInsideDetails = base.Driver.findElement(By.xpath("//h2[contains(text(), 'Sprint')]"));
             wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
             ((JavascriptExecutor) base.Driver).executeScript("arguments[0].scrollIntoView(true);", sprintInsideDetails);
             Thread.sleep(500);
 
+            //check testcases element inside detailed view then click
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
             jiraObjects.testCases.click();
             Thread.sleep(2000);
 
-            //Switch to iframe
+            //Switch to iframes
             base.Driver.switchTo().frame(base.Driver.findElement(By.xpath("//div[@id='ghx-detail-view']//iframe[contains(@id,'com.testrail.jira.testrail-plugin__panel-references')]")));
             longwait.until(ExpectedConditions.elementToBeClickable(base.Driver.findElement(By.xpath("//iframe[@id='tr-frame-panel-references']"))));
             base.Driver.switchTo().frame(base.Driver.findElement(By.xpath("//iframe[@id='tr-frame-panel-references']")));
 
+            //check if already logged in to testrail
             int loginToTestrail = locator.loginToTestRail().size();
             if(loginToTestrail > 0){
                 System.out.println("Not yet logged in to testrail.");
@@ -238,15 +295,14 @@ public class Login extends BaseUtil{
 
             } else {
 
-                //wait.until(ExpectedConditions.visibilityOf((WebElement) locator.testCases_status()));
                 int testCases = locator.testCases_status().size();
                 if (testCases > 0) {
                     testCases_stats = "None";
                 } else {
                     testCases_stats = "Already have test cases.";
                 }
-                //    System.out.println("tc done");
 
+                //Switch back to default frame
                 base.Driver.switchTo().defaultContent();
                 wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCasesBack));
                 jiraObjects.testCasesBack.click();
@@ -256,7 +312,7 @@ public class Login extends BaseUtil{
                 jiraObjects.testRuns.click();
                 Thread.sleep(500);
 
-                //Switch to iframe
+                //Switch to iframes
                 base.Driver.switchTo().frame(base.Driver.findElement(By.xpath("//div[@id='ghx-detail-view']//iframe[contains(@id,'com.testrail.jira.testrail-plugin__panel-runsreferences')]")));
                 longwait.until(ExpectedConditions.elementToBeClickable(base.Driver.findElement(By.xpath("//iframe[@id='tr-frame-panel-runsreferences']"))));
                 base.Driver.switchTo().frame(base.Driver.findElement(By.xpath("//iframe[@id='tr-frame-panel-runsreferences']")));
@@ -275,15 +331,46 @@ public class Login extends BaseUtil{
                 jiraObjects.testRunsBack.click();
                 Thread.sleep(500);
 
-                System.out.println(i + ". " + "(" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
+                result = (i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
+                        "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "%0A" +
+                        "•Status: " + extractedCardStatus + "%0A" +
+                        "─ Test Cases: " + testCases_stats + "%0A" + "─ Test Runs: " + testRuns_stats + "%0A%0A");
+
+                System.out.println(i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                         "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                         "•Status: " + extractedCardStatus + "\n" +
                         "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
+                resultContent.append(result);
                 Thread.sleep(1000);
             }
         }
-
     }
+
+    @And("^I send results in telegram")
+    public void sendResultsInTelegram(DataTable telegramCreds){
+        List<List<String>> data = telegramCreds.asLists(String.class);
+        String token = data.get(1).get(0);
+        String chatId = data.get(1).get(1);
+
+        try {
+            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+resultContent.toString());
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int status = connection.getResponseCode();
+            System.out.println(status + ": " + url);
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
 
 }
 
@@ -299,3 +386,31 @@ public class Login extends BaseUtil{
 //                project.click();
 //                }
 //                }
+
+//base.Driver.navigate().to("https://api.telegram.org/bot"+token+"/sendMessage?chat_id=@jirachecker&text="+ result);
+//base.Driver.navigate().back();
+
+//        try {
+//            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id=@jirachecker&text="+ resultContent.toString());
+//            connection = (HttpURLConnection) url.openConnection();
+//
+//            connection.setRequestMethod("POST");
+//            connection.setConnectTimeout(5000);
+//            connection.setReadTimeout(5000);
+//
+//            int status = connection.getResponseCode();
+//            System.out.println(status + ": " + url);
+//
+//
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//            System.out.println("here1");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.out.println("here2");
+//
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("here3");
+//        }

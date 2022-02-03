@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="11">
-      <module name="pool_selenium" target="10" />
+      <module name="pool_selenium" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

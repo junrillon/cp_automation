@@ -37,6 +37,9 @@ public class JiraObjects {
         loginButton.click();
     }
 
+    @FindBy(how = How.XPATH, using = "//header[@role='banner']")
+    public WebElement homeBanner;
+
     @FindBy(how = How.XPATH, using = "//div[@data-testid='home-page-content']")
     public WebElement homePage;
 
