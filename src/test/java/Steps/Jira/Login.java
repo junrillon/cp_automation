@@ -12,10 +12,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -25,15 +22,15 @@ import java.util.List;
 
 public class Login extends BaseUtil{
 
-    public static void main(String[] args){
-        try {
-            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(new JiraBot());
-        } catch (TelegramApiException e) {
-            e.printStackTrace();
-        }
-
-    }
+//    public static void main(String[] args){
+//        try {
+//            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+//            telegramBotsApi.registerBot(new JiraBot());
+//        } catch (TelegramApiException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     private static HttpURLConnection connection;
     private final BaseUtil base;
@@ -85,7 +82,7 @@ public class Login extends BaseUtil{
     @And("^I select project ([^\"]*)$")
     public void selectProject(String projectName) throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
 
         WebElement homePage = jiraObjects.homePage;
         wait.until(ExpectedConditions.visibilityOf(homePage));
@@ -117,7 +114,7 @@ public class Login extends BaseUtil{
     public void searchBacklog(String sprint, DataTable testrailCreds) throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
         TestRailObjects testRailObjects = new TestRailObjects(base.Driver);
-        JiraBot jiraBot = new JiraBot();
+        //JiraBot jiraBot = new JiraBot();
         Locator locator = new Locator(base.Driver);
 
         WebDriverWait wait = new WebDriverWait(base.Driver, 5);
@@ -143,7 +140,7 @@ public class Login extends BaseUtil{
         String issueCount = base.Driver.findElement(By.xpath("//div[@class='header-left']/div[contains(text(),'"+ advanceSprint +"')]/following-sibling::div[@class='ghx-issue-count']")).getText();
         String count = issueCount.replace(" issues","");
         int converted_issueCount = Integer.parseInt(count);
-        //planned
+
         String advanceSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-planned js-sprint-container ghx-open ui-droppable' and div[@class='ghx-backlog-header js-sprint-header' and div[@class='header-left' and div[@class='ghx-name' and contains(text(), '"+ advanceSprint +"')]]]]";
         String activeSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-active js-sprint-container ghx-open ui-droppable' and div[@class='ghx-backlog-header js-sprint-header' and div[@class='header-left' and div[@class='ghx-name' and contains(text(), '"+ advanceSprint +"')]]]]";
         String perCardXpath = "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]";
@@ -170,10 +167,11 @@ public class Login extends BaseUtil{
             //check if card has tester
             int cardTester_isNull = base.Driver.findElements(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).size();
             String extractedCardTester;
+
             if(cardTester_isNull > 0){
                 //locate card title element and get text
                 extractedCardTester = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).getText();
-                String testerName = extractedCardTester;
+                //String testerName = extractedCardTester;
                 String[] splitStr = extractedCardTester.split("\\s+");
 
                 // Switch statement over above string
@@ -340,6 +338,7 @@ public class Login extends BaseUtil{
                         "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                         "•Status: " + extractedCardStatus + "\n" +
                         "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
+
                 resultContent.append(result);
                 Thread.sleep(1000);
             }

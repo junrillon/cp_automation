@@ -27,7 +27,7 @@ public class Hook extends BaseUtil {
         System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-debugging-port=9223");
-        //options.addArguments("--start-maximized");
+        options.addArguments("--start-maximized");
         //options.addArguments("--auto-open-devtools-for-tabs");
         //WebDriver browser = new ChromeDriver(options);
         options.setExperimentalOption("debuggerAddress", "127.0.0.1:9223");
