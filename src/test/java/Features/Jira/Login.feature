@@ -5,7 +5,8 @@ Feature:
     When I input username junarson.rillon@clickplaycorp.com and password Clickplay123!
     And I select project B2C
     And I access backlog
-    And I search Sprint_46 in backlog
+    And Navigate to Sprint_45 in backlog
+    And Check if logged in to testrail
       | username | password |
       | qa.testrail@clickplay.org  | Clickplay123 |
     And I send results in telegram

@@ -67,4 +67,11 @@ public class JiraObjects {
     @FindBy(how = How.XPATH, using = "//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Runs')]")
     public WebElement testRunsBack;
 
+    public String perCardXpath = "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]";
+    public String perCardTitleXpath = "//span[@class='ghx-inner']";
+    public String perCardNumberXpath = "//span[@class='ghx-end ghx-items-container']/a";
+    public String perCardAssignee = "//span[@class='ghx-end ghx-items-container']/img"; // <-- get Alt
+    public String perCardTester = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[3]/span";
+    public String perCardStatus = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[1]/span";
+
 }
