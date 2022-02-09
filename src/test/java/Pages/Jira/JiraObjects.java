@@ -46,9 +46,6 @@ public class JiraObjects {
     @FindBy(how = How.XPATH, using = "//span[contains(text(),'Backlog')]")
     public WebElement backlog;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='ghx-issue-count']")
-    public WebElement issueCount;
-
     @FindBy(how = How.XPATH, using = "//div[@id='ghx-detail-view']")
     public WebElement cardDetailedView;
 
@@ -67,7 +64,11 @@ public class JiraObjects {
     @FindBy(how = How.XPATH, using = "//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Runs')]")
     public WebElement testRunsBack;
 
+    public String advanceSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-planned js-sprint-container ghx-open ui-droppable'][1]";
+    public String activeSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-active js-sprint-container ghx-open ui-droppable'][1]";
     public String perCardXpath = "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]";
+    public String issueCount = "//div[@class='ghx-issue-count']";
+    public String sprintNumber = "//div[@class='ghx-name']";
     public String perCardTitleXpath = "//span[@class='ghx-inner']";
     public String perCardNumberXpath = "//span[@class='ghx-end ghx-items-container']/a";
     public String perCardAssignee = "//span[@class='ghx-end ghx-items-container']/img"; // <-- get Alt

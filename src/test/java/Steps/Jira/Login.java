@@ -15,7 +15,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -31,7 +30,6 @@ public class Login extends BaseUtil{
 //
 //    }
 
-    private static HttpURLConnection connection;
     private final BaseUtil base;
     public Login(BaseUtil base) {
         this.base = base;
@@ -98,8 +96,6 @@ public class Login extends BaseUtil{
         WebDriverWait wait = new WebDriverWait(base.Driver, 5);
 
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.backlog));
-        boolean x = jiraObjects.backlog.isDisplayed();
-
         wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.backlog));
         jiraObjects.backlog.click();
         System.out.println("Clicked backlog.");
@@ -108,37 +104,30 @@ public class Login extends BaseUtil{
     StringBuffer resultContent = new StringBuffer();
     String advanceSprint = null;
 
-    @And("^Navigate to ([^\"]*) in backlog")
-    public void navigateToFutureSprint(String sprint) throws InterruptedException {
-        advanceSprint = sprint.replace('_',' ');
+    @And("^Navigate to future sprint in backlog")
+    public void navigateToFutureSprint() throws InterruptedException {
+        JiraObjects jiraObjects = new JiraObjects(base.Driver);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
 
-        Thread.sleep(3000);
-        WebElement sprintHeader = base.Driver.findElement(By.xpath("//div[@class='header-left']/div[contains(text(),'"+ advanceSprint +"')]"));
+        Thread.sleep(2000);
+        WebElement sprintHeader = base.Driver.findElement(By.xpath(jiraObjects.advanceSprintXpath));
         ((JavascriptExecutor) base.Driver).executeScript("arguments[0].scrollIntoView(true);", sprintHeader);
-        Thread.sleep(500);
+
+        wait.until(ExpectedConditions.visibilityOf(base.Driver.findElement(By.xpath(jiraObjects.advanceSprintXpath + jiraObjects.sprintNumber))));
+        advanceSprint = base.Driver.findElement(By.xpath(jiraObjects.advanceSprintXpath + jiraObjects.sprintNumber)).getText();
         System.out.println("Searched " + advanceSprint + " in backlog. \n");
-        System.out.println(advanceSprint);
     }
 
     @And("^Check cards in future sprint")
     public void checkCardsInFutureSprint() throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
-        TestRailObjects testRailObjects = new TestRailObjects(base.Driver);
         Locator locator = new Locator(base.Driver);
 
         WebDriverWait wait = new WebDriverWait(base.Driver, 5);
         WebDriverWait longwait = new WebDriverWait(base.Driver, 15);
 
-        String oldTab = base.Driver.getWindowHandle();
 
-        String issueCount = base.Driver.findElement(By.xpath("//div[@class='header-left']/div[contains(text(),'"+ advanceSprint +"')]/following-sibling::div[@class='ghx-issue-count']")).getText();
-        String count = issueCount.replace(" issues","");
-        int converted_issueCount = Integer.parseInt(count);
-
-        String advanceSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-planned js-sprint-container ghx-open ui-droppable' and div[@class='ghx-backlog-header js-sprint-header' and div[@class='header-left' and div[@class='ghx-name' and contains(text(), '"+ advanceSprint +"')]]]]";
-        String activeSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-active js-sprint-container ghx-open ui-droppable' and div[@class='ghx-backlog-header js-sprint-header' and div[@class='header-left' and div[@class='ghx-name' and contains(text(), '"+ advanceSprint +"')]]]]";
-
-        String perCardXpath = jiraObjects.perCardXpath;
+        String advanceSprint = jiraObjects.advanceSprintXpath;
         String perCardTitleXpath = jiraObjects.perCardTitleXpath;
         String perCardNumberXpath = jiraObjects.perCardNumberXpath;
         String perCardAssignee = jiraObjects.perCardAssignee;
@@ -147,24 +136,28 @@ public class Login extends BaseUtil{
         String testCases_stats;
         String testRuns_stats;
 
-        String result = null;
+        String result;
+
+        String issueCount = base.Driver.findElement(By.xpath(advanceSprint + jiraObjects.issueCount)).getText();
+        String count = issueCount.replace(" issues","");
+        int converted_issueCount = Integer.parseInt(count);
 
         for(int i = 1; i <= converted_issueCount; i++){
             //locate card status element and get text
-            WebElement cardStatus = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardStatus));
+            WebElement cardStatus = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardStatus));
             String extractedCardStatus = cardStatus.getText();
 
             //locate card title element and get text
-            WebElement cardTitle = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTitleXpath));
+            WebElement cardTitle = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTitleXpath));
             String extractedCardTitle = cardTitle.getText();
 
             //check if card has tester
-            int cardTester_isNull = base.Driver.findElements(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).size();
+            int cardTester_isNull = base.Driver.findElements(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).size();
             String extractedCardTester;
 
             if(cardTester_isNull > 0){
                 //locate card title element and get text
-                extractedCardTester = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).getText();
+                extractedCardTester = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).getText();
                 //String testerName = extractedCardTester;
                 String[] splitStr = extractedCardTester.split("\\s+");
 
@@ -221,17 +214,17 @@ public class Login extends BaseUtil{
             }
 
             //check if card has assignee/dev
-            int cardAssignee_isNull = base.Driver.findElements(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardAssignee)).size();
+            int cardAssignee_isNull = base.Driver.findElements(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardAssignee)).size();
             String extractedCardAssignee;
             if(cardAssignee_isNull > 0){
                 //locate card assignee element and get text
-                extractedCardAssignee = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardAssignee)).getAttribute("alt");
+                extractedCardAssignee = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardAssignee)).getAttribute("alt");
             } else {
                 extractedCardAssignee = "Assignee: None";
             }
 
             //check cards inside sprint and then click
-            WebElement cardNumber = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardNumberXpath));
+            WebElement cardNumber = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardNumberXpath));
             String extractedCardNumber = cardNumber.getAttribute("title");
             wait.until(ExpectedConditions.elementToBeClickable(cardNumber));
             cardNumber.click();
@@ -283,24 +276,31 @@ public class Login extends BaseUtil{
             } else {
                 testRuns_stats = "Already have test runs.";
             }
-            //    System.out.println("tr done");
 
             base.Driver.switchTo().defaultContent();
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRunsBack));
             jiraObjects.testRunsBack.click();
             Thread.sleep(500);
 
-            result = (i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
+            result = ("⚠ (" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
                     "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "%0A" +
                     "•Status: " + extractedCardStatus + "%0A" +
                     "─ Test Cases: " + testCases_stats + "%0A" + "─ Test Runs: " + testRuns_stats + "%0A%0A");
 
-            System.out.println(i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
+            boolean isAppended;
+            if(testCases > 0 || testRuns > 0){
+                isAppended = true;
+                resultContent.append(result);
+            } else {
+                isAppended = false;
+            }
+
+            System.out.println("isAppended: " + isAppended + "\n" +
+                    i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                     "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                     "•Status: " + extractedCardStatus + "\n" +
                     "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
 
-            resultContent.append(result);
             Thread.sleep(1000);
         }
 
@@ -314,7 +314,7 @@ public class Login extends BaseUtil{
 
         try {
             URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+resultContent.toString());
-            connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
@@ -322,8 +322,9 @@ public class Login extends BaseUtil{
             int status = connection.getResponseCode();
             System.out.println(status + ": " + url);
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+//            if(status != 200){
+//                sendResultsInTelegram(telegramCreds);
+//            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -405,13 +406,13 @@ public class Login extends BaseUtil{
             checkIfLoggedIntoTestrail(testrailCreds);
 
         } else {
-            System.out.println("Already logged in to testrail");
+            System.out.println("Already logged in to testrail.");
+
             //Switch back to default frame
             base.Driver.switchTo().defaultContent();
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCasesBack));
             jiraObjects.testCasesBack.click();
             Thread.sleep(500);
-
 
             checkCardsInFutureSprint();
 
