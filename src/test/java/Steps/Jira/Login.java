@@ -322,9 +322,9 @@ public class Login extends BaseUtil{
             int status = connection.getResponseCode();
             System.out.println(status + ": " + url);
 
-//            if(status != 200){
-//                sendResultsInTelegram(telegramCreds);
-//            }
+            if(status != 200){
+                sendResultsInTelegram(telegramCreds);
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
