@@ -18,7 +18,6 @@ public class HomePageAdmin {
     @FindBy(how = How.CSS, using =  "form.d-flex > ul.navbar-nav.me-auto.mb-2.mb-lg-0 > li.nav-item.dropdown > #navbarDropdown")
     public WebElement userAccount;
 
-
     //games header dropdown
     @FindBy(how = How.XPATH, using =  "(//a[@id='navbarDropdown'])[2]")
     public WebElement gamesDropdown;
@@ -29,7 +28,7 @@ public class HomePageAdmin {
     //*[@href = 'https://admin.cpp555.com/matches' and (text() = 'Matches' or . = 'Matches')] <-- old xpath
 
 
-//*android.widget.TextView[contains(text(), 'Mobile testing - Do not bet here')]
+
     /**
      * Object action
      */
