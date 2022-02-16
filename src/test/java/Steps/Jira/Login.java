@@ -20,20 +20,20 @@ import java.util.List;
 
 public class Login extends BaseUtil{
 
+    private static BaseUtil base;
+    public Login(BaseUtil base) {
+        Login.base = base;
+    }
+
 //    public static void main(String[] args){
 //        try {
 //            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-//            telegramBotsApi.registerBot(new JiraBot());
+//            telegramBotsApi.registerBot(new JiraBot(base));
 //        } catch (TelegramApiException e) {
 //            e.printStackTrace();
 //        }
 //
 //    }
-
-    private final BaseUtil base;
-    public Login(BaseUtil base) {
-        this.base = base;
-    }
 
     @Given("^I access jira website ([^\"]*)$")
     public void accessJiraWebsite(String feUrl){
@@ -102,6 +102,7 @@ public class Login extends BaseUtil{
     }
 
     StringBuffer resultContent = new StringBuffer();
+    //ArrayList<String> resultContent = new ArrayList<String>();
     String advanceSprint = null;
 
     @And("^Navigate to future sprint in backlog")
@@ -311,6 +312,12 @@ public class Login extends BaseUtil{
         List<List<String>> data = telegramCreds.asLists(String.class);
         String token = data.get(1).get(0);
         String chatId = data.get(1).get(1);
+//
+//        String toSend = resultContent.toString();
+//        toSend = toSend.replace("[","")
+//                        .replace("]","")
+//                        .replace(",","");
+        //System.out.println(resultContent.length());
 
         try {
             URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+resultContent.toString());

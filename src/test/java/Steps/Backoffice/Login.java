@@ -34,14 +34,14 @@ public class Login {
 
     }
 
-    @When("^input the Username ([^\"]*) and Password ([^\"]*)$")
+    @When("^input the BO Username ([^\"]*) and Password ([^\"]*)$")
     public void inputTheUsernameAndPassword(String usernameAdmin, String passwordAdmin) throws InterruptedException {
         //Input username and password
         Backoffice page = new Backoffice(base.Driver);
         page.inputCredentials(usernameAdmin, passwordAdmin);
     }
 
-    @And("click the login button")
+    @And("click the login button in BO")
     public void clickTheLoginButton() {
         //Click login button
         Backoffice page = new Backoffice(base.Driver);

@@ -4,8 +4,8 @@
     Background: Login
     Scenario:
 #        Given I access b2c backoffice https://admin.clickplaysports.net/login
-#        When input the Username shey.admin and Password Sheyadmin123
-#        And click the login button
+#        When input the BO Username shey.admin and Password Sheyadmin123
+#        And click the login button in BO
 #        Then access the BO dashboard
         And go to gamelist
 #        And select provider EVOLUTION
