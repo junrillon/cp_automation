@@ -29,7 +29,7 @@ public class Hook extends BaseUtil {
         options.addArguments("--remote-debugging-port=9223");
         options.addArguments("--start-maximized");
         //options.addArguments("--auto-open-devtools-for-tabs");
-        WebDriver browser = new ChromeDriver(options);
+        //WebDriver browser = new ChromeDriver(options);
         options.setExperimentalOption("debuggerAddress", "127.0.0.1:9223");
         base.Driver = new ChromeDriver(options);
     }
