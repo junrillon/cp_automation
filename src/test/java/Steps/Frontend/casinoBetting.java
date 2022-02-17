@@ -3,6 +3,7 @@ package Steps.Frontend;
 import Base.BaseUtil;
 import Pages.Frontend.LoginPage;
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -43,7 +44,7 @@ public class casinoBetting {
 
         }
 
-        catch (org.openqa.selenium.TimeoutException e)
+        catch (TimeoutException e)
         {
             return false;
         }
@@ -126,7 +127,7 @@ public class casinoBetting {
     }
 
     @Then("play available games")
-    public void playAvailableGames() throws IOException, InterruptedException {
+    public void playAvailableGames() throws IOException, InterruptedException, CsvValidationException {
         LoginPage page = new LoginPage(base.Driver);
         WebDriverWait wait = new WebDriverWait(base.Driver, 10);
         WebDriverWait longwait = new WebDriverWait(base.Driver, 20);

@@ -3,6 +3,7 @@ package Steps.Backoffice;
 import Base.BaseUtil;
 import Pages.Backoffice.Backoffice;
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -200,7 +201,7 @@ public class Login {
 //    }
 
     @And("check all the games without image under provider using excel")
-    public void checkAllTheGamesWithoutImageUnderProviderUsingExcel(DataTable data) throws IOException, InterruptedException {
+    public void checkAllTheGamesWithoutImageUnderProviderUsingExcel(DataTable data) throws IOException, InterruptedException, CsvValidationException {
         Backoffice page = new Backoffice(base.Driver);
         WebDriverWait wait = new WebDriverWait(base.Driver, 10);
 
