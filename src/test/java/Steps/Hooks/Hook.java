@@ -34,10 +34,4 @@ public class Hook extends BaseUtil {
         base.Driver = new ChromeDriver(options);
     }
 
-
-/*    @Afterdd
-    public void TearDownTest(Scenario scenario)
-    {
-        System.out.println("Closing the browser: hook");
-    }*/
 }
