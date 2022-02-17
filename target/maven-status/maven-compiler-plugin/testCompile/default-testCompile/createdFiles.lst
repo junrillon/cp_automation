@@ -5,6 +5,7 @@ Database\DataBaseConnection.class
 Steps\AdminBO\CreateMatch.class
 Pages\AdminBO\MatchDetails.class
 Pages\AdminBO\MatchesPage.class
+CucumberRunnerTest.class
 Pages\TestRail\TestRailObjects.class
 Pages\AgentSite\CreateUserPage.class
 Steps\Jira\Locator.class

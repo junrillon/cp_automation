@@ -24,7 +24,7 @@ public class Hook extends BaseUtil {
 
     @Before()
     public void beforeScenarioStart() {
-        System.setProperty("webdriver.chrome.driver", "jars\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "jars/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--remote-debugging-port=9223");
         options.addArguments("--start-maximized");
