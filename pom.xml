@@ -15,21 +15,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
                     <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
-                <executions>
-                    <execution>
-                        <configuration>
-                            <sources>
-                                <sourceDirectory>src</sourceDirectory>
-                            </sources>
-                        </configuration>
-                    </execution>
-                </executions>
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <configuration>-->
+<!--                            <sources>-->
+<!--                                <sourceDirectory>src</sourceDirectory>-->
+<!--                            </sources>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
 
@@ -177,6 +177,25 @@
             <artifactId>opencsv</artifactId>
             <version>4.1</version>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>5.6.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

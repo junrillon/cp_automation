@@ -7,7 +7,6 @@ Pages\AdminBO\MatchDetails.class
 Pages\AdminBO\MatchesPage.class
 Pages\TestRail\TestRailObjects.class
 Pages\AgentSite\CreateUserPage.class
-Runner\CucumberRunnerTest.class
 Steps\Jira\Locator.class
 Steps\Backoffice\Login.class
 Pages\AdminBO\MatchesDetails.class

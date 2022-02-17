@@ -9,6 +9,6 @@ import org.junit.runner.RunWith;
         features = "src\\main\\java\\Features\\Jira\\Login.feature",
         plugin = {"pretty"},
         glue = {"Steps"}
-        )
+)
 public class CucumberRunnerTest {
 }
