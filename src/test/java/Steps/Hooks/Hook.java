@@ -26,6 +26,9 @@ public class Hook extends BaseUtil {
     public void beforeScenarioStart() {
         System.setProperty("webdriver.chrome.driver", "jars/chromedriver");
         ChromeOptions options = new ChromeOptions();
+        options.setBinary("/usr/bin/google-chrome");
+        options.addArguments("--headless"); //<--- newly added
+        options.addArguments("--no-sandbox"); //<--- newly added
         options.addArguments("--remote-debugging-port=9223");
         options.addArguments("--start-maximized");
         //options.addArguments("--auto-open-devtools-for-tabs");
