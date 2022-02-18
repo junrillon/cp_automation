@@ -25,8 +25,9 @@ public class Hook extends BaseUtil {
     public void beforeScenarioStart() {
         System.setProperty("webdriver.chrome.driver", "/usr/bin/google-chrome");
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("google-chrome-stable --enable-logging --headless --disable-gpu --no-sandbox"); //<--- newly added
-        //options.addArguments("--no-sandbox"); //<--- newly added
+        options.addArguments("--no-sandbox");
+        options.addArguments("--headless"); //<--- newly added
+        options.addArguments("--disable-gpu"); //<--- newly added
         //options.addArguments("--remote-debugging-port=9224");
         //options.addArguments("--start-maximized");
         //options.addArguments("--auto-open-devtools-for-tabs");
