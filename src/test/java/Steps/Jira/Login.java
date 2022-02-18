@@ -124,7 +124,7 @@ public class Login extends BaseUtil{
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
         Locator locator = new Locator(base.Driver);
 
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
         WebDriverWait longwait = new WebDriverWait(base.Driver, 15);
 
 
@@ -146,10 +146,12 @@ public class Login extends BaseUtil{
         for(int i = 1; i <= converted_issueCount; i++){
             //locate card status element and get text
             WebElement cardStatus = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardStatus));
+            wait.until(ExpectedConditions.visibilityOf(cardStatus));
             String extractedCardStatus = cardStatus.getText();
 
             //locate card title element and get text
             WebElement cardTitle = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTitleXpath));
+            wait.until(ExpectedConditions.visibilityOf(cardTitle));
             String extractedCardTitle = cardTitle.getText();
 
             //check if card has tester
@@ -345,7 +347,7 @@ public class Login extends BaseUtil{
         TestRailObjects testRailObjects = new TestRailObjects(base.Driver);
         Locator locator = new Locator(base.Driver);
 
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 15);
         WebDriverWait longwait = new WebDriverWait(base.Driver, 15);
 
         List<List<String>> data = testrailCreds.asLists(String.class);
@@ -357,8 +359,11 @@ public class Login extends BaseUtil{
         String advanceSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-planned js-sprint-container ghx-open ui-droppable' and div[@class='ghx-backlog-header js-sprint-header' and div[@class='header-left' and div[@class='ghx-name' and contains(text(), '"+ advanceSprint +"')]]]]";
         String perCardNumberXpath = jiraObjects.perCardNumberXpath;
 
+        Thread.sleep(2000);
+
         //check cards inside sprint and then click
         WebElement cardNumber = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')][1]" + perCardNumberXpath));
+        wait.until(ExpectedConditions.elementToBeClickable(cardNumber));
         cardNumber.click();
 
         Thread.sleep(1000);

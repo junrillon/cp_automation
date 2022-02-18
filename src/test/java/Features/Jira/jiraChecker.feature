@@ -1,7 +1,7 @@
 Feature:
 
   @jirachecker
-  Scenario: Login to Jira
+  Scenario: Jira Checker
     Given I access jira website https://id.atlassian.com/login
     When I input username junarson.rillon@clickplaycorp.com and password Clickplay123!
     And I select project B2C
