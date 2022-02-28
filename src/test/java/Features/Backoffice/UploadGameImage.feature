@@ -12,4 +12,5 @@
         | provider | fileType | location |
         | EVOLUTION| .png     |D:\CP Files\Casino Provider\Evolution\RED TIGER\Red Tiger (Resized)\Red Tiger\ |
 
-        #adminjun, P@ssw0rd shey.admin, Sheyadmin123
+        #adminjun, P@ssw0rd shey.admin, Sheyadmin123 #testing
+
