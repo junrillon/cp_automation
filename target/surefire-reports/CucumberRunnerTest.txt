@@ -1,0 +1,13 @@
+-------------------------------------------------------------------------------
+Test set: CucumberRunnerTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 85.393 s <<< FAILURE! - in CucumberRunnerTest
+EMPTY_NAME.Jira Checker  Time elapsed: 85.277 s  <<< ERROR!
+org.openqa.selenium.TimeoutException: 
+Expected condition failed: waiting for element to be clickable: [[ChromeDriver: chrome on WINDOWS (d85e9e5759d1f238be005fbb265bc390)] -> xpath: //div[@class='ghx-backlog-container ghx-sprint-planned js-sprint-container ghx-open ui-droppable'][1]//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')][1]//span[@class='ghx-end ghx-items-container']/a] (tried for 20 second(s) with 500 milliseconds interval)
+Build info: version: '4.1.2', revision: '9a5a329c5a'
+System info: host: 'DESKTOP-PPNVO37', ip: '192.168.1.8', os.name: 'Windows 10', os.arch: 'amd64', os.version: '10.0', java.version: '11.0.8'
+Driver info: org.openqa.selenium.chrome.ChromeDriver
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 98.0.4758.102, chrome: {chromedriverVersion: 98.0.4758.102 (273bf7ac8c90..., userDataDir: C:\Users\QA02\AppData\Local...}, goog:chromeOptions: {debuggerAddress: localhost:52516}, javascriptEnabled: true, networkConnectionEnabled: false, pageLoadStrategy: normal, platform: WINDOWS, platformName: WINDOWS, proxy: Proxy(), se:cdp: ws://localhost:52516/devtoo..., se:cdpVersion: 98.0.4758.102, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:virtualAuthenticators: true}
+Session ID: d85e9e5759d1f238be005fbb265bc390
+

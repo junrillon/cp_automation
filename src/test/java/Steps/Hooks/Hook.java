@@ -22,20 +22,34 @@ public class Hook extends BaseUtil {
     }
 
     @Before()
+//    public void beforeScenarioStart() {
+//       // System.setProperty("webdriver.chrome.driver", "/usr/bin/google-chrome");
+//        ChromeOptions options = new ChromeOptions();
+//
+//        options.addArguments("--no-sandbox");
+//        options.addArguments("--headless"); //<--- newly added
+//        options.addArguments("--disable-gpu"); //<--- newly added
+//
+//        //options.addArguments("--remote-debugging-port=9224");
+//        //options.addArguments("--start-maximized");
+//        //options.addArguments("--auto-open-devtools-for-tabs");
+//        WebDriver browser = new ChromeDriver(options);
+//        //options.setExperimentalOption("debuggerAddress", "127.0.0.1:9224");
+//        base.Driver = new ChromeDriver(options);
+//
+//    }
+
+//    @Before()
     public void beforeScenarioStart() {
-       // System.setProperty("webdriver.chrome.driver", "/usr/bin/google-chrome");
+        System.setProperty("webdriver.chrome.driver", "jars/chromedriver.exe");
         ChromeOptions options = new ChromeOptions();
 
-        options.addArguments("--no-sandbox");
-        options.addArguments("--headless"); //<--- newly added
-        options.addArguments("--disable-gpu"); //<--- newly added
-
-        //options.addArguments("--remote-debugging-port=9224");
-        //options.addArguments("--start-maximized");
+        options.addArguments("--remote-debugging-port=9224");
+        options.addArguments("--start-maximized");
         //options.addArguments("--auto-open-devtools-for-tabs");
-        WebDriver browser = new ChromeDriver(options);
-        //options.setExperimentalOption("debuggerAddress", "127.0.0.1:9224");
-       //base.Driver = new ChromeDriver(options);
+        //WebDriver browser = new ChromeDriver(options);
+        options.setExperimentalOption("debuggerAddress", "127.0.0.1:9224");
+        base.Driver = new ChromeDriver(options);
 
     }
 

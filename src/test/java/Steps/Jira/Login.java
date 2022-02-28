@@ -13,9 +13,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Login extends BaseUtil{
@@ -39,14 +42,13 @@ public class Login extends BaseUtil{
     public void accessJiraWebsite(String feUrl){
         //Open Chrome with URL
         base.Driver.navigate().to(feUrl);
-        base.Driver.manage().window().maximize();
         System.out.println("Accessed jira website.");
     }
 
     @When("^I input username ([^\"]*) and password ([^\"]*)$")
     public void inputCredentials(String username, String password){
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 20);
 
         int homeBanner = base.Driver.findElements(By.xpath("//header[@role='banner']")).size();
         if(homeBanner == 0){
@@ -78,7 +80,7 @@ public class Login extends BaseUtil{
     @And("^I select project ([^\"]*)$")
     public void selectProject(String projectName) throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
-        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 20);
 
         WebElement homePage = jiraObjects.homePage;
         wait.until(ExpectedConditions.visibilityOf(homePage));
@@ -93,7 +95,7 @@ public class Login extends BaseUtil{
     @And("^I access backlog")
     public void accessBacklog(){
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 20);
 
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.backlog));
         wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.backlog));
@@ -101,14 +103,14 @@ public class Login extends BaseUtil{
         System.out.println("Clicked backlog.");
     }
 
-    StringBuffer resultContent = new StringBuffer();
+    StringBuffer resultContent = new StringBuffer("⚠️ (B2C-2296) [Brasilbet][Frontend] Allow players to update their personal information%0A•Tester: @mxxx67  |  •Assignee: Kenn%0A•Status: To Do%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2203) [Brasilbet][Agents] - Create New Theme%0A•Tester: @mxxx67  |  •Assignee: Lynet Chua%0A•Status: In Progress%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2310) [PIX][Agents][Withdraw] - Adjustment in Withdraw Page%0A•Tester: @daysofdash  |  •Assignee: Edgardo Guzman Jr%0A•Status: To Do%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2311) [PIX][API][Withdraw] - Cancel withdraw endpoint%0A•Tester: @daysofdash  |  •Assignee: Edgardo Guzman Jr%0A•Status: To Do%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2297) [PIX][Back Office] - New Payment Gateway Provisioning%0A•Tester: @daysofdash  |  •Assignee: Vincent James Valero%0A•Status: In Progress%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2298) [PIX][Frontend][Withdraw] - Withdraw Wizard Page%0A•Tester: @daysofdash  |  •Assignee: Vincent James Valero%0A•Status: To Do%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2275) [Brasilbet][Casino] - Affiliate Commision Gain in Casino Bets%0A•Tester: @mxxx67  |  •Assignee: Rusell Mallanao%0A•Status: In Progress%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2295) [Brasilbet] - CPF integration%0A•Tester: @Sheeey  |  •Assignee: Vincent James Valero%0A•Status: To Do%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2305) [Brasilbet] [FE][API]- Player Registration (CPF)%0A•Tester: @Sheeey  |  •Assignee: Vincent James Valero%0A•Status: In Progress%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A⚠️ (B2C-2309) [PIX][Frontend][Fund History] - Additional requirement in Fund History%0A•Tester: @jeanpaola  |  •Assignee: Vincent James Valero%0A•Status: To Do%0A─ Test Cases: None%0A─ Test Runs: None%0A%0A");
     //ArrayList<String> resultContent = new ArrayList<String>();
     String advanceSprint = null;
 
     @And("^Navigate to future sprint in backlog")
     public void navigateToFutureSprint() throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 20);
 
         Thread.sleep(2000);
         WebElement sprintHeader = base.Driver.findElement(By.xpath(jiraObjects.advanceSprintXpath));
@@ -124,9 +126,8 @@ public class Login extends BaseUtil{
         JiraObjects jiraObjects = new JiraObjects(base.Driver);
         Locator locator = new Locator(base.Driver);
 
-        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
-        WebDriverWait longwait = new WebDriverWait(base.Driver, 15);
-
+        WebDriverWait wait = new WebDriverWait(base.Driver, 20);
+        WebDriverWait longwait = new WebDriverWait(base.Driver, 20);
 
         String advanceSprint = jiraObjects.advanceSprintXpath;
         String perCardTitleXpath = jiraObjects.perCardTitleXpath;
@@ -143,18 +144,25 @@ public class Login extends BaseUtil{
         String count = issueCount.replace(" issues","");
         int converted_issueCount = Integer.parseInt(count);
 
+        System.out.println("Checking every card now.");
+
         for(int i = 1; i <= converted_issueCount; i++){
             //locate card status element and get text
+            System.out.println("Checking card status");
             WebElement cardStatus = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardStatus));
+            ((JavascriptExecutor) base.Driver).executeScript("arguments[0].scrollIntoView(true);", cardStatus);
             wait.until(ExpectedConditions.visibilityOf(cardStatus));
             String extractedCardStatus = cardStatus.getText();
 
             //locate card title element and get text
+            System.out.println("Checking card title");
             WebElement cardTitle = base.Driver.findElement(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTitleXpath));
+            ((JavascriptExecutor) base.Driver).executeScript("arguments[0].scrollIntoView(true);", cardTitle);
             wait.until(ExpectedConditions.visibilityOf(cardTitle));
             String extractedCardTitle = cardTitle.getText();
 
             //check if card has tester
+            System.out.println("Checking card tester");
             int cardTester_isNull = base.Driver.findElements(By.xpath(advanceSprint + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]["+i+"]" + perCardTester)).size();
             String extractedCardTester;
 
@@ -310,7 +318,7 @@ public class Login extends BaseUtil{
     }
 
     @And("^I send results in telegram")
-    public void sendResultsInTelegram(DataTable telegramCreds){
+    public void sendResultsInTelegram(DataTable telegramCreds) throws IOException, InterruptedException {
         List<List<String>> data = telegramCreds.asLists(String.class);
         String token = data.get(1).get(0);
         String chatId = data.get(1).get(1);
@@ -320,23 +328,49 @@ public class Login extends BaseUtil{
 //                        .replace("]","")
 //                        .replace(",","");
         //System.out.println(resultContent.length());
+        advanceSprint = "Sprint 45";
+        System.out.println(resultContent.length());
+        String resultContentString = resultContent.toString();
+        int limitSize = 500;
 
-        try {
-            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+resultContent.toString());
+         int resultContentSize = resultContent.length();
+         if(resultContentSize <= 0){
+             resultContent.append("All cards have tc/tr. Thank you for your cooperation! \uD83D\uDE4F\uD83C\uDFFC");
+         }
+
+
+        List<String> stringToSend = new ArrayList<String>();
+        int index = 0;
+        while (index < resultContentString.length()) {
+            stringToSend.add(resultContentString.substring(index, Math.min(index + limitSize,resultContentString.length())));
+            index += limitSize;
+        }
+
+        int count = 0;
+        while (stringToSend.size() > count) {
+            Thread.sleep(2000);
+            String telegramMessage = stringToSend.get(count);
+            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+telegramMessage);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
 
             int status = connection.getResponseCode();
-            System.out.println(status + ": " + url);
+            String message = connection.getResponseMessage();
+            System.out.println(status + ": " + message + "\n" + telegramMessage);
 
-//            if(status != 200){
-//                sendResultsInTelegram(telegramCreds);
-//            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder results = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                results.append(line);
+            }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            connection.disconnect();
+            System.out.println(results.toString());
+
+            count++;
 
         }
     }
@@ -347,8 +381,8 @@ public class Login extends BaseUtil{
         TestRailObjects testRailObjects = new TestRailObjects(base.Driver);
         Locator locator = new Locator(base.Driver);
 
-        WebDriverWait wait = new WebDriverWait(base.Driver, 15);
-        WebDriverWait longwait = new WebDriverWait(base.Driver, 15);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 20);
+        WebDriverWait longwait = new WebDriverWait(base.Driver, 60);
 
         List<List<String>> data = testrailCreds.asLists(String.class);
         String username = data.get(1).get(0);
@@ -362,8 +396,12 @@ public class Login extends BaseUtil{
         Thread.sleep(2000);
 
         //check cards inside sprint and then click
-        WebElement cardNumber = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')][1]" + perCardNumberXpath));
-        wait.until(ExpectedConditions.elementToBeClickable(cardNumber));
+        WebElement advanceSprint = base.Driver.findElement(By.xpath(advanceSprintXpath));
+        ((JavascriptExecutor) base.Driver).executeScript("arguments[0].scrollIntoView(true);", advanceSprint);
+        System.out.println("Scrolled into per card");
+
+        WebElement cardNumber = base.Driver.findElement(By.xpath(advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')][1]"));
+        longwait.until(ExpectedConditions.elementToBeClickable(cardNumber));
         cardNumber.click();
 
         Thread.sleep(1000);
@@ -416,6 +454,7 @@ public class Login extends BaseUtil{
             }
 
             checkIfLoggedIntoTestrail(testrailCreds);
+            //navigateToFutureSprint();
 
         } else {
             System.out.println("Already logged in to testrail.");
@@ -425,8 +464,6 @@ public class Login extends BaseUtil{
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCasesBack));
             jiraObjects.testCasesBack.click();
             Thread.sleep(500);
-
-            checkCardsInFutureSprint();
 
         }
 

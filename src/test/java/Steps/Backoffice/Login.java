@@ -7,7 +7,6 @@ import com.opencsv.exceptions.CsvValidationException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -20,7 +19,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Login {
     private BaseUtil base;
@@ -30,37 +28,30 @@ public class Login {
     }
 
     @Given("^I access b2c backoffice ([^\"]*)$")
-    public void IAccessB2cBackoffice(String BOUrl) {
+    public void IAccessB2cBackoffice(String BOUrl) throws CsvValidationException, IOException, InterruptedException {
+        //navigate to backoffice
         base.Driver.navigate().to(BOUrl);
-
     }
 
     @When("^input the BO Username ([^\"]*) and Password ([^\"]*)$")
-    public void inputTheUsernameAndPassword(String usernameAdmin, String passwordAdmin) throws InterruptedException {
+    public void inputTheUsernameAndPassword(String usernameAdmin, String passwordAdmin) throws InterruptedException{
         //Input username and password
-        Backoffice page = new Backoffice(base.Driver);
-        page.inputCredentials(usernameAdmin, passwordAdmin);
-    }
-
-    @And("click the login button in BO")
-    public void clickTheLoginButton() {
-        //Click login button
         Backoffice page = new Backoffice(base.Driver);
         WebElement login = page.loginButton;
         //Wait
-        WebDriverWait wait = new WebDriverWait(base.Driver, 5);
-        wait.until(ExpectedConditions.elementToBeClickable(login));
-        page.clickLoginButton();
+        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
 
-    }
-
-    @Then("access the BO dashboard")
-    public void accessTheBODashboard() {
-        Backoffice page = new Backoffice(base.Driver);
-
-        //Verify if user account is display
-        base.Driver.manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
-        page.adminUsernameDisplay();
+        //Get current website title
+        String currentPage = base.Driver.getTitle();
+        System.out.println(currentPage);
+        if(currentPage.contains("Dashboard")){
+            System.out.println("You're already logged in!");
+        } else {
+            page.inputCredentials(usernameAdmin, passwordAdmin);
+            wait.until(ExpectedConditions.elementToBeClickable(login));
+            page.clickLoginButton();
+            page.adminUsernameDisplay();
+        }
     }
 
     @And("go to gamelist")
@@ -68,7 +59,7 @@ public class Login {
         Backoffice page = new Backoffice(base.Driver);
         WebElement nav_casino = page.navCasino;
         //Wait
-        WebDriverWait wait = new WebDriverWait(base.Driver, 10);
+        WebDriverWait wait = new WebDriverWait(base.Driver, 60);
         wait.until(ExpectedConditions.elementToBeClickable(nav_casino));
         //Go to game list page
         page.navigateToGamelist();
@@ -244,12 +235,11 @@ public class Login {
             Thread.sleep(1000);
 
             //Check if modalCloseButton isPresent
-//            wait.until(ExpectedConditions.visibilityOf(gDetailsCloseButton));
-//            boolean modalCloseButton_isPresent = gDetailsCloseButton.isDisplayed();
-//            if (modalCloseButton_isPresent) {
-//                wait.until(ExpectedConditions.elementToBeClickable(gDetailsCloseButton));
-//                page.modalCloseButton.click();
-//            }
+            int gameDetails = base.Driver.findElements(By.xpath("//div[@class='modal-dialog modal-sm']//h5[contains(text(),\"Game Details\")]")).size();
+            if(gameDetails > 0){
+                wait.until(ExpectedConditions.elementToBeClickable(gDetailsCloseButton));
+                page.modalCloseButton.click();
+            }
 
             Thread.sleep(1000);
 
