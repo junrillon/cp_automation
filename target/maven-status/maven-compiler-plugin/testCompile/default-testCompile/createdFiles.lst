@@ -1,7 +1,9 @@
 Pages\Jira\JiraObjects.class
 Steps\Hooks\Hook.class
 Pages\WinLossPage.class
+Steps\TestRail\API\APIClient.class
 Database\DataBaseConnection.class
+Steps\TestRail\API\APIException.class
 Steps\AdminBO\CreateMatch.class
 Pages\AdminBO\MatchDetails.class
 Pages\AdminBO\MatchesPage.class

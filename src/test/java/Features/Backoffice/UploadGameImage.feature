@@ -10,7 +10,7 @@
 #        And check all the games without image under provider EVOLUTION
        And check all the games without image under provider using excel
         | provider | fileType | location |
-        | EVOLUTION| .png     |D:\CP Files\Casino Provider\Evolution\RED TIGER\Red Tiger (Resized)\Red Tiger\ |
+        | MARIO| .png     |D:\CP Files\Casino Provider\Mario\ |
 
         #adminjun, P@ssw0rd shey.admin, Sheyadmin123 #testing
 

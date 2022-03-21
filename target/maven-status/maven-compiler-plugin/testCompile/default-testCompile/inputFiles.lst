@@ -7,12 +7,14 @@ C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Pages\Agent
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Pages\AdminBO\LoginPageAdmin.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\Jira\Locator.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Pages\AdminBO\MatchesDetails.java
+C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\TestRail\API\APIException.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Pages\AgentSite\LoginPageAgents.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\AdminBO\SettleMatch.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\AgentSite\CreatePlayer.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Pages\WinLossPage.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Base\BaseUtil.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\TestRail\TestRail.java
+C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\TestRail\API\APIClient.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Pages\AdminBO\MatchesPage.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\Backoffice\Login.java
 C:\Users\QA02\IdeaProjects\pool_selenium\pool_selenium\src\test\java\Steps\Jira\Login.java

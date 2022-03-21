@@ -22,7 +22,6 @@ import java.util.List;
 
 public class Login {
     private BaseUtil base;
-
     public Login(BaseUtil base) {
         this.base = base;
     }
@@ -215,7 +214,7 @@ public class Login {
         Select casinoRoomDrpDown = new Select(casinoRoomFilter);
         casinoRoomDrpDown.selectByVisibleText(provider);
 
-        CSVReader reader = new CSVReader(new FileReader("D:\\Book.csv"));
+        CSVReader reader = new CSVReader(new FileReader("D:\\MarioImages.csv"));
         String csvCell[];
         String fakePath = "C:\\fakepath\\";
 
