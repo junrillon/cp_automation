@@ -233,7 +233,7 @@ public class Login {
 
             Thread.sleep(3000);
 
-            //Check if modalCloseButton isPresent
+            //Check if modalCloseButton isPresents
             int gameDetails = base.Driver.findElements(By.xpath("//div[@id='modal-loading' and contains(@style,'display: block;')]")).size();
             System.out.println(gameDetails);
             if(gameDetails > 0){
