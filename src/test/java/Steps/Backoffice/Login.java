@@ -231,10 +231,11 @@ public class Login {
             casinoRoomDrpDown.selectByVisibleText(provider); //<-- Select provider in casino room dropdown
             applyFilter.click(); //<-- Click apply filter button
 
-            Thread.sleep(1000);
+            Thread.sleep(3000);
 
             //Check if modalCloseButton isPresent
-            int gameDetails = base.Driver.findElements(By.xpath("//div[@class='modal-dialog modal-sm']//h5[contains(text(),\"Game Details\")]")).size();
+            int gameDetails = base.Driver.findElements(By.xpath("//div[@id='modal-loading' and contains(@style,'display: block;')]")).size();
+            System.out.println(gameDetails);
             if(gameDetails > 0){
                 wait.until(ExpectedConditions.elementToBeClickable(gDetailsCloseButton));
                 page.modalCloseButton.click();

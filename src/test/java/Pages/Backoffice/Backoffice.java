@@ -77,9 +77,9 @@ public class Backoffice {
     @FindBy(how = How.XPATH, using = "//ul[@class='inner show']/li/a/span") //ul[@class='inner show']/li/a/span[@class='game-provider-accordion']
     public WebElement providerInnerSelection;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='modal-dialog modal-sm']//h5[contains(text(), 'Game Details')]")
+    @FindBy(how = How.XPATH, using = "//div[@class='modal-dialog modal-sm']//button[@class='close']")
     public WebElement modalCloseButton;
-    //div[@class='modal-dialog modal-sm']//button[@class='close']
+
 
     @FindBy(how = How.XPATH, using = "//table[@id='gameListTable']") //<-- Game list table
     public WebElement gameListTable;
