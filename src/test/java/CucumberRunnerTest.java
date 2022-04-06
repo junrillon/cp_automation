@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "src/test/java/Features/Jira",
         plugin = {"pretty"},
-        glue = {"Steps"}
+        glue = {"steps"}
 )
 
 public class CucumberRunnerTest {
