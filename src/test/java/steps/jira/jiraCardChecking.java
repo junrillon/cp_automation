@@ -18,11 +18,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class Login extends BaseUtil{
+public class jiraCardChecking extends BaseUtil{
 
     private static BaseUtil base;
-    public Login(BaseUtil base) {
-        Login.base = base;
+    public jiraCardChecking(BaseUtil base) {
+        jiraCardChecking.base = base;
     }
 
 //    public static void main(String[] args){

@@ -32,7 +32,7 @@ public class JiraBot extends TelegramLongPollingBot{
 
     @Override
     public void onUpdateReceived(Update update) {
-        Login asd = new Login(base);
+        jiraCardChecking asd = new jiraCardChecking(base);
         String command = update.getMessage().getText();
         //System.out.println(update.getMessage().getText());
         if(command.equals("/runchecker")){

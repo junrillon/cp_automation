@@ -17,13 +17,13 @@ public class JiraObjects {
     /**
      * Object repository
      */
-    @FindBy(how = How.XPATH, using = "//input[@id='username']")
+    @FindBy(how = How.XPATH, using = ".//input[@id='username']")
     public WebElement username;
 
-    @FindBy(how = How.XPATH, using = "//input[@id='password']")
+    @FindBy(how = How.XPATH, using = ".//input[@id='password']")
     public WebElement password;
 
-    @FindBy(how = How.XPATH, using = "//button[@id='login-submit']")
+    @FindBy(how = How.XPATH, using = ".//button[@id='login-submit']")
     public WebElement loginButton;
 
 
@@ -39,31 +39,31 @@ public class JiraObjects {
         loginButton.click();
     }
 
-    @FindBy(how = How.XPATH, using = "//header[@role='banner']")
+    @FindBy(how = How.XPATH, using = ".//header[@role='banner']")
     public WebElement homeBanner;
 
-    @FindBy(how = How.XPATH, using = "//div[@data-testid='home-page-content']")
+    @FindBy(how = How.XPATH, using = ".//div[@data-testid='home-page-content']")
     public WebElement homePage;
 
-    @FindBy(how = How.XPATH, using = "//span[contains(text(),'Backlog')]")
+    @FindBy(how = How.XPATH, using = ".//span[contains(text(),'Backlog')]")
     public WebElement backlog;
 
-    @FindBy(how = How.XPATH, using = "//div[@id='ghx-detail-view']")
+    @FindBy(how = How.XPATH, using = ".//div[@id='ghx-detail-view']")
     public WebElement cardDetailedView;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='mffpf0-2 bWvVtC']") //<-- details
+    @FindBy(how = How.XPATH, using = ".//div[@class='mffpf0-2 bWvVtC']") //<-- details
     public WebElement cardDetails;
 
-    @FindBy(how = How.XPATH, using = "//div[contains(concat(' ',@class,' '), ' sc-1ddwfnu-3 ') and contains(text(), 'TestRail: Cases')]")
+    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' sc-1ddwfnu-3 ') and contains(text(), 'TestRail: Cases')]")
     public WebElement testCases;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Cases')]")
+    @FindBy(how = How.XPATH, using = ".//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Cases')]")
     public WebElement testCasesBack;
 
-    @FindBy(how = How.XPATH, using = "//div[contains(concat(' ',@class,' '), ' sc-1ddwfnu-3 fXigRG ') and contains(text(), 'TestRail: Runs')]")
+    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' sc-1ddwfnu-3 fXigRG ') and contains(text(), 'TestRail: Runs')]")
     public WebElement testRuns;
 
-    @FindBy(how = How.XPATH, using = "//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Runs')]")
+    @FindBy(how = How.XPATH, using = ".//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Runs')]")
     public WebElement testRunsBack;
 
     @FindBy(how = How.XPATH, using = ".//section[@id='content']/p")
