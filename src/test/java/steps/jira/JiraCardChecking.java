@@ -11,8 +11,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.jiraObjects.JiraObjects;
-import pages.testrailObjects.TestRailObjects;
+import pages.jira.JiraObjects;
+import pages.testrail.TestRailObjects;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -190,7 +190,6 @@ public class JiraCardChecking {
         WebDriverWait wait = new WebDriverWait(driver, 20);
         WebDriverWait longwait = new WebDriverWait(driver, 30);
 
-        String advanceSprint = jiraObjects.advanceSprintXpath;
         String perCardTitleXpath = jiraObjects.perCardTitleXpath;
         String perCardNumberXpath = jiraObjects.perCardNumberXpath;
         String perCardAssignee = jiraObjects.perCardAssigneeXpath;
@@ -247,9 +246,6 @@ public class JiraCardChecking {
                         break;
                     case "jerald":
                         extractedCardTester = "@jerald Manamtam";
-                        break;
-                    case "Mae":
-                        extractedCardTester = "@maaarmas";
                         break;
                     case "Marjorie":
                         extractedCardTester = "@Marj0819";

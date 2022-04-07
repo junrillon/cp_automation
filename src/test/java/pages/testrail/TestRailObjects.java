@@ -1,4 +1,4 @@
-package pages.testrailObjects;
+package pages.testrail;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

@@ -1,7 +1,5 @@
-package pages.jiraObjects;
+package pages.jira;
 
-import engine.Driver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
