@@ -2,7 +2,7 @@ Feature: Jira
 
   Scenario: Jira card checking
     Given I access jira website "https://id.atlassian.com/login"
-    When I logged in on Jira
+    When I login on Jira
       | username                          | password      |
       | junarson.rillon@clickplaycorp.com | Clickplay123! |
     And I select project "B2C"

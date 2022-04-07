@@ -36,7 +36,7 @@ public class JiraCardChecking {
         System.out.println("I accessed jira website.");
     }
 
-    @When("I logged in on Jira")
+    @When("I login on Jira")
     public void iLoginInJira(DataTable credentials) {
         JiraObjects jiraObjects = new JiraObjects(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -280,7 +280,6 @@ public class JiraCardChecking {
                         break;
                     default:
                         extractedCardTester = "None";
-                        System.out.println("no match");
                 }
             } else {
                 extractedCardTester = "None";
@@ -313,18 +312,14 @@ public class JiraCardChecking {
 
             //Switch to iframes (testcases iframe 1 and 2)
             driver.switchTo().frame(jiraObjects.tcIframe1);
-            System.out.println("Switch to iframe1 testcases");
             longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.tcIframe2));
             driver.switchTo().frame(jiraObjects.tcIframe2);
-            System.out.println("Switch to iframe2 testcases");
 
             int testCases = jiraObjects.testCases_status.size();
             if (testCases > 0) {
                 testCases_stats = "None";
-                System.out.println("None");
             } else {
                 testCases_stats = "Already have test cases.";
-                System.out.println("Already have test cases.");
             }
 
             //Switch back to default frame
@@ -337,19 +332,15 @@ public class JiraCardChecking {
 
             //Switch to iframes
             driver.switchTo().frame(jiraObjects.trIframe1);
-            System.out.println("Switch to iframe1 testrun");
             longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.trIframe2));
             driver.switchTo().frame(jiraObjects.trIframe2);
-            System.out.println("Switch to iframe2 testrun");
 
             //wait.until(ExpectedConditions.elementToBeClickable((WebElement) locator.testRuns_status()));
             int testRuns = jiraObjects.testRuns_status.size();
             if (testRuns > 0) {
                 testRuns_stats = "None";
-                System.out.println("TR NONE");
             } else {
                 testRuns_stats = "Already have test runs.";
-                System.out.println("TR HAVE");
             }
 
             driver.switchTo().defaultContent();

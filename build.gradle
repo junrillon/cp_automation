@@ -16,6 +16,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
     testImplementation 'io.cucumber:cucumber-java:7.2.3'
     testImplementation 'io.cucumber:cucumber-junit:7.2.3'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
 }
 
 configurations {
