@@ -67,14 +67,9 @@ public class JiraCardChecking {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //locate for p element that contains {projectName}
-        int projectSize  = driver.findElements(By.xpath(".//p[@class='name' and contains(text(),'"+ projectName +"')]")).size();
-        if(projectSize > 0){
-            WebElement project = driver.findElement(By.xpath(".//p[@class='name' and contains(text(),'"+ projectName +"')]"));
-            wait.until(ExpectedConditions.elementToBeClickable(project));
-            project.click();
-        }
-
-        System.out.println("I select project: "+projectName + ": projectSize: " + projectSize);
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//p[@class='name' and contains(text(),'"+ projectName +"')]")));
+        driver.findElement(By.xpath(".//p[@class='name' and contains(text(),'"+ projectName +"')]")).click();
+        System.out.println("I select project: "+projectName);
 
     }
 
