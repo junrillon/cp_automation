@@ -92,6 +92,7 @@ public class JiraCardChecking {
         JiraObjects jiraObjects = new JiraObjects(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(jiraObjects.advanceSprintXpath)));
         WebElement sprintHeader = driver.findElement(By.xpath(jiraObjects.advanceSprintXpath));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sprintHeader);
 
@@ -126,6 +127,7 @@ public class JiraCardChecking {
 
         //check sprint element inside detailed view then scroll to it
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
+        wait.until(ExpectedConditions.visibilityOf(jiraObjects.sprintDisplayInsideCard));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", jiraObjects.sprintDisplayInsideCard);
 
         //check testcases element inside detailed view then click
@@ -301,9 +303,9 @@ public class JiraCardChecking {
             cardNumber.click();
 
             //check sprint element inside detailed view then scroll to it
-            WebElement sprintInsideDetails = jiraObjects.sprintDisplayInsideCard;
             wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sprintInsideDetails);
+            wait.until(ExpectedConditions.visibilityOf(jiraObjects.sprintDisplayInsideCard));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", jiraObjects.sprintDisplayInsideCard);
 
             //check testcases element inside detailed view then click
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
