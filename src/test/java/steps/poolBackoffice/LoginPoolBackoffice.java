@@ -5,9 +5,11 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.poolBackofficeObjects.DashboardPoolBackofficeObjects;
 import pages.poolBackofficeObjects.LoginPoolBackofficeObjects;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class LoginPoolBackoffice {
 
@@ -38,8 +40,15 @@ public class LoginPoolBackoffice {
 
 
         //Input username and password
-        LoginPoolBackofficeObjects page = new LoginPoolBackofficeObjects(driver);
-        page.LoginAdmin(user, pass);
+        LoginPoolBackofficeObjects pageLogin = new LoginPoolBackofficeObjects(driver);
+        pageLogin.LoginAdmin(user, pass);
+
+        // wait for captcha removal
+        driver.manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
+
+        //Verify if user account is display
+        DashboardPoolBackofficeObjects pageDashboard = new DashboardPoolBackofficeObjects(driver);
+        pageDashboard.userAccountDisplay();
 
 
     }
