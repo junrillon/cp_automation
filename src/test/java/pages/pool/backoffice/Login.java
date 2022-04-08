@@ -1,4 +1,4 @@
-package pages.poolBackofficeObjects;
+package pages.pool.backoffice;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,8 +7,8 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 
 
-public class LoginPoolBackofficeObjects {
-    public LoginPoolBackofficeObjects(WebDriver driver) {
+public class Login {
+    public Login(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 

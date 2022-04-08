@@ -1,4 +1,4 @@
-package pages.poolBackofficeObjects;
+package pages.pool.backoffice;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,8 +7,8 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
-public class MatchesPoolBackofficeObjects {
-    public MatchesPoolBackofficeObjects(WebDriver driver) {
+public class Matches {
+    public Matches(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 

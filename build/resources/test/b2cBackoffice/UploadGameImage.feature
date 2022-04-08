@@ -8,11 +8,11 @@ Feature: Upload Game Image
       | adminjun | P@ssw0rd |
     Then I should access the dashboard
 
-  Scenario: Upload Game Image
-    Given I go to gamelist page
-    When I upload the image per game
-      | provider | fileType | location                           | csvLocation        |
-      | MARIO    | .png     | D:\CP Files\Casino Provider\Mario\ | D:\MarioImages.csv |
+#  Scenario: Upload Game Image
+#    Given I go to gamelist page
+#    When I upload the image per game
+#      | provider | fileType | location                           | csvLocation        |
+#      | MARIO    | .png     | D:\CP Files\Casino Provider\Mario\ | D:\MarioImages.csv |
 #    Then all active games should have an image.
 
         #adminjun, P@ssw0rd shey.admin, Sheyadmin123 #testing upload the image per game

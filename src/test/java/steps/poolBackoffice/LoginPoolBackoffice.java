@@ -5,8 +5,8 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.poolBackofficeObjects.DashboardPoolBackofficeObjects;
-import pages.poolBackofficeObjects.LoginPoolBackofficeObjects;
+import pages.pool.backoffice.Dashboard;
+import pages.pool.backoffice.Login;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +21,7 @@ public class LoginPoolBackoffice {
 
     }
 
-    @Given("i logged in at pool backoffice ([^\"]*)$")
+    @Given("I logged in at pool backoffice ([^\"]*)$")
     public void iLoggedInAtPoolBackoffice(String url, DataTable loginDetails) {
 
 
@@ -40,14 +40,14 @@ public class LoginPoolBackoffice {
 
 
         //Input username and password
-        LoginPoolBackofficeObjects pageLogin = new LoginPoolBackofficeObjects(driver);
+        Login pageLogin = new Login(driver);
         pageLogin.LoginAdmin(user, pass);
 
         // wait for captcha removal
         driver.manage().timeouts().implicitlyWait(90, TimeUnit.SECONDS);
 
         //Verify if user account is display
-        DashboardPoolBackofficeObjects pageDashboard = new DashboardPoolBackofficeObjects(driver);
+        Dashboard pageDashboard = new Dashboard(driver);
         pageDashboard.userAccountDisplay();
 
 

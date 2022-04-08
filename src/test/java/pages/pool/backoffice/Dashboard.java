@@ -1,4 +1,4 @@
-package pages.poolBackofficeObjects;
+package pages.pool.backoffice;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -6,8 +6,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 
-public class DashboardPoolBackofficeObjects {
-    public DashboardPoolBackofficeObjects(WebDriver driver) {
+public class Dashboard {
+    public Dashboard(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
