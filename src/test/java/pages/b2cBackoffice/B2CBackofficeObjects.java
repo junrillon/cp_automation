@@ -60,9 +60,13 @@ public class B2CBackofficeObjects {
     @FindBy(how = How.XPATH, using = ".//div[@class='modal-dialog modal-sm']//button[@class='close']")
     public WebElement modalCloseButton;
 
-    @FindBy(how = How.XPATH, using = ".//div[@id='modal-loading' and contains(@style,'display: block;')]")
+    @FindBy(how = How.XPATH, using = ".//div[@id='modal-loading' and contains(@style,'display: block;')]//div[@class=\"modal-content\"]")
     public List<WebElement> gDetailsModal;
 
+    @FindBy(how = How.XPATH, using = ".//div[@id='modal-loading' and contains(@style,'display: block;')]//div[@class=\"modal-content\"]")
+    public WebElement WE_gDetailsModal;
+
+    //.//div[@id='modal-loading' and contains(@style,'display: block;')]
 
     @FindBy(how = How.ID, using = "gameListTable") //<-- Game list table
     public WebElement gameListTable;

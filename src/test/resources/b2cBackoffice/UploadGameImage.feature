@@ -2,7 +2,7 @@
 Feature: Upload Game Image
 
   Background:
-    Given I access b2c backoffice https://dev-admin.clickplaysports.net
+    Given I access b2c backoffice https://staging-admin.clickplaysports.net
     When I login on b2c backoffice
       | username | password  |
       | adminjun | P@ssw0rd |

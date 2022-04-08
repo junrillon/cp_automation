@@ -45,7 +45,7 @@ public class UploadGameImage {
         }
 
     @When("I upload the image per game")
-    public void iUploadImagePerGame(DataTable FileDetails) throws IOException, CsvValidationException {
+    public void iUploadImagePerGame(DataTable FileDetails) throws IOException, CsvValidationException, InterruptedException {
         B2CBackofficeObjects page = new B2CBackofficeObjects(driver);
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
@@ -81,10 +81,13 @@ public class UploadGameImage {
             page.applyFilterButton.click(); //<-- Click apply filter button
 
             //Check if modalCloseButton isPresents
+            wait.until(ExpectedConditions.visibilityOf(page.WE_gDetailsModal));
             int gameDetails = page.gDetailsModal.size();
             if(gameDetails > 0){
                 wait.until(ExpectedConditions.elementToBeClickable(page.modalCloseButton));
                 page.modalCloseButton.click();
+            } else {
+                System.out.println("Game Details Modal not closed.");
             }
 
             //Check if gameImage isPresent
