@@ -100,7 +100,7 @@ public class UploadGameImage {
                 Assert.fail("Game image object is not present.");
             }
 
-            //Wait for Upload Image Modal
+            //
             wait.until(ExpectedConditions.visibilityOf(page.uploadImageForm));
 
             //Check if gameImage isPresent
