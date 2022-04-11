@@ -29,7 +29,7 @@ public class Login {
 
 
     @Given("I logged in on frontend page ([^\"]*)$")
-    public void iLoggedInOnFrontendPageHttpsStagingGgplayCo(String url, DataTable loginDetails) {
+    public void iLoggedInOnFrontendPageHttpsStagingGgplayCo(String url, DataTable loginDetails) throws InterruptedException {
 
 
         //Open browser plus url
@@ -69,36 +69,15 @@ public class Login {
         pageLogin.Login(user, pass);
 
         // wait for captcha removal
+        pageLogin.getAndInputCaptcha();
+        Thread.sleep(1000);
         pageLogin.clickLoginBtn();
 
-        //Verify if user account is display
-        Dashboard pageDashboard = new Dashboard(driver);
-        pageDashboard.userAccountDisplay();
+
+
 
 
     }
 
-    @Given("I click the pool header button")
-    public void iClickThePoolHeaderButton() {
-    }
 
-    @When("I click the available sports")
-    public void iClickTheAvailableSports() {
-    }
-
-    @And("I select team and input bet amount")
-    public void iSelectTeamAndInputBetAmount() {
-    }
-
-    @And("I click place bet button")
-    public void iClickPlaceBetButton() {
-    }
-
-    @And("I confirm my place bet")
-    public void iConfirmMyPlaceBet() {
-    }
-
-    @Then("place bet success")
-    public void placeBetSuccess() {
-    }
 }

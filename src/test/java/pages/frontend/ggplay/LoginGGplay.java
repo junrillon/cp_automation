@@ -5,6 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class LoginGGplay {
     public LoginGGplay(WebDriver driver) {
@@ -31,9 +32,13 @@ public class LoginGGplay {
     @FindBy(how = How.ID, using =  "ct")
     public WebElement getCaptcha;
 
-    // login button
-    @FindBy(how = How.CSS, using =  "div.login-footer.d-flex.justify-content-center > button.btn.btn-primary")
+    // login button .//button[@type='submit' and contains(text()
+    @FindBy(how = How.XPATH, using =  ".//div[@class='login-page']//button[@class=\"btn btn-primary\" and contains(text(),\"Login\")]")
     public WebElement loginBtn;
+
+    // login button
+    @FindBy(how = How.XPATH, using =  ".//div")
+    public WebElement logiHeadernBtn;
 
 
     /**
