@@ -1,4 +1,4 @@
-package steps.poolBackoffice;
+package steps.pool.backoffice;
 
 import database.DatabaseConnection;
 import engine.Driver;
@@ -31,13 +31,13 @@ public class SettleMatch {
     String cMatchStatus;
     String winningTeam;
 
-    @And("I click the games header dropdown")
-    public void clickTheGamesHeaderDropdown() {
-        //Click pool header button
-        Dashboard page = new Dashboard(driver);
-        page.clickGamesDropdown();
-
-    }
+//    @And("I click the games header dropdown")
+//    public void clickTheGamesHeaderDropdown() {
+//        //Click pool header button
+//        Dashboard page = new Dashboard(driver);
+//        page.clickGamesDropdown();
+//
+//    }
 
 //    String matchID;
 //    @And("get match id from DB")
