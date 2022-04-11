@@ -23,7 +23,7 @@ public class B2CBackofficeObjects {
     @FindBy(how = How.ID, using = "password")
     public WebElement passwordField;
 
-    @FindBy(how = How.XPATH, using = ".//button[@type='submit' and contains(text(), 'Login')]")
+    @FindBy(how = How.XPATH, using = ".//button[@type='submit' and contains(text(), 'steps.pool.frontend.Login')]")
     public WebElement loginButton;
 
     @FindBy(how = How.XPATH, using = ".//span[@class='username btn btn-default']")

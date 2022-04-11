@@ -1,4 +1,4 @@
-package steps.poolBackoffice;
+package steps.pool.backoffice;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
@@ -6,16 +6,15 @@ import io.cucumber.java.en.Given;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.pool.backoffice.Dashboard;
-import pages.pool.backoffice.Login;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class LoginPoolBackoffice {
+public class Login {
 
     private WebDriver driver;
 
-    public LoginPoolBackoffice(Driver driver) {
+    public Login(Driver driver) {
         this.driver = driver.get();
 
 
@@ -40,7 +39,7 @@ public class LoginPoolBackoffice {
 
 
         //Input username and password
-        Login pageLogin = new Login(driver);
+        pages.pool.backoffice.Login pageLogin = new pages.pool.backoffice.Login(driver);
         pageLogin.LoginAdmin(user, pass);
 
         // wait for captcha removal
@@ -52,6 +51,5 @@ public class LoginPoolBackoffice {
 
 
     }
-
 
 }
