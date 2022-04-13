@@ -36,9 +36,15 @@ public class LoginGGplay {
     @FindBy(how = How.XPATH, using =  ".//div[@class='login-page']//button[@class=\"btn btn-primary\" and contains(text(),\"Login\")]")
     public WebElement loginBtn;
 
-    // login button
-    @FindBy(how = How.XPATH, using =  ".//div")
-    public WebElement logiHeadernBtn;
+
+    // banner exit button
+    @FindBy(how = How.XPATH, using =  ".//i[@class='fa fa-times-circle fa-2x']")
+    public WebElement bannerExitBtn;
+
+    // continue button
+    @FindBy(how = How.XPATH, using =  ".//i[@class=\"fa fa-check\"]")
+    public WebElement ContinueSession;
+
 
 
     /**

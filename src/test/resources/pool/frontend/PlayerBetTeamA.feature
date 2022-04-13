@@ -10,14 +10,15 @@ Feature: Frontend betting player 1
 
   Scenario: Player bet on team A
     Given I click the pool header button
-    When I click the available sports
-    And I select team and input bet amount
-        #Selection 1 = TEAM A, 2 = TEAM B, 3 = DRAW
+    When I click the test sports
+    And I select team A and input bet amount
+     #Selection 1 = TEAM A, 2 = TEAM B, 3 = DRAW
       | Selection | Amount |
-      | 1         | 10     |
+      | 1         | 100    |
     And I click place bet button
     And I confirm my place bet
     Then place bet success
+    And settlement is correct
 
 
 

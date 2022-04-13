@@ -68,6 +68,9 @@ public class MatchDetails {
     @FindBy(how = How.XPATH, using = "//div[@class='swal2-header']//h2[@class='swal2-title']")
     public WebElement modalContent;
 
+    @FindBy(how = How.ID, using = "col-match-status")
+    public WebElement MatchStatusTxt;
+
     //Match Open Button
     public void matchOpenButton(){
         matchOpenButton.isDisplayed();
@@ -77,6 +80,11 @@ public class MatchDetails {
         confirmOpenMatch.click();
         openMatchSuccessMessage.isDisplayed();
         openMatchSuccessModalOkButton.click();
+    }
+
+    public String GetmatchStatus(){
+        String matchStatus = MatchStatusTxt.getText();return matchStatus;
+
     }
 
     //Match Open Confirmation

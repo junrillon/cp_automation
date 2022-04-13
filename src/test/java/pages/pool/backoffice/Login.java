@@ -29,6 +29,11 @@ public class Login {
     public WebElement txtCaptcha;
 
 
+    // captcha txt
+    @FindBy(how = How.ID, using =  "loginBtn")
+    public WebElement signIn;
+
+
 
     /**
      * Object action
@@ -39,7 +44,7 @@ public class Login {
     {
         txtUserNameAdmin.sendKeys(usernameAdmin);
         txtPasswordAdmin.sendKeys(passwordAdmin);
-        txtCaptcha.click();
+        signIn.click();
     }
 
 

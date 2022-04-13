@@ -1,21 +1,16 @@
-package steps.pool.frontend;
+package steps.frontend.ggplay;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.pool.backoffice.Dashboard;
 import pages.frontend.ggplay.LoginGGplay;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Login {
 
@@ -24,13 +19,10 @@ public class Login {
     public Login(Driver driver) {
         this.driver = driver.get();
 
-
     }
-
 
     @Given("I logged in on frontend page ([^\"]*)$")
     public void iLoggedInOnFrontendPageHttpsStagingGgplayCo(String url, DataTable loginDetails) throws InterruptedException {
-
 
         //Open browser plus url
         driver.get(url);
@@ -39,11 +31,12 @@ public class Login {
         try {
 
             //Click Banner Exit button
-            WebDriverWait wait = new WebDriverWait(driver, 2);
-            WebElement bannerExitBtn;
+            WebDriverWait wait = new WebDriverWait(driver, 20);
+            LoginGGplay pageLogin = new  LoginGGplay(driver);
+
             //  base.Driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-            bannerExitBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//i[@class = 'fa fa-times-circle fa-2x']")));
-            bannerExitBtn.click();
+            wait.until(ExpectedConditions.elementToBeClickable(pageLogin.bannerExitBtn));
+            pageLogin.bannerExitBtn.click();
 
         }
 
@@ -52,10 +45,8 @@ public class Login {
             return;
         }
 
-
         WebDriverWait wait = new WebDriverWait(driver, 20);
         List<List<String>> data = loginDetails.asLists(String.class);
-
 
         //Get data table from feature file
         String user = data.get(1).get(0); String pass = data.get(1).get(1);
@@ -70,10 +61,22 @@ public class Login {
 
         // wait for captcha removal
         pageLogin.getAndInputCaptcha();
-        Thread.sleep(1000);
+        Thread.onSpinWait();
         pageLogin.clickLoginBtn();
 
 
+        try {
+
+            //Click continue
+            wait.until(ExpectedConditions.elementToBeClickable(pageLogin.ContinueSession));
+            pageLogin.ContinueSession.click();
+
+        }
+
+        catch (org.openqa.selenium.TimeoutException e)
+        {
+            return;
+        }
 
 
 

@@ -55,7 +55,7 @@ public class B2CLogin {
         if(currentPage.contains("Dashboard")){
             System.out.println("You're in Dashboard.");
 
-        } else if(currentPage.contains("steps.pool.frontend.Login")){
+        } else if(currentPage.contains("steps.frontend.ggplay.Login")){
             System.out.println("You're still not logged in.");
 
         } else {
