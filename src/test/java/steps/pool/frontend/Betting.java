@@ -150,8 +150,8 @@ public class Betting {
         //driver.switchTo().defaultContent();
         Dashboard page = new Dashboard(driver);
 
-        var actualBalanceAfterBet1 = page.walletBalance();
-        var actualBalanceAfterBetTrim = actualBalanceAfterBet1.replace(",","");
+        var actualBalanceAfterBetTrim = page.walletBalance().replace(",","");;
+        //var actualBalanceAfterBetTrim = actualBalanceAfterBet1.replace(",","");
         var actualBalanceAfterBet = Double.valueOf(actualBalanceAfterBetTrim);
         var actualBalanceAfterBetFinal = new BigDecimal(balanceAfterbet).setScale(2);
         System.out.println("Actual balance After Bet: " + actualBalanceAfterBet);
@@ -160,9 +160,4 @@ public class Betting {
         Assert.assertEquals(balanceAfterbetFinal, actualBalanceAfterBetFinal);
     }
 
-    @And("settlement is correct")
-    public void settlementIsCorrect() throws InterruptedException {
-
-        Thread.sleep(90000);
-    }
 }

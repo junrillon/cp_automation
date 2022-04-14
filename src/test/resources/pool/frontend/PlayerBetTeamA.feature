@@ -18,7 +18,6 @@ Feature: Frontend betting player 1
     And I click place bet button
     And I confirm my place bet
     Then place bet success
-    And settlement is correct
 
 
 
