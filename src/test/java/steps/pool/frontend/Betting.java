@@ -8,20 +8,18 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
+import pages.frontend.ggplay.LoginGGplay;
 import pages.pool.frontend.MatchDetails;
-
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 public class Betting {
 
@@ -61,6 +59,54 @@ public class Betting {
         //Click the test sports
         wait.until(ExpectedConditions.elementToBeClickable(page.TestSport));
         page.clickTestSport();
+
+
+
+        String noMatchAvailable;
+          //  do{
+        WebDriverWait tryWait = new WebDriverWait(driver, 5);
+        try {
+
+            tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
+                noMatchAvailable = String.valueOf(page.noLivegames.isDisplayed());
+
+            }
+
+                catch (org.openqa.selenium.TimeoutException e)
+                {
+                    return;
+                }
+
+                System.out.println("no match prompt " + noMatchAvailable);
+
+        if(noMatchAvailable == "true")
+            {
+                do {
+                    tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
+                    page.noLivegames.click();
+
+                    tryWait.until(ExpectedConditions.elementToBeClickable(page.TestSport));
+                    page.clickTestSport();
+
+
+                    try {
+                        tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
+                        noMatchAvailable = String.valueOf(page.noLivegames.isDisplayed());
+
+                        }
+
+                        catch (org.openqa.selenium.TimeoutException e)
+                            {
+                                return;
+                            }
+
+                    Thread.sleep(5000);
+
+                    } while(noMatchAvailable == "true");
+            }
+
+
+
     }
 
     String BetAmount; int BetSelection;
@@ -217,39 +263,42 @@ public class Betting {
         System.out.println("match winner : " + matchWinner);
 
 
-      /*  if (BetSelection == Integer.parseInt(matchWinner)){
-
-            System.out.println("I WIN!!!");
-
-        }else{
-
-            System.out.println("I LOSE!!!");
-        }*/
 
         //settlement wallet and  winner checking
 
 
         // if odds is canceled
-        if(Integer.parseInt(oddsTeamA) < 1.01);
+        if(Double.valueOf(oddsTeamA) <= 0.01)
             {
                 System.out.println("match is cancel return bet amount and cancelled match is displayed");
                // if match winner is draw
-            }  if(Integer.parseInt(matchWinner) == 3);
-                        {
+            }
+                if(Integer.parseInt(matchWinner) == 3)
+                    {
                             // if bet selection is draw
                             if(BetSelection == 3)
                                 {
                                   System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
-                                }
+                                } else
+                                        {
+                                            // draw win return bets for team a and b
+                                         System.out.println("return bet amount and draw winner is displayed");
+
+                                         }
                            // if match winner is same as bet selection
-                        }  if(BetSelection == Integer.parseInt(matchWinner));
+                    }
+                                if(BetSelection == Integer.parseInt(matchWinner))
                                     {
                                         System.out.println("you WIN! compute odds x bet amount and winner is displayed");
-                                    }
+                                    } else
+
+                                        {
+                                            System.out.println("you LOSE!");
+                                        }
 
 
 
 
         }
     }
-}
+

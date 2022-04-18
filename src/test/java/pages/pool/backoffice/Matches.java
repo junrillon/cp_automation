@@ -61,14 +61,12 @@ public class Matches {
     //click create match button
     public void clickCreateMatch()
     {
-        createMatchBtn.isDisplayed();
         createMatchBtn.click();
     }
 
     //select sport
     public void selectSports(String selectedSports)
     {
-        sportsDropdown.isDisplayed();
         sportsDropdown.sendKeys(selectedSports);
     }
 
@@ -99,7 +97,6 @@ public class Matches {
 
     //search field is displayed
     public void clickSearchField(){
-        searchField.isDisplayed();
         searchField.click();
     }
 
