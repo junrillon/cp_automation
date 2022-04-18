@@ -39,6 +39,16 @@ public class MatchDetails {
     @FindBy(how = How.XPATH, using =  "//*[@id=\"confirmBetTeamA\"]/div/div/div[2]/div[3]/button")
     public WebElement confirmPlacebet;
 
+    // odds
+    @FindBy(how = How.XPATH, using = ".//div[@id='placeBetTeamA']/preceding-sibling::div[@class='bet-details small']/div/div[2]")
+    public WebElement teamAOdds;
+
+    @FindBy(how = How.XPATH, using = ".//div[@id='placeBetTeamB']/preceding-sibling::div[@class='bet-details small']/div/div[2]")
+    public WebElement teamBOdds;
+
+    @FindBy(how = How.XPATH, using = ".//div[@id='placeBetDraw']/preceding-sibling::div[@class='bet-details small']/child::*/div[2][@class]")
+    public WebElement drawOdds;
+
 
 
 
@@ -62,6 +72,15 @@ public class MatchDetails {
 
     //click pool header button
     public void clickConfirmPlaceBetBtn() {confirmPlacebet.click();}
+
+    //get odds team a
+    public String getTeamAOdds() {String teamA = teamAOdds.getText();return teamA;}
+
+    //get odds team b
+    public String getTeamBOdds() {String teamB = teamBOdds.getText();return teamB;}
+
+    //get odds draw
+    public String getDrawOdds() {String draw = drawOdds.getText();return draw;}
 
 
 }

@@ -1,10 +1,10 @@
 
 Feature: Frontend betting player 1
 
-  Background:
+  Background: player login
   Given I logged in on frontend page https://staging.ggplay.co/login/
 
-   # user login  credentials
+   # user login  credentials (player balance must > 1,000)
     | Username   | Password |
     | gcme4151t1 | 123123   |
 
@@ -17,7 +17,9 @@ Feature: Frontend betting player 1
       | 1         | 100    |
     And I click place bet button
     And I confirm my place bet
-    Then place bet success
+    And place bet success
+    And I wait for the match to settle
+    Then settlement is correct
 
 
 
