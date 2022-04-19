@@ -49,6 +49,12 @@ public class MatchDetails {
     @FindBy(how = How.XPATH, using = ".//div[@id='placeBetDraw']/preceding-sibling::div[@class='bet-details small']/child::*/div[2][@class]")
     public WebElement drawOdds;
 
+    @FindBy(how = How.XPATH, using = ".//span[@class='badge badge-primary rounded-pill pending-bets-total']")
+    public WebElement betSlipCount;
+
+    @FindBy(how = How.XPATH, using = ".//div[@class='small font-weight-bold' and contains(text()[3],' Cancelled')]")
+    public WebElement cancelledBroadcast;
+
 
 
 

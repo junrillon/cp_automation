@@ -9,11 +9,9 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
-import pages.frontend.ggplay.LoginGGplay;
 import pages.pool.frontend.MatchDetails;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -45,12 +43,15 @@ public class Betting {
 
 
         Dashboard page = new Dashboard(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
 
 
         //get wallet balance display before betting
         wait.until(ExpectedConditions.visibilityOfAllElements(page.walletBalance));
-        balanceBeforeBet = page.walletBalance();
+        String balanceBeforeBetOrigin = page.walletBalance();
+         balanceBeforeBet = balanceBeforeBetOrigin.replace(",","");
+        //balanceBeforeBet = new BigDecimal(trimbalB4Bet).setScale(2);
+
 
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePool));
@@ -67,15 +68,15 @@ public class Betting {
         WebDriverWait tryWait = new WebDriverWait(driver, 5);
         try {
 
-            tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
+                tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
                 noMatchAvailable = String.valueOf(page.noLivegames.isDisplayed());
 
             }
 
                 catch (org.openqa.selenium.TimeoutException e)
-                {
-                    return;
-                }
+                    {
+                        return;
+                    }
 
                 System.out.println("no match prompt " + noMatchAvailable);
 
@@ -121,7 +122,7 @@ public class Betting {
         BetAmount = data.get(1).get(1);
 
         //wait for odds to be clickable
-        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(page.selectionA));
 
 
@@ -155,7 +156,7 @@ public class Betting {
     public void iClickPlaceBetButton() {
 
         MatchDetails page = new MatchDetails(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(page.clickSubmitBtn));
         page.clickPlaceBetBtn();
     }
@@ -164,11 +165,12 @@ public class Betting {
     public void iConfirmMyPlaceBet() {
 
         MatchDetails page = new MatchDetails(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebet));
         page.clickConfirmPlaceBetBtn();
     }
 
+    BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbetFinal;
     @And("place bet success")
     public void placeBetSuccess() throws InterruptedException {
 
@@ -176,8 +178,9 @@ public class Betting {
         driver.switchTo().defaultContent();
 
         // Remove comma on balance b4 bet for math operation
-        var trimbalB4Bet = balanceBeforeBet.replace(",","");
-        var BB = Double.valueOf(trimbalB4Bet);
+       // var trimbalB4Bet = balanceBeforeBet.replace(",","");
+       // var BB = Double.valueOf(balanceBeforeBet); balanceBeforeBet
+        var BB = Double.valueOf(balanceBeforeBet);
         var BA = Double.valueOf(BetAmount);
 
         //balance b4 bet minus bet amount
@@ -186,19 +189,19 @@ public class Betting {
         System.out.println("Expected New BA: " + BA );
 
         //set 2 decimal for expected new balance
-        var balanceAfterbetFinal = new BigDecimal(balanceAfterbet).setScale(2);
+        balanceAfterbetFinal = new BigDecimal(balanceAfterbet).setScale(2);
         System.out.println("Expected New balance: " + balanceAfterbetFinal);
 
 
         //delay for checking the wallet broadcast
-        Thread.sleep(7000);
+        Thread.sleep(5000);
 
         Dashboard page = new Dashboard(driver);
 
         var actualBalanceAfterBetTrim = page.walletBalance().replace(",","");;
         //var actualBalanceAfterBetTrim = actualBalanceAfterBet1.replace(",","");
         var actualBalanceAfterBet = Double.valueOf(actualBalanceAfterBetTrim);
-        var actualBalanceAfterBetFinal = new BigDecimal(actualBalanceAfterBet).setScale(2);
+         actualBalanceAfterBetFinal =  new BigDecimal(actualBalanceAfterBet).setScale(2);
         System.out.println("Actual balance After Bet: " + actualBalanceAfterBetFinal);
 
         //assert if bet amount is deducted after betting
@@ -220,7 +223,7 @@ public class Betting {
 
             System.out.println("match settlement status is: " + settlementStatus);
 
-            Thread.sleep(7000);
+            Thread.sleep(5000);
 
             }while(settlementStatus != 2);
 
@@ -232,10 +235,8 @@ public class Betting {
     @Then("settlement is correct")
     public void settlementIsCorrect() throws SQLException {
 
-
-
         // verify if iframe is available and switch to that iframe
-        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
         Dashboard page2 = new Dashboard(driver);
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
 
@@ -264,39 +265,50 @@ public class Betting {
 
 
 
-        //settlement wallet and  winner checking
+        //settlement wallet and  winner checking   BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbetFinal;
 
 
         // if odds is canceled
-        if(Double.valueOf(oddsTeamA) <= 0.01)
-            {
-                System.out.println("match is cancel return bet amount and cancelled match is displayed");
-               // if match winner is draw
-            }
-                if(Integer.parseInt(matchWinner) == 3)
+        if(Double.valueOf(oddsTeamA) <= 0.01) {
+            System.out.println("match is cancel return bet amount and cancelled match is displayed");
+
+            wait.until(ExpectedConditions.visibilityOfAllElements( page.cancelledBroadcast));
+
+            //switch back to dashboard content
+            driver.switchTo().defaultContent();
+            var actualBalanceAfterCancelTrim = page2.walletBalance().replace(",","");;
+            var actualBalanceAfterCancel = Double.valueOf(actualBalanceAfterCancelTrim);
+            var actualBalanceAfterCancelFinal =  new BigDecimal(actualBalanceAfterCancel).setScale(2);
+
+            var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet).setScale(2);
+
+            Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterCancelFinal);
+
+            System.out.println("balance b4  betting " + balanceBeforeBetFinal);
+
+            System.out.println("balance after  cancel " + actualBalanceAfterCancelFinal);
+
+        } else if(Integer.parseInt(matchWinner) == 3)
                     {
                             // if bet selection is draw
-                            if(BetSelection == 3)
-                                {
+                        if(BetSelection == 3)
+                             {
                                   System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
-                                } else
+                             } else
                                         {
                                             // draw win return bets for team a and b
                                          System.out.println("return bet amount and draw winner is displayed");
 
                                          }
                            // if match winner is same as bet selection
+                        if(BetSelection == Integer.parseInt(matchWinner))
+                            {
+                                System.out.println("you WIN! compute odds x bet amount and winner is displayed");
+                            } else
+                                {
+                                    System.out.println("you LOSE!");
+                                }
                     }
-                                if(BetSelection == Integer.parseInt(matchWinner))
-                                    {
-                                        System.out.println("you WIN! compute odds x bet amount and winner is displayed");
-                                    } else
-
-                                        {
-                                            System.out.println("you LOSE!");
-                                        }
-
-
 
 
         }

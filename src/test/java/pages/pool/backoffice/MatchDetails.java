@@ -145,6 +145,8 @@ public class MatchDetails {
     @FindBy(how = How.XPATH, using = "//div[@class='swal2-actions']/button[contains(text(), 'Ok')]")
     public WebElement matchSelectWinnerSuccessModalOkButton;
 
+
+
     public void selectMatchWinner(){
         matchSelectWinnerButton.isDisplayed();
         matchSelectWinnerButton.isEnabled();
