@@ -244,9 +244,15 @@ public class SettleMatch {
 
     @And("I view match details")
     public void viewMatchDetails() {
-        ///view match details
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        //view match details
         Matches page = new Matches(driver);
-        page.selectFromActionDrpDown();
+        wait.until(ExpectedConditions.visibilityOfAllElements(page.actionDropDown));
+
+        Select actionDrpDown = new Select(page.actionDropDown);
+        actionDrpDown.selectByVisibleText("View Match Details");
     }
 
     @And("I check the current settlement status and match status")

@@ -29,15 +29,39 @@ public class MatchDetails {
 
     //input amount //*[@id="placeBetTeamA"]/input
     @FindBy(how = How.XPATH, using =  ".//input[@placeholder='Enter Amount']")
-    public WebElement amountInput;
+    public WebElement amountInputTeamA;
 
-    //plce bet button
+    //input amount //*[@id="placeBetTeamb"]/input
+    @FindBy(how = How.XPATH, using =  ".//input[@placeholder='Enter Amount']")
+    public WebElement amountInputTeamB;
+
+    //input amount //*[@id="placeBetTeamdraw"]/input
+    @FindBy(how = How.XPATH, using =  ".//div[@id='placeBetDraw']//input[@placeholder='Enter Amount']")
+    public WebElement amountInputDraw;
+
+    //plce bet button //*[@id="placeBetDraw"]/div/div/div[3]/button
     @FindBy(how = How.XPATH, using =  ".//button[@class='btn btn-primary btn-block' and contains(text(),' Place Bet')]")
-    public WebElement clickSubmitBtn;
+    public WebElement clickSubmitBtnTeamA;
 
-    //confirm button //*[@id="confirmBetTeamA"]/div/div/div[2]/div[3]/button
-    @FindBy(how = How.XPATH, using =  "//*[@id=\"confirmBetTeamA\"]/div/div/div[2]/div[3]/button")
-    public WebElement confirmPlacebet;
+    //plce bet button //*[@id="placeBetDraw"]/div/div/div[3]/button
+    @FindBy(how = How.XPATH, using =  ".//button[@class='btn btn-primary btn-block' and contains(text(),' Place Bet')]")
+    public WebElement clickSubmitBtnTeamB;
+
+    //plce bet button //*[@id="placeBetDraw"]/div/div/div[3]/button
+    @FindBy(how = How.XPATH, using =  "//*[@id='placeBetDraw']//button[@class='btn btn-primary btn-block' and contains(text(),' Place Bet')]")
+    public WebElement clickSubmitBtnDraw;
+
+    //confirm button //*[@id="confirmBetTeamA"]/div/div/div[2]/div[3]/button //*[@id="confirmBetTeamA"]/div/div/div[2]/div[3]/button/text()
+    @FindBy(how = How.XPATH, using =  "//*[@id='confirmBetTeamA']//button[@class='btn btn-primary btn-block']")
+    public WebElement confirmPlacebetTeamA;
+
+    //confirm button //*[@id="confirmBetTeamA"]/div/div/div[2]/div[3]/button //*[@id="confirmBetTeamA"]/div/div/div[2]/div[3]/button/text()
+    @FindBy(how = How.XPATH, using =  "//*[@id='confirmBetTeamB']//button[@class='btn btn-primary btn-block']")
+    public WebElement confirmPlacebetTeamB;
+
+    //confirm button //*[@id="confirmBetTeamA"]/div/div/div[2]/div[3]/button //*[@id="confirmBetTeamA"]/div/div/div[2]/div[3]/button/text()
+    @FindBy(how = How.XPATH, using =  "//*[@id='confirmBetDraw']//button[@class='btn btn-primary btn-block']")
+    public WebElement confirmPlacebetDraw;
 
     // odds
     @FindBy(how = How.XPATH, using = ".//div[@id='placeBetTeamA']/preceding-sibling::div[@class='bet-details small']/div/div[2]")
@@ -56,37 +80,6 @@ public class MatchDetails {
     public WebElement cancelledBroadcast;
 
 
-
-
-    /**
-     * Object action
-     */
-    //Click TEAM A
-    public void ClickTeamA() {selectionA.click();}
-
-    //click TEAM B
-    public void ClickTeamB() {selectionB.click();}
-
-    //click pool header button
-    public void ClickDraw() {selectionDraw.click();}
-
-    //click pool header button
-    public void inputAmount(String matchCountInput) { amountInput.sendKeys(matchCountInput);}
-
-    //click pool header button
-    public void clickPlaceBetBtn() {clickSubmitBtn.click();}
-
-    //click pool header button
-    public void clickConfirmPlaceBetBtn() {confirmPlacebet.click();}
-
-    //get odds team a
-    public String getTeamAOdds() {String teamA = teamAOdds.getText();return teamA;}
-
-    //get odds team b
-    public String getTeamBOdds() {String teamB = teamBOdds.getText();return teamB;}
-
-    //get odds draw
-    public String getDrawOdds() {String draw = drawOdds.getText();return draw;}
 
 
 }

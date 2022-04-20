@@ -129,13 +129,54 @@ public class Betting {
         //betting selection
         switch(BetSelection) {
             case 1:
-                page.ClickTeamA();
+
+                page.selectionA.click();
+
+                //imput bet amount
+                wait.until(ExpectedConditions.visibilityOf(page.amountInputTeamA));
+                driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                page.amountInputTeamA.sendKeys(BetAmount);
+
+                //place bet submit
+                wait.until(ExpectedConditions.elementToBeClickable(page.clickSubmitBtnTeamA));
+                page.clickSubmitBtnTeamA.click();
+
+                //confirm place bet
+                wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebetTeamA));
+                page.confirmPlacebetTeamA.click();
+
                 break;
             case 2:
-                page.ClickDraw();
+
+                page.selectionB.click();
+
+                //imput bet amount
+                wait.until(ExpectedConditions.visibilityOf(page.amountInputTeamB));
+                driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                page.amountInputTeamB.sendKeys(BetAmount);
+
+                //confirm place bet
+                wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebetTeamB));
+                page.confirmPlacebetTeamB.click();
+
                 break;
             case 3:
-                page.ClickTeamB();
+
+                page.selectionDraw.click();
+
+                //imput bet amount
+                wait.until(ExpectedConditions.visibilityOf(page.amountInputDraw));
+                driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+                page.amountInputDraw.sendKeys(BetAmount);
+
+                //place bet submit
+                wait.until(ExpectedConditions.elementToBeClickable(page.clickSubmitBtnDraw));
+                page.clickSubmitBtnDraw.click();
+
+                //confirm place bet
+                wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebetDraw));
+                page.confirmPlacebetDraw.click();
+
                 break;
             default:
                 System.out.println("WRONG SELECTION FORMAT!");
@@ -144,31 +185,9 @@ public class Betting {
 
 
 
-        //imput bet amount
-        wait.until(ExpectedConditions.visibilityOf(page.amountInput));
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        page.inputAmount(BetAmount);
-
 
     }
 
-    @And("I click place bet button")
-    public void iClickPlaceBetButton() {
-
-        MatchDetails page = new MatchDetails(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(page.clickSubmitBtn));
-        page.clickPlaceBetBtn();
-    }
-
-    @And("I confirm my place bet")
-    public void iConfirmMyPlaceBet() {
-
-        MatchDetails page = new MatchDetails(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebet));
-        page.clickConfirmPlaceBetBtn();
-    }
 
     BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbetFinal;
     @And("place bet success")
@@ -242,9 +261,10 @@ public class Betting {
 
         MatchDetails page = new MatchDetails(driver);
 
-        String oddsTeamA = page.getTeamAOdds();
-        String oddsTeamB =page.getTeamBOdds();
-        String oddsDraw = page.getDrawOdds();
+        String oddsTeamA = page.teamAOdds.getText();
+        //String oddsTeamA = page.getTeamAOdds();
+        String oddsTeamB = page.teamBOdds.getText();
+        String oddsDraw = page.drawOdds.getText();
 
 
         System.out.println("team selection bet is : " + BetSelection);
@@ -272,21 +292,26 @@ public class Betting {
         if(Double.valueOf(oddsTeamA) <= 0.01) {
             System.out.println("match is cancel return bet amount and cancelled match is displayed");
 
-            wait.until(ExpectedConditions.visibilityOfAllElements( page.cancelledBroadcast));
+            wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
 
             //switch back to dashboard content
             driver.switchTo().defaultContent();
-            var actualBalanceAfterCancelTrim = page2.walletBalance().replace(",","");;
+
+
+            var actualBalanceAfterCancelTrim = page2.walletBalance().replace(",","");
             var actualBalanceAfterCancel = Double.valueOf(actualBalanceAfterCancelTrim);
             var actualBalanceAfterCancelFinal =  new BigDecimal(actualBalanceAfterCancel).setScale(2);
 
-            var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet).setScale(2);
 
-            Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterCancelFinal);
+            var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet).setScale(2);
 
             System.out.println("balance b4  betting " + balanceBeforeBetFinal);
 
             System.out.println("balance after  cancel " + actualBalanceAfterCancelFinal);
+
+            Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterCancelFinal);
+
+
 
         } else if(Integer.parseInt(matchWinner) == 3)
                     {
@@ -294,6 +319,7 @@ public class Betting {
                         if(BetSelection == 3)
                              {
                                   System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
+
                              } else
                                         {
                                             // draw win return bets for team a and b
