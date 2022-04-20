@@ -263,7 +263,7 @@ public class Betting {
 
         String oddsTeamA = page.teamAOdds.getText();
         String oddsTeamB = page.teamBOdds.getText();
-        String oddsDraw = page.drawOdds.getText();
+        Double oddsDraw = Double.valueOf(page.drawOdds.getText());
 
 
         System.out.println("team selection bet is : " + BetSelection);
@@ -282,35 +282,38 @@ public class Betting {
 
         System.out.println("match winner : " + matchWinner);
 
+        driver.switchTo().defaultContent(); //switch back to dashboard content
+        var actualBalanceAfterSettlementTrim = page2.walletBalance().replace(",",""); //get new wallet balance after settlement
+        var actualBalanceAfterSettlement = Double.valueOf(actualBalanceAfterSettlementTrim);
+        var actualBalanceAfterSettlementFinal =  new BigDecimal(actualBalanceAfterSettlement).setScale(2);
+
+        var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet).setScale(2);
 
 
-        //settlement wallet and  winner checking   BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbetFinal;
 
-
-        // if odds is canceled
-        if(Double.valueOf(oddsTeamA) <= 0.01){
+        if(Double.valueOf(oddsTeamA) <= 0.01)  {   // if odds is canceled
 
             System.out.println("match is cancel return bet amount and cancelled match is displayed");
-            wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
-
-            //switch back to dashboard content
-            driver.switchTo().defaultContent();
-
-            var actualBalanceAfterCancelTrim = page2.walletBalance().replace(",","");
-            var actualBalanceAfterCancel = Double.valueOf(actualBalanceAfterCancelTrim);
-            var actualBalanceAfterCancelFinal =  new BigDecimal(actualBalanceAfterCancel).setScale(2);
-
-            var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet).setScale(2);
-
             System.out.println("balance b4  betting " + balanceBeforeBetFinal);
-            System.out.println("balance after  cancel " + actualBalanceAfterCancelFinal);
-            Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterCancelFinal);
+            System.out.println("balance after  cancel " + actualBalanceAfterSettlementFinal);
+            Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterSettlementFinal);
+
+            wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
+            wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
 
         }
             else if(Integer.parseInt(matchWinner) == 3) {
 
                 if(BetSelection == 3) {
                     System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
+                    var drawWin = oddsDraw * Double.valueOf(BetAmount); //win amount from draw odds
+                    System.out.println("draw win = " + drawWin);
+                    var expectedBalance = Double.valueOf(String.valueOf(balanceAfterbetFinal)) + drawWin;
+                    Assert.assertEquals(BigDecimal.valueOf(expectedBalance).setScale(2), actualBalanceAfterSettlementFinal);
+
+                    wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
+                    wait.until(ExpectedConditions.visibilityOfAllElements(page.drawWinBroadcast));
+
                 }else {
                     System.out.println("return bet amount and draw winner is displayed");
                 }

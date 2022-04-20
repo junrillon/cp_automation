@@ -79,7 +79,8 @@ public class MatchDetails {
     @FindBy(how = How.XPATH, using = ".//div[@class='small font-weight-bold' and contains(text()[3],' Cancelled')]")
     public WebElement cancelledBroadcast;
 
-
+    @FindBy(how = How.XPATH, using = ".//div[@class='small font-weight-bold' and contains(text()[3],' Winner:')]")
+    public WebElement drawWinBroadcast;
 
 
 }
