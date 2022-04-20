@@ -40,8 +40,7 @@ public class Login {
      */
 
     // input username and password
-    public void LoginAdmin(String usernameAdmin,String passwordAdmin)
-    {
+    public void LoginAdmin(String usernameAdmin,String passwordAdmin) {
         txtUserNameAdmin.sendKeys(usernameAdmin);
         txtPasswordAdmin.sendKeys(passwordAdmin);
         signIn.click();

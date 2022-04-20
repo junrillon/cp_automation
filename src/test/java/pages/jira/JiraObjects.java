@@ -96,15 +96,4 @@ public class JiraObjects {
     public String perCardTesterXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[3]/span";
     public String perCardStatusXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[1]/span";
 
-//    public List<WebElement> testCases_status(){
-//        return driver.findElements(By.xpath("//p[contains(text(),'No test cases in TestRail are linked to this issue.')]"));
-//
-//    }
-//
-//    public List<WebElement> testRuns_status(){
-//        return driver.findElements(By.xpath("//p[contains(text(),'No test runs in TestRail are linked to this issue.')]"));
-//
-//    }
-
-    //.//div[@class='ghx-backlog-container ghx-sprint-planned js-sprint-container ghx-open ui-droppable'][1]
 }

@@ -28,9 +28,9 @@ public class ClearTestData {
         try{
 
             //check p match if null
-        String p_match = "SELECT id FROM `stage_pool_betting`.`p_match` WHERE sport_id = 83 AND league_id = 191";
-       ResultSet p_match_bet_selection = DatabaseConnection.execDBQuery(p_match);
-         pmatchValue = p_match_bet_selection.getString("id");
+            String p_match = "SELECT id FROM `stage_pool_betting`.`p_match` WHERE sport_id = 83 AND league_id = 191";
+            ResultSet p_match_bet_selection = DatabaseConnection.execDBQuery(p_match);
+            pmatchValue = p_match_bet_selection.getString("id");
 
 
         }catch (Exception e) {

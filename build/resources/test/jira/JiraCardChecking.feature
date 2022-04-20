@@ -1,3 +1,4 @@
+@jirachecker
 Feature: Jira
 
   Scenario: Jira card checking
@@ -12,7 +13,7 @@ Feature: Jira
       | username                  | password     |
       | qa.testrail@clickplay.org | Clickplay123 |
     And I check cards in future sprint
-    And I send results in telegram
+    Then I send results in telegram
       | token                                          | chatId     |
       | 5266678102:AAFdXQxtUGGhRn14vWmXISQMZh2dK3dwkRg | -643306593 |
 

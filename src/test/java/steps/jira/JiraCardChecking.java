@@ -4,6 +4,7 @@ import engine.Driver;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -183,7 +184,7 @@ public class JiraCardChecking {
 
     }
 
-    @And("I check cards in future sprint")
+    @When("I check cards in future sprint")
     public void iCheckCardsInFutureSprint() {
         JiraObjects jiraObjects = new JiraObjects(driver);
 
@@ -245,7 +246,7 @@ public class JiraCardChecking {
                         extractedCardTester = "@jeanpaola";
                         break;
                     case "jerald":
-                        extractedCardTester = "@jerald Manamtam";
+                        extractedCardTester = "@jeraldmm";
                         break;
                     case "Marjorie":
                         extractedCardTester = "@Marj0819";
@@ -364,7 +365,7 @@ public class JiraCardChecking {
         }
     }
 
-    @And("I send results in telegram")
+    @Then("I send results in telegram")
     public void iSendResultsInTelegram(DataTable telegramCreds) {
         List<List<String>> data = telegramCreds.asLists(String.class);
         String token = data.get(1).get(0);

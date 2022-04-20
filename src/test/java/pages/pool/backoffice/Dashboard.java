@@ -39,8 +39,7 @@ public class Dashboard {
     public void clickGamesDropdown() {gamesDropdown.click();}
 
     //click matches
-    public void clickMatches()
-    {
+    public void clickMatches(){
         matches.isDisplayed();
         matches.click();
     }

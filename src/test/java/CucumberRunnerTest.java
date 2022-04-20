@@ -5,7 +5,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(monochrome = true,
         plugin = {"pretty"},
-        features = "src/test/resources/jira",
+        features = "src/test/resources/jira/",
         glue = "steps"
 )
 

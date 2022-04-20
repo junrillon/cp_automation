@@ -46,12 +46,10 @@ public class Matches {
 
     //Action button
     @FindBy(how = How.CSS, using =  "select.custom-select.match-action")
-    public WebElement actionDropDown;
+    public WebElement actionDrpdown;
 
     @FindBy(how = How.XPATH, using = "//input[@type='search']")
     public WebElement searchField;
-
-
 
 
     /**
@@ -61,12 +59,14 @@ public class Matches {
     //click create match button
     public void clickCreateMatch()
     {
+        createMatchBtn.isDisplayed();
         createMatchBtn.click();
     }
 
     //select sport
     public void selectSports(String selectedSports)
     {
+        sportsDropdown.isDisplayed();
         sportsDropdown.sendKeys(selectedSports);
     }
 
@@ -88,14 +88,15 @@ public class Matches {
     public void clickSubmitBtn() {submitBtn.click();}
 
     //matches is display
-/*    public void selectFromActionDrpDown() {
+    public void selectFromActionDrpDown(){
         actionDrpdown.isDisplayed();
         Select actionDrpDown = new Select(actionDrpdown);
         actionDrpDown.selectByVisibleText("View Match Details");
-    }*/
+    }
 
     //search field is displayed
     public void clickSearchField(){
+        searchField.isDisplayed();
         searchField.click();
     }
 
