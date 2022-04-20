@@ -262,7 +262,6 @@ public class Betting {
         MatchDetails page = new MatchDetails(driver);
 
         String oddsTeamA = page.teamAOdds.getText();
-        //String oddsTeamA = page.getTeamAOdds();
         String oddsTeamB = page.teamBOdds.getText();
         String oddsDraw = page.drawOdds.getText();
 
@@ -289,54 +288,47 @@ public class Betting {
 
 
         // if odds is canceled
-        if(Double.valueOf(oddsTeamA) <= 0.01) {
-            System.out.println("match is cancel return bet amount and cancelled match is displayed");
+        if(Double.valueOf(oddsTeamA) <= 0.01){
 
+            System.out.println("match is cancel return bet amount and cancelled match is displayed");
             wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
 
             //switch back to dashboard content
             driver.switchTo().defaultContent();
 
-
             var actualBalanceAfterCancelTrim = page2.walletBalance().replace(",","");
             var actualBalanceAfterCancel = Double.valueOf(actualBalanceAfterCancelTrim);
             var actualBalanceAfterCancelFinal =  new BigDecimal(actualBalanceAfterCancel).setScale(2);
 
-
             var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet).setScale(2);
 
             System.out.println("balance b4  betting " + balanceBeforeBetFinal);
-
             System.out.println("balance after  cancel " + actualBalanceAfterCancelFinal);
-
             Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterCancelFinal);
 
+        }
+            else if(Integer.parseInt(matchWinner) == 3) {
 
+                if(BetSelection == 3) {
+                    System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
+                }else {
+                    System.out.println("return bet amount and draw winner is displayed");
+                }
 
-        } else if(Integer.parseInt(matchWinner) == 3)
-                    {
-                            // if bet selection is draw
-                        if(BetSelection == 3)
-                             {
-                                  System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
+            } else if(BetSelection == Integer.parseInt(matchWinner) && Integer.parseInt(matchWinner) != 3){
+                // draw win return bets for team a and b
 
-                             } else
-                                        {
-                                            // draw win return bets for team a and b
-                                         System.out.println("return bet amount and draw winner is displayed");
+                // if match winner is same as bet selection
+                //if(BetSelection == Integer.parseInt(matchWinner)){
+                System.out.println("you WIN! compute odds x bet amount and winner is displayed");
+                //}
+                //   else{
 
-                                         }
-                           // if match winner is same as bet selection
-                        if(BetSelection == Integer.parseInt(matchWinner))
-                            {
-                                System.out.println("you WIN! compute odds x bet amount and winner is displayed");
-                            } else
-                                {
-                                    System.out.println("you LOSE!");
-                                }
-                    }
-
-
+                //}
+            }
+            else {
+                System.out.println("you LOSE!");
+            }
         }
     }
 

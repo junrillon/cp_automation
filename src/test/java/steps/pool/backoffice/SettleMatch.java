@@ -249,7 +249,7 @@ public class SettleMatch {
 
         //view match details
         Matches page = new Matches(driver);
-        wait.until(ExpectedConditions.visibilityOfAllElements(page.actionDropDown));
+        wait.until(ExpectedConditions.elementToBeClickable(page.actionDropDown));
 
         Select actionDrpDown = new Select(page.actionDropDown);
         actionDrpDown.selectByVisibleText("View Match Details");
