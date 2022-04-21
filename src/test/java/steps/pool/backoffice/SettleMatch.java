@@ -249,6 +249,7 @@ public class SettleMatch {
 
         //view match details
         Matches page = new Matches(driver);
+        Thread.onSpinWait();
         wait.until(ExpectedConditions.elementToBeClickable(page.actionDropDown));
 
         Select actionDrpDown = new Select(page.actionDropDown);

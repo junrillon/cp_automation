@@ -12,7 +12,7 @@ public class Driver {
     public void start() {
         driver = new GoogleChromeDriver();
         driver.manage().deleteAllCookies();
-        //driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+      //  driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
 
     public WebDriver get() {

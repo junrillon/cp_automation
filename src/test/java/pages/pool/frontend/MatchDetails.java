@@ -32,7 +32,7 @@ public class MatchDetails {
     public WebElement amountInputTeamA;
 
     //input amount //*[@id="placeBetTeamb"]/input
-    @FindBy(how = How.XPATH, using =  ".//input[@placeholder='Enter Amount']")
+    @FindBy(how = How.XPATH, using =  ".//div[@id='placeBetTeamB']//input[@placeholder='Enter Amount']")
     public WebElement amountInputTeamB;
 
     //input amount //*[@id="placeBetTeamdraw"]/input
@@ -44,7 +44,7 @@ public class MatchDetails {
     public WebElement clickSubmitBtnTeamA;
 
     //plce bet button //*[@id="placeBetDraw"]/div/div/div[3]/button
-    @FindBy(how = How.XPATH, using =  ".//button[@class='btn btn-primary btn-block' and contains(text(),' Place Bet')]")
+    @FindBy(how = How.XPATH, using =  "//*[@id='placeBetTeamB']//button[@class='btn btn-primary btn-block' and contains(text(),' Place Bet')]")
     public WebElement clickSubmitBtnTeamB;
 
     //plce bet button //*[@id="placeBetDraw"]/div/div/div[3]/button
@@ -80,7 +80,7 @@ public class MatchDetails {
     public WebElement cancelledBroadcast;
 
     @FindBy(how = How.XPATH, using = ".//div[@class='small font-weight-bold' and contains(text()[3],' Winner:')]")
-    public WebElement drawWinBroadcast;
+    public WebElement winBroadcast;
 
 
 }
