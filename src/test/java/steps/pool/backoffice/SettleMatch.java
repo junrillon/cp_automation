@@ -32,43 +32,6 @@ public class SettleMatch {
     public static String winningTeam;
     public static By email;
 
-//    @And("I click the games header dropdown")
-//    public void clickTheGamesHeaderDropdown() {
-//        //Click pool header button
-//        Dashboard page = new Dashboard(driver);
-//        page.clickGamesDropdown();
-//
-//    }
-
-//    String matchID;
-//    @And("get match id from DB")
-//    public void getMatchIdFromDB() throws SQLException {
-//
-//        // generate date today
-//        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//        Date referenceDate = new Date();
-//        Calendar c = Calendar.getInstance();
-//        c.setTime(referenceDate);
-//        Date currentDatePlusOne = c.getTime();
-//        String dateToday = dateFormat.format(currentDatePlusOne);
-//        //System.out.println(dateToday);
-//
-//        //cm1
-//        DataBaseConnection db = new DataBaseConnection();
-//        String sql = "SELECT * FROM p_match WHERE sport_id = 2 AND league_id = 2 order by match_date desc ";
-//        ResultSet cm1st = db.execDBQuery(sql);
-//        matchID = cm1st.getString("id");
-//        System.out.println(matchID);
-//
-//    }
-
-//    @And("redirect to match details")
-//    public void redirectToMatchDetails() throws InterruptedException {
-//        Thread.sleep(1000);
-//        String mdUrl = "https://admin.cpp555.com/match-details/" + matchID;
-//        driver.navigate().to(mdUrl);
-//    }
-
     @When("I navigate to matches page")
     public void clickMatches() {
         Dashboard page = new Dashboard(driver);
@@ -89,7 +52,7 @@ public class SettleMatch {
         String selectedSports = data.get(1).get(0);
 
         //Wait
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
         wait.until(ExpectedConditions.visibilityOf(page.searchField));
         wait.until(ExpectedConditions.elementToBeClickable(page.searchField));
         page.searchField.click();
@@ -179,47 +142,6 @@ public class SettleMatch {
                     }
                 }
 
-//                //bpc_bet_slip ======================
-//                String bpcBetSlip = "SELECT count(id) FROM `bpc_bet_slip` WHERE match_id = "+ matchID;
-//                ResultSet bpc = DatabaseConnection.execDBQuery(bpcBetSlip);
-//                String bpcResult = bpc.getString("count(id)");
-//                System.out.println("*bpc_bet_slip: " + bpcResult);
-//
-//                String bpBC = "SELECT c.label, COUNT(a.bet_selection) AS BetCount " +
-//                        "FROM `bpc_bet_slip` a " +
-//                        "LEFT JOIN `p_sport` b " +
-//                        "ON a.sport_id = b.id " +
-//                        "LEFT JOIN `p_bet_selection` c " +
-//                        "ON a.bet_selection = c.result_key " +
-//                        "AND a.sport_id = c.sport_id " +
-//                        "WHERE a.match_id = "+matchID+" " +
-//                        "GROUP BY a.bet_selection " +
-//                        "ORDER BY a.bet_selection ASC";
-//
-//                ResultSet rs2 = DatabaseConnection.execDBQuery(bpBC);
-//                if(!rs2.next()) {
-//                    System.out.println("--- No bets available.");
-//                } else {
-//                    rs2.absolute(1); //<-- row 1
-//                    String bpb1 = rs2.getString(1);
-//                    String bpbc1 = rs2.getString(2);
-//                    rs2.absolute(2); //<-- row 2
-//                    String bpb2 = rs2.getString(1);
-//                    String bpbc2 = rs2.getString(2);
-//                    rs2.absolute(3); //<-- row 3
-//                    String bpb3 = rs2.getString(1);
-//                    String bpbc3 = rs2.getString(2);
-//
-//                    bpSelection1 = Integer.parseInt(bpbc1);
-//                    bpSelection2 = Integer.parseInt(bpbc2);
-//                    bpSelection3 = Integer.parseInt(bpbc3);
-//                    //esdev == Display the count per bet selection
-//                    System.out.println("    " + bpb1 + ": " + bpbc1 + "" +
-//                            "\n " + bpb2 + ": " + bpbc2 + "" +
-//                            "\n " + bpb3 + ": " + bpbc3 + "");
-//                }
-                //total bet count of es and bpc
-                //totalBets = Integer.parseInt(esdevResult) + Integer.parseInt(bpcResult);.
                 totalBets = Integer.parseInt(ggstgResult);
                 System.out.println("Bet(s) found in match " + matchID + ": " + totalBets + "\n_______________");
                 Thread.sleep(5000);
@@ -247,6 +169,8 @@ public class SettleMatch {
 
         //Wait
         WebDriverWait wait = new WebDriverWait(driver, 20) ;
+
+        driver.navigate().refresh();
         wait.until(ExpectedConditions.visibilityOf(page.actionDrpdown));
 
         //Select option with text = "View Match Details"
@@ -303,35 +227,12 @@ public class SettleMatch {
         if (cMatchStatus.equalsIgnoreCase("NOT STARTED")) {
             Assert.assertEquals("NOT STARTED", cMatchStatus);
             //Open Match
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.matchOpenButton));
             wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchOpenButton));
-            matchDetails.matchOpenButton.click();
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.openMatchConfirmationModal));
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.confirmOpenMatch));
-            wait.until(ExpectedConditions.elementToBeClickable(matchDetails.confirmOpenMatch));
-            matchDetails.confirmOpenMatch.click();
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.openMatchSuccessMessage));
-            wait.until(ExpectedConditions.elementToBeClickable(matchDetails.openMatchSuccessModalOkButton));
-            matchDetails.openMatchSuccessModalOkButton.click();
+            matchDetails.matchOpenButton();
 
             //Close Match
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.matchCloseButton));
             wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchCloseButton));
-            matchDetails.matchCloseButton.click();
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.closeMatchConfirmationModal));
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.confirmCloseMatch));
-            wait.until(ExpectedConditions.elementToBeClickable(matchDetails.confirmCloseMatch));
-            matchDetails.confirmCloseMatch.click();
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.closeMatchSuccessModal));
-            wait.until(ExpectedConditions.elementToBeClickable(matchDetails.closeMatchSuccessModalOkButton));
-            matchDetails.closeMatchSuccessModalOkButton.click();
-
+            matchDetails.matchCloseButton();
             System.out.println("The match is now closed.");
 
 
@@ -339,19 +240,8 @@ public class SettleMatch {
             Assert.assertEquals("OPEN", cMatchStatus);
 
             //Close Match
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.matchCloseButton));
             wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchCloseButton));
-            matchDetails.matchCloseButton.click();
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.closeMatchConfirmationModal));
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.confirmCloseMatch));
-            wait.until(ExpectedConditions.elementToBeClickable(matchDetails.confirmCloseMatch));
-            matchDetails.confirmCloseMatch.click();
-
-            wait.until(ExpectedConditions.visibilityOf(matchDetails.closeMatchSuccessModal));
-            wait.until(ExpectedConditions.elementToBeClickable(matchDetails.closeMatchSuccessModalOkButton));
-            matchDetails.closeMatchSuccessModalOkButton.click();
+            matchDetails.matchCloseButton();
             System.out.println("The match is now closed.");
 
         } else {
@@ -363,31 +253,21 @@ public class SettleMatch {
     @When("I select winner")
     public void selectWinner() {
         MatchDetails matchDetails = new MatchDetails(driver);
+
         //Wait
         WebDriverWait wait = new WebDriverWait(driver, 20) ;
-
-        matchDetails.selectMatchWinner(); //<-Open select match winner modal
-
-        //Confirm match winner selection
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.matchSelectWinnerButton));
         wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchSelectWinnerButton));
-        matchDetails.matchSelectWinnerButton.click();
-
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.matchSelectWinnerModal));
-
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.matchSelectWinnerDropdown));
-        wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchSelectWinnerDropdown));
-        matchDetails.matchSelectWinnerDropdown.click();
-        //---Confirm match winner selection
+        matchDetails.selectMatchWinner(); //<-Open select match winner modal
 
         WebElement mySelectElm = matchDetails.matchSelectWinnerDropdown;
 
         Select mySelect= new Select(mySelectElm);
         List<String> betSelections = new ArrayList<>();
         List<WebElement> options = mySelect.getOptions();
-        for (WebElement option : options) {
-            betSelections.add(option.getText());
-        }
+
+            for (WebElement option : options) {
+                betSelections.add(option.getText());
+            }
 
         betSelections.remove(0); //<-Remove the first index which is "Select Winner"
         Random r = new Random(); //<-Select Random Text/Index in a List<String>
@@ -403,43 +283,22 @@ public class SettleMatch {
         Assert.assertNotEquals("Select Winner", winningTeam);
 
         //Confirm match winner selection
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.matchSelectWinnerSubmitButton));
         wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchSelectWinnerSubmitButton));
-        matchDetails.matchSelectWinnerSubmitButton.click();
-
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.matchSelectWinnerModalConfirmation));
-
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.matchSelectWinnerSubmitButton2));
-        wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchSelectWinnerSubmitButton2));
-        matchDetails.matchSelectWinnerSubmitButton2.click();
-
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.matchSelectWinnerSuccessMessage));
-        wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchSelectWinnerSuccessModalOkButton));
-        matchDetails.matchSelectWinnerSuccessModalOkButton.click();
+        matchDetails.confirmMatchWinner();
 
     }
 
     @Then("I settle match")
-    public void settleMatch() {
+    public void settleMatch() throws InterruptedException {
         MatchDetails matchDetails = new MatchDetails(driver);
         //Wait
         WebDriverWait wait = new WebDriverWait(driver, 20) ;
 
         //Click settle button
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.settleMatchButton));
         wait.until(ExpectedConditions.elementToBeClickable(matchDetails.settleMatchButton));
-        matchDetails.settleMatchButton.click();
+        matchDetails.settleMatchButton();
 
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.settleMatchConfirmationMessage));
-
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.settleMatchConfirmationYesButton));
-        wait.until(ExpectedConditions.elementToBeClickable(matchDetails.settleMatchConfirmationYesButton));
-        matchDetails.settleMatchConfirmationYesButton.click();
-
-        wait.until(ExpectedConditions.visibilityOf(matchDetails.settleMatchSuccessMessage));
-        wait.until(ExpectedConditions.elementToBeClickable(matchDetails.settleMatchSuccessModalOkButton));
-        matchDetails.settleMatchSuccessModalOkButton.click();
-
+        //refresh page
         driver.navigate().refresh();
 
         //Wait for match details table
@@ -447,7 +306,7 @@ public class SettleMatch {
 
         //Variables for the match details
         String selectedWinner = winningTeam;
-        String currentSettleStatus = matchDetails.matchSettleStatusColumn.getText();
+        //String currentSettleStatus = matchDetails.matchSettleStatusColumn.getText();
         String currentWinningTeam = matchDetails.matchWinnerColumn.getText();
         String currentMatchStatus = matchDetails.matchStatusColumn.getText();
 
@@ -461,7 +320,9 @@ public class SettleMatch {
         Assert.assertEquals("CLOSE", currentMatchStatus);
         System.out.println("Expected Match Status: CLOSE | Actual Match Status: " + currentWinningTeam);
 
+        Thread.sleep(5000);
         //Wait until current settlement status to be present in settlement status column
+        String currentSettleStatus = matchDetails.matchSettleStatusColumn.getText();
         wait.until(ExpectedConditions.textToBePresentInElement(matchDetails.matchSettleStatusColumn, "Settled"));
         Assert.assertEquals("Settled", currentSettleStatus);
         System.out.println("Expected Settlement Status: Settled | Actual Settlement Status: " + currentSettleStatus);

@@ -1,6 +1,6 @@
 # new feature
 # Tags: optional
-
+@regression
 Feature: A description
 
   Background: Pool login

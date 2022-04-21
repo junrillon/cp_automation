@@ -1,4 +1,3 @@
-@jirachecker
 Feature: Jira
 
   Scenario: Jira card checking

@@ -4,35 +4,65 @@ apply plugin: 'java'
 group 'org.automation'
 version '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    implementation group: 'commons-io', name: 'commons-io', version: '2.0.1'
-    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
-    implementation group: 'org.json', name: 'json', version: '20160810'
-    implementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.7.0'
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'io.cucumber:cucumber-java:7.2.3'
-    testImplementation 'io.cucumber:cucumber-junit:7.2.3'
-    implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
-}
-
 configurations {
     cucumberRuntime {
         extendsFrom testImplementation
     }
 }
 
-task jirachecker() {
-    dependsOn assemble, testClasses
-    doLast {
-        javaexec {
-            main = "io.cucumber.core.cli.Main"
-            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-            args = ['--plugin', 'pretty', '--glue', 'cp_automation.definations', 'src/test/resources/jira']
-        }
-    }
+repositories {
+    mavenCentral()
 }
+
+dependencies {
+    implementation 'org.testng:testng:7.5'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.0.1'
+    implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
+    implementation group: 'org.json', name: 'json', version: '20160810'
+    implementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.7.0'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.8.2'
+
+    testImplementation 'io.cucumber:cucumber-java:7.2.3'
+    testImplementation 'io.cucumber:cucumber-junit:7.2.3'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
+    testImplementation 'io.github.bonigarcia:selenium-jupiter:4.1.0'
+
+}
+
+test {
+    systemProperty "cucumber.options", System.getProperty("cucumber.options")
+}
+
+task jirachecker(type: JavaExec) {
+    dependsOn assemble, testClasses
+    mainClass = "steps.CucumberLauncher"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--dir0', 'src/test/resources/jira'
+    ]
+
+}
+
+task cucumber(type: JavaExec) {
+    dependsOn assemble, testClasses
+    mainClass = "steps.CucumberLauncher"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--tags', '@regression',
+            '--dir0', 'src/test/resources/pool/backoffice',
+            '--dir1', 'src/test/resources/pool/frontend/SingleBetTeamA.feature',
+            '--dir2', 'src/test/resources/pool/frontend/SingleBetTeamB.feature'
+    ]
+}
+

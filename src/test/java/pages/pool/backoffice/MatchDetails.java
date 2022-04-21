@@ -158,14 +158,6 @@ public class MatchDetails {
 //    @CacheLookup
 //    public WebElement matchSelectWinner;
 
-    public void selectMatchWinner(){
-        matchSelectWinnerButton.isDisplayed();
-        matchSelectWinnerButton.isEnabled();
-        matchSelectWinnerButton.click();
-        matchSelectWinnerModal.isDisplayed();
-        matchSelectWinnerDropdown.click();
-    }
-
     @FindBy(how = How.XPATH, using = ".//button[@id='match-settle-btn']")
     @CacheLookup
     public WebElement settleMatchButton;
@@ -187,6 +179,56 @@ public class MatchDetails {
     public WebElement settleMatchSuccessModalOkButton;
 
     public String selectWinningTeam = ".//select[@id='winner']//option[contains(text(),'"+winningTeam+"')]";
+
+    //Match Open Button
+    public void matchOpenButton(){
+        matchOpenButton.isDisplayed();
+        matchOpenButton.isEnabled();
+        matchOpenButton.click();
+        openMatchConfirmationModal.isDisplayed();
+        confirmOpenMatch.click();
+        openMatchSuccessMessage.isDisplayed();
+        openMatchSuccessModalOkButton.click();
+    }
+
+    //Match Close Button
+    public void matchCloseButton(){
+        matchCloseButton.isDisplayed();
+        matchCloseButton.isEnabled();
+        matchCloseButton.click();
+        closeMatchConfirmationModal.isDisplayed();
+        confirmCloseMatch.click();
+        closeMatchSuccessModal.isDisplayed();
+        closeMatchSuccessModalOkButton.click();
+    }
+
+    //Select match winner
+    public void selectMatchWinner(){
+        matchSelectWinnerButton.isDisplayed();
+        matchSelectWinnerButton.isEnabled();
+        matchSelectWinnerButton.click();
+        matchSelectWinnerModal.isDisplayed();
+        matchSelectWinnerDropdown.click();
+    }
+
+    public void confirmMatchWinner(){
+        matchSelectWinnerSubmitButton.isDisplayed();
+        matchSelectWinnerSubmitButton.click();
+        matchSelectWinnerModalConfirmation.isDisplayed();
+        matchSelectWinnerSubmitButton2.click();
+        matchSelectWinnerSuccessMessage.isDisplayed();
+        matchSelectWinnerSuccessModalOkButton.click();
+    }
+
+    public void settleMatchButton(){
+        settleMatchButton.isDisplayed();
+        settleMatchButton.isEnabled();
+        settleMatchButton.click();
+        settleMatchConfirmationMessage.isDisplayed();
+        settleMatchConfirmationYesButton.click();
+        settleMatchSuccessMessage.isDisplayed();
+        settleMatchSuccessModalOkButton.click();
+    }
 
 }
 

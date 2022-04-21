@@ -1,4 +1,4 @@
-
+@regression
 Feature: Settle Match
 
   Background: Pool login
@@ -18,8 +18,8 @@ Feature: Settle Match
     And I verify if has match
     And I view match details
     And I verify if has bets
-      | sport_id | league_id| totalBetCount | betSelection1 | betSelection2 | betSelection3 | selectionCount |
-      | 83       | 191      | 8             | 6             | 6             | 6             | 2              |
+      | sport_id | league_id| totalBetCount | betSelection1 | betSelection2 | betSelection3 |
+      | 83       | 191      | 2             | 0             | 0             | 0             |
         And I check the current settlement status and match status
         And I close the match
         And I select winner
