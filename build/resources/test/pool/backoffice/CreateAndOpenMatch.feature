@@ -11,8 +11,6 @@ Feature: A description
       | Username | Password    |
       | andre    | @Clickplay1 |
 
-
-
   Scenario: Create and open match on test league
     Given I click the games header dropdown
     When I click matches

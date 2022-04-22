@@ -58,38 +58,6 @@ public class Dashboard {
     @FindBy(how = How.XPATH, using =  ".//button[@class='MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary']")
     public WebElement noLivegames;
 
-  //
-
-
-    /**
-     * Object action
-     */
-
-
-    //User wallet is display
-    public String walletBalance() {
-         String wallet = walletBalance.getText();return wallet;
-    }
-
-    //User account is display
-    public String walletBalanceUpdate() {
-        String wallet = walletBalance.getText();return wallet;
-    }
-
-    //click continue button
-    public void clickContinueBtn() {alertContinueBtn.click();}
-
-    //click pool header button
-    public void clickEsportsBtn() {EsportsHeaderBtn.click();}
-
-    //click pool header button
-    public void selectGameTxtDisplay() {selectGameTxt.isDisplayed();selectGameTxt.click();}
-
-    //click pool header button
-    public void clickTestSport() {
-
-
-
-        TestSport.click();}
 
 }
+

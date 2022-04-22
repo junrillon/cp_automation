@@ -27,10 +27,12 @@ public class Betting {
         this.driver = driver.get();
     }
 
+
+    StringBuffer reportRsult = new StringBuffer();
     @Given("I click the pool header button")
     public void iClickThePoolHeaderButton() {
         Dashboard page = new Dashboard(driver);  //Click pool header button
-        page.clickEsportsBtn();
+        page.EsportsHeaderBtn.click();
     }
 
     String balanceBeforeBet;
@@ -39,11 +41,11 @@ public class Betting {
         Dashboard page = new Dashboard(driver);
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfAllElements(page.walletBalance)); //get wallet balance display before betting
-        String balanceBeforeBetOrigin = page.walletBalance();
+        String balanceBeforeBetOrigin = page.walletBalance.getText();
          balanceBeforeBet = balanceBeforeBetOrigin.replace(",","");
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePool)); // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.elementToBeClickable(page.TestSport)); //Click the test sports
-        page.clickTestSport();
+        page.TestSport.click();
         String noMatchAvailable;
         WebDriverWait tryWait = new WebDriverWait(driver, 5);
         try {
@@ -58,7 +60,7 @@ public class Betting {
                     tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
                     page.noLivegames.click();
                     tryWait.until(ExpectedConditions.elementToBeClickable(page.TestSport));
-                    page.clickTestSport();
+                    page.TestSport.click();
                     try {
                         tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
                         noMatchAvailable = String.valueOf(page.noLivegames.isDisplayed());
@@ -115,7 +117,10 @@ public class Betting {
             default:
                 System.out.println("WRONG SELECTION FORMAT!");
                 break;
+
+
         }
+        wait.until(ExpectedConditions.visibilityOfAllElements(page.betSlipCount)); //betslip count is display after betting
     }
 
     BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbetFinal;
@@ -132,14 +137,11 @@ public class Betting {
         Thread.sleep(5000); //delay for checking the wallet broadcast
 
         Dashboard page = new Dashboard(driver);
-        MatchDetails page2 = new MatchDetails(driver);
-        var actualBalanceAfterBetTrim = page.walletBalance().replace(",","");;
+        var actualBalanceAfterBetTrim = page.walletBalance.getText().replace(",","");;
         var actualBalanceAfterBet = Double.valueOf(actualBalanceAfterBetTrim);
         actualBalanceAfterBetFinal =  new BigDecimal(actualBalanceAfterBet).setScale(2);
         System.out.println("Actual balance After Bet: " + actualBalanceAfterBetFinal);
         Assert.assertEquals(balanceAfterbetFinal, actualBalanceAfterBetFinal);
-       // WebDriverWait wait = new WebDriverWait(driver, 10);
-        //wait.until(ExpectedConditions.visibilityOfAllElements(page2.betSlipCount));
 
     }
 
@@ -174,7 +176,7 @@ public class Betting {
         String matchWinner = resultValue.getString("team_winner");
         System.out.println("match winner : " + matchWinner);
         driver.switchTo().defaultContent(); //switch back to dashboard content
-        var actualBalanceAfterSettlementTrim = page2.walletBalance().replace(",",""); //get new wallet balance after settlement
+        var actualBalanceAfterSettlementTrim = page2.walletBalance.getText().replace(",",""); //get new wallet balance after settlement
         var actualBalanceAfterSettlement = Double.valueOf(actualBalanceAfterSettlementTrim);
         var actualBalanceAfterSettlementFinal =  new BigDecimal(actualBalanceAfterSettlement).setScale(2);
         var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet).setScale(2);
@@ -236,6 +238,24 @@ public class Betting {
                 wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                 wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
             }
+
+
+
+      /*  try {
+            URL url = new URL("https://api.telegram.org/bot5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg/sendMessage?chat_id=-1001766036425&text=bull testing");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int status = connection.getResponseCode();
+            System.out.println(status + ": " + url);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }*/
+
         }
     }
 

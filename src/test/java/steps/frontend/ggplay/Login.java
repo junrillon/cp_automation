@@ -22,11 +22,10 @@ public class Login {
     }
 
     @Given("I logged in on frontend page ([^\"]*)$")
-    public void iLoggedInOnFrontendPageHttpsStagingGgplayCo(String url, DataTable loginDetails) throws InterruptedException {
+    public void iLoggedInOnFrontend(String url, DataTable loginDetails) throws InterruptedException {
 
         //Open browser plus url
         driver.get(url);
-
 
         try {
 
