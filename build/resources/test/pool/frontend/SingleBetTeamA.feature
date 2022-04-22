@@ -1,4 +1,4 @@
-@regression
+
 Feature: Frontend betting player 1
 
   Background: player login
@@ -6,7 +6,7 @@ Feature: Frontend betting player 1
 
    # user login  credentials (player balance must > 1,000)
     | Username   | Password |
-    | qamasubpljun | 123123   |
+    | gcme4151t1 | 123123   |
 
   Scenario: Player bet on team A
     Given I click the pool header button
