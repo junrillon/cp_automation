@@ -19,8 +19,8 @@ public class Hooks {
         driver.start();
     }
 
-//    @After()
-//    public void after() {
-//        driver.close();
-//    }
+    @After()
+   public void after() {
+        driver.close();
+    }
 }

@@ -5,7 +5,7 @@ Feature: Frontend betting player 1
   Given I logged in on frontend page https://staging.ggplay.co/login/
 
    # user login  credentials (player balance must > 1,000)
-    | Username   | Password |
+    | Username     | Password |
     | qamasubpljun | 123123   |
 
   Scenario: Player bet on team A
@@ -14,7 +14,7 @@ Feature: Frontend betting player 1
     And I select team A and input bet amount
      #Selection 1 = TEAM A, 2 = TEAM B, 3 = DRAW
       | Selection | Amount |
-      | 1         | 100    |
+      | 2         | 100    |
     And place bet success
     And I wait for the match to settle
     Then settlement is correct
