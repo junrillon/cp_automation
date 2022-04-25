@@ -58,6 +58,10 @@ public class Dashboard {
     @FindBy(how = How.XPATH, using =  ".//button[@class='MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary']")
     public WebElement noLivegames;
 
+ //confirm button
+ @FindBy(how = How.ID, using =  "navbarDropdownMenuLinkUserAccount")
+ public WebElement tcxtUsername;
+
 
 }
 

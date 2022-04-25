@@ -13,7 +13,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
 import pages.pool.frontend.MatchDetails;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,14 +40,15 @@ public class Betting {
         page.EsportsHeaderBtn.click();
     }
 
-    String balanceBeforeBet;
+    String balanceBeforeBet; String pUsername;
     @When("I click the test sports")
     public void iClickTheAvailableSports() throws InterruptedException {
         Dashboard page = new Dashboard(driver);
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfAllElements(page.walletBalance)); //get wallet balance display before betting
         String balanceBeforeBetOrigin = page.walletBalance.getText();
-         balanceBeforeBet = balanceBeforeBetOrigin.replace(",","");
+        balanceBeforeBet = balanceBeforeBetOrigin.replace(",","");
+        pUsername = page.tcxtUsername.getText();
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePool)); // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.elementToBeClickable(page.TestSport)); //Click the test sports
         page.TestSport.click();
@@ -74,8 +80,8 @@ public class Betting {
         }
     }
 
-    String BetAmount; int BetSelection;
-    @And("I select team A and input bet amount")
+    String BetAmount; int BetSelection; String OddsName;
+    @And("I select team and input bet amount")
     public void iSelectTeamAndInputBetAmount(DataTable matchDetails) throws InterruptedException {
         MatchDetails page = new MatchDetails(driver);
         List<List<String>> data = matchDetails.asLists(String.class); //get the value list from feature file
@@ -93,6 +99,7 @@ public class Betting {
                 page.clickSubmitBtnTeamA.click();
                 wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebetTeamA)); //confirm place bet
                 page.confirmPlacebetTeamA.click();
+                OddsName = "Team A";
                 break;
             case 2:
                 page.selectionB.click();
@@ -103,6 +110,7 @@ public class Betting {
                 page.clickSubmitBtnTeamB.click();
                 wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebetTeamB)); //confirm place bet
                 page.confirmPlacebetTeamB.click();
+                OddsName = "Team B";
                 break;
             case 3:
                 page.selectionDraw.click();
@@ -113,6 +121,7 @@ public class Betting {
                 page.clickSubmitBtnDraw.click();
                 wait.until(ExpectedConditions.elementToBeClickable(page.confirmPlacebetDraw)); //confirm place bet
                 page.confirmPlacebetDraw.click();
+                OddsName = "Draw";
                 break;
             default:
                 System.out.println("WRONG SELECTION FORMAT!");
@@ -147,6 +156,20 @@ public class Betting {
         actualBalanceAfterBetFinal =  new BigDecimal(actualBalanceAfterBetTrim);
         System.out.println("Actual balance After Bet: " + actualBalanceAfterBetFinal);
         Assert.assertEquals(balanceAfterbet, actualBalanceAfterBetFinal);
+
+        ////////////////////////
+         reportRsult.append("Username:" + pUsername + "%0A" +
+                            "Balance before bet:" + balanceBeforeBet + "%0A" +
+                            "Place bet on " + OddsName + "%0A" + " bet amount:" + BetAmount + "%0A" +
+                            "Balance after bet:"+balanceAfterbet);
+
+        String testResult = ("Username:" + pUsername + "\n" +
+                "Current balance:" + balanceBeforeBet + "\n" +
+                "Place bet on " + OddsName + "\n" + "Bet amount:" + BetAmount + "\n" +
+                "Balance after bet:"+balanceAfterbet);
+
+
+        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrr\n" + testResult);
 
     }
 
@@ -192,7 +215,7 @@ public class Betting {
             Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterSettlementFinal);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
             wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
-        }else if(Integer.parseInt(matchWinner) == 3 && !(Double.valueOf(oddsTeamA) <= 0.01) || Double.valueOf(oddsTeamA) >= 99.99) {
+        }else if(Integer.parseInt(matchWinner) == 3 && !(Double.valueOf(oddsTeamA) <= 0.01) || Double.valueOf(oddsTeamA) >= 99.99) { // match winner draw
                 if(BetSelection == 3) { //Draw win and bet selection is draw (win amount will add to wallet balance)
                     System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
                     var drawWin = oddsDraw * Double.valueOf(BetAmount); //win amount from draw odds
@@ -212,8 +235,8 @@ public class Betting {
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
                 }
-            }else if(BetSelection == Integer.parseInt(matchWinner) && Integer.parseInt(matchWinner) != 3 && !(Double.valueOf(oddsTeamA) <= 0.01) || !(Double.valueOf(oddsTeamA) >= 99.99))  { //Team A or B win and bet selection is A or B
-                if(BetSelection == 1) { // Player win Team A
+            }else if(BetSelection == Integer.parseInt(matchWinner) && Integer.parseInt(matchWinner) != 3 && (!(Double.valueOf(oddsTeamA) <= 0.01) || !(Double.valueOf(oddsTeamA) >= 99.99)))  { //Team A or B win and bet selection is A or B
+                if(Integer.parseInt(matchWinner) == 1) { // Player win Team A
                     System.out.println("you WIN! compute team A odds x bet amount and winner is displayed");
                     var teamAWin = oddsTeamA * Double.valueOf(BetAmount); //win amount from draw odds
                     System.out.println("team a win = " + teamAWin);
@@ -224,14 +247,10 @@ public class Betting {
                     Assert.assertEquals(expectedBalance, actualBalanceAfterSettlementFinal);
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
-                }else { // Player win Team B
+                }else if(Integer.parseInt(matchWinner) == 2){ // Player win Team B
                     System.out.println("you WIN! compute team b odds x bet amount and winner is displayed");
-                   // var teamBWin = oddsTeamB * Double.valueOf(BetAmount); //win amount from draw odds
                     BigDecimal teamBWin = new BigDecimal(String.valueOf(oddsTeamB)).multiply(BigDecimal.valueOf(Long.parseLong(BetAmount)));
                     System.out.println("team a win = " + teamBWin);
-
-                   // var expectedBalance = Double.valueOf(String.valueOf(balanceAfterbetFinal)) + teamBWin;
-
                     BigDecimal expectedBalance = new BigDecimal(String.valueOf(balanceAfterbet)).add(teamBWin).setScale(2);
                     System.out.println("balance after settlement  " + actualBalanceAfterSettlementFinal);
                     System.out.println("expected balance after settlement  " + expectedBalance);
@@ -250,21 +269,21 @@ public class Betting {
             }
 
 
+           try {
+               // String result = "test result";
+                URL url = new URL("https://api.telegram.org/bot5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg/sendMessage?chat_id=-1001766036425&text=" +reportRsult);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
 
-      /*  try {
-            URL url = new URL("https://api.telegram.org/bot5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg/sendMessage?chat_id=-1001766036425&text=bull testing");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
+                int status = connection.getResponseCode();
+                System.out.println(status + ": " + url);
 
-            int status = connection.getResponseCode();
-            System.out.println(status + ": " + url);
+            } catch (IOException e) {
+                e.printStackTrace();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        }*/
+            }
 
         }
     }
