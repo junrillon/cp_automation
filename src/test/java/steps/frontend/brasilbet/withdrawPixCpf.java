@@ -25,6 +25,7 @@ public class withdrawPixCpf {
 
             WebDriverWait wait = new WebDriverWait(driver, 20);
             WithdrawPix page = new WithdrawPix(driver);
+            wait.until(ExpectedConditions.visibilityOf(page.walletBalance));
             wait.until(ExpectedConditions.elementToBeClickable(page.walletBalance));
             page.clickWalletBalance();
     }
@@ -34,8 +35,9 @@ public class withdrawPixCpf {
 
             WebDriverWait wait = new WebDriverWait(driver, 20);
             WithdrawPix page = new WithdrawPix(driver);
-        wait.until(ExpectedConditions.elementToBeClickable(page.withdrawButton));
-        page.clickWithdrawButton();
+            wait.until(ExpectedConditions.visibilityOf(page.withdrawButton));
+            wait.until(ExpectedConditions.elementToBeClickable(page.withdrawButton));
+            page.clickWithdrawButton();
     }
 
     @When("I click the saved bank account")
@@ -43,6 +45,7 @@ public class withdrawPixCpf {
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
         WithdrawPix page = new WithdrawPix(driver);
+        wait.until(ExpectedConditions.visibilityOf(page.cpfBankButton));
         wait.until(ExpectedConditions.elementToBeClickable(page.cpfBankButton));
         page.clickCpfBank();
     }
@@ -52,6 +55,7 @@ public class withdrawPixCpf {
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
         WithdrawPix page = new WithdrawPix(driver);
+        wait.until(ExpectedConditions.visibilityOf(page.inputWithdrawAmount));
         wait.until(ExpectedConditions.elementToBeClickable(page.inputWithdrawAmount));
         page.setInputWithdrawAmount();
     }
@@ -61,6 +65,7 @@ public class withdrawPixCpf {
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
         WithdrawPix page = new WithdrawPix(driver);
+        wait.until(ExpectedConditions.visibilityOf(page.confirmButton));
         wait.until(ExpectedConditions.elementToBeClickable(page.confirmButton));
         page.clickConfirmWithdraw();
     }
