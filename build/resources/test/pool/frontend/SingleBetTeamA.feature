@@ -1,4 +1,4 @@
-@regression
+@Smoke
 Feature: Frontend betting player 1
 
   Background: player login

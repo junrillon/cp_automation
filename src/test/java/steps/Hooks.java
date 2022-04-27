@@ -12,6 +12,7 @@ import java.util.Collection;
 public class Hooks {
 
     private Driver driver;
+    public static String sce;
 
     public Hooks(Driver driver) {
         this.driver = driver;
@@ -20,11 +21,11 @@ public class Hooks {
     @Before()
     public void before(Scenario scenario) {
      Collection<String> tag = scenario.getSourceTagNames();
-     String sdf = scenario.getName();
+     sce = scenario.getName();
 
 
         System.out.print("Tag: " + tag);
-        System.out.print("scenario: " + sdf);
+        System.out.print("scenario: " + sce);
         driver.start();
     }
 

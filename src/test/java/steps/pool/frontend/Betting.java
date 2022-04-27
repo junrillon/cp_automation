@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import io.cucumber.java.Scenario;
 import steps.CucumberLauncher;
+import steps.Hooks;
+import steps.pool.backoffice.CreateOpenTestMatch;
 
 public class Betting {
 
@@ -162,22 +164,6 @@ public class Betting {
         ////////////////////////
 
 
-         reportRsult.append(
-                            "Username:" + pUsername + "%0A" +
-                            "Balance before bet:" + balanceBeforeBet + "%0A" +
-                          //  "Place bet on " + OddsName + "%0A" +
-                            "Bet amount:" + BetAmount + "%0A" +
-                            "Balance after bet:"+balanceAfterbet);
-
-        String testResult = (
-                "Username:" + pUsername + "\n" +
-                "Current balance:" + balanceBeforeBet + "\n" +
-                "Place bet on " + OddsName + "\n" + "Bet amount:" + BetAmount + "\n" +
-                "Balance after bet:"+balanceAfterbet);
-
-
-        System.out.println("rrrrrrrrrrrrrrrrrrrrrrrrr\n" + testResult);
-
     }
 
     @And("I wait for the match to settle")
@@ -212,14 +198,17 @@ public class Betting {
         System.out.println("match winner : " + matchWinner);
         driver.switchTo().defaultContent(); //switch back to dashboard content
         var actualBalanceAfterSettlementTrim = page2.walletBalance.getText().replace(",",""); //get new wallet balance after settlement
-        //var actualBalanceAfterSettlement = Double.valueOf(actualBalanceAfterSettlementTrim);
         var actualBalanceAfterSettlementFinal =  new BigDecimal(actualBalanceAfterSettlementTrim);
         var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet);
+        BigDecimal expectedBalance = null;
+        BigDecimal actualBalance = null;
         if(oddsTeamA <= 0.01 || oddsTeamA >= 99.99)  {   // if odds is canceled
             System.out.println("match is cancel return bet amount and cancelled match is displayed");
             System.out.println("balance b4  betting " + balanceBeforeBetFinal);
             System.out.println("expected balance after  cancel " + actualBalanceAfterSettlementFinal);
-            Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterSettlementFinal);
+             expectedBalance = balanceBeforeBetFinal;
+             actualBalance = actualBalanceAfterSettlementFinal;
+            Assert.assertEquals(expectedBalance, actualBalance);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
             wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
         }else if(Integer.parseInt(matchWinner) == 3 && (!(oddsTeamA <= 0.01) || !(oddsTeamA >= 99.99))) { // match winner draw
@@ -228,17 +217,20 @@ public class Betting {
                     var drawWin = oddsDraw * Double.valueOf(BetAmount); //win amount from draw odds
                     System.out.println("draw win = " + drawWin);
                     //var expectedBalance = Double.valueOf(String.valueOf(balanceAfterbet)) + drawWin;
-                    BigDecimal expectedBalance = new BigDecimal(String.valueOf(balanceAfterbet)).add(BigDecimal.valueOf(drawWin));
+                    expectedBalance = new BigDecimal(String.valueOf(balanceAfterbet)).add(BigDecimal.valueOf(drawWin));
                     System.out.println("balance after settlement  " + actualBalanceAfterSettlementFinal);
                     System.out.println("expected balance after settlement  " + expectedBalance);
-                    Assert.assertEquals(expectedBalance, actualBalanceAfterSettlementFinal);
+                     actualBalance = actualBalanceAfterSettlementFinal;
+                    Assert.assertEquals(expectedBalance, actualBalance);
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
                 }else { // Draw win but bet selection is team A or B (return bet amount to player)
                     System.out.println("return bet amount and draw winner is displayed");
                     System.out.println("balance b4  betting " + balanceBeforeBetFinal);
                     System.out.println("expected balance after settlement " + actualBalanceAfterSettlementFinal);
-                    Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterSettlementFinal);
+                     expectedBalance = balanceBeforeBetFinal;
+                     actualBalance = actualBalanceAfterSettlementFinal;
+                    Assert.assertEquals(expectedBalance, actualBalance);
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
                 }
@@ -248,20 +240,22 @@ public class Betting {
                     var teamAWin = oddsTeamA * Double.valueOf(BetAmount); //win amount from draw odds
                     System.out.println("team a win = " + teamAWin);
                     //var expectedBalance = Double.valueOf(String.valueOf(balanceAfterbetFinal)) + teamAWin;
-                    BigDecimal expectedBalance = new BigDecimal(String.valueOf(balanceAfterbet)).add(BigDecimal.valueOf(teamAWin));
+                    expectedBalance = new BigDecimal(String.valueOf(balanceAfterbet)).add(BigDecimal.valueOf(teamAWin));
                     System.out.println("balance after settlement  " + actualBalanceAfterSettlementFinal);
                     System.out.println("expected balance after settlement  " + expectedBalance);
-                    Assert.assertEquals(expectedBalance, actualBalanceAfterSettlementFinal);
+                     actualBalance = actualBalanceAfterSettlementFinal;
+                    Assert.assertEquals(expectedBalance, actualBalance);
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
                 }else if(Integer.parseInt(matchWinner) == 2){ // Player win Team B
                     System.out.println("you WIN! compute team b odds x bet amount and winner is displayed");
                     BigDecimal teamBWin = new BigDecimal(String.valueOf(oddsTeamB)).multiply(BigDecimal.valueOf(Long.parseLong(BetAmount)));
                     System.out.println("team a win = " + teamBWin);
-                    BigDecimal expectedBalance = new BigDecimal(String.valueOf(balanceAfterbet)).add(teamBWin).setScale(2);
+                    expectedBalance = new BigDecimal(String.valueOf(balanceAfterbet)).add(teamBWin).setScale(2);
                     System.out.println("balance after settlement  " + actualBalanceAfterSettlementFinal);
                     System.out.println("expected balance after settlement  " + expectedBalance);
-                    Assert.assertEquals(expectedBalance, actualBalanceAfterSettlementFinal);
+                     actualBalance = actualBalanceAfterSettlementFinal;
+                    Assert.assertEquals(expectedBalance, actualBalance);
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
                 }
@@ -270,13 +264,41 @@ public class Betting {
                 System.out.println("you LOSE! no settlement amount will deduct or return");
                 System.out.println("balance after betting " + actualBalanceAfterBetFinal);
                 System.out.println("expected balance after Settlement " + actualBalanceAfterSettlementFinal);
-                Assert.assertEquals(actualBalanceAfterBetFinal, actualBalanceAfterSettlementFinal);
+                expectedBalance = actualBalanceAfterBetFinal;
+                actualBalance = actualBalanceAfterSettlementFinal;
+                Assert.assertEquals(expectedBalance, actualBalance);
                 wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                 wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
             }
 
+        String scenarioTitle = Hooks.sce;
 
-           try {
+
+        reportRsult.append("**** BETTING ****" + "%0A" +
+                        "Scenario: " + scenarioTitle + "%0A" +
+                        "Username: " + pUsername + "%0A" +
+                        "Balance before bet: " + balanceBeforeBet + "%0A" +
+                        "Bet amount:" + BetAmount + "%0A" +
+                        "Balance after bet:"+balanceAfterbet + "%0A" + "%0A" +
+                        "**** SETTLEMENT ****" + "%0A" +
+                        "Balance after settlement: " + actualBalance + "%0A" +
+                        "Expected balance: " + expectedBalance + "%0A");
+
+        String testResult = ("**** BETTING ****" + "\n" +
+                        "Scenario: " + scenarioTitle + "\n" +
+                        "Username: " + pUsername + "\n" +
+                        "Balance before bet: " + balanceBeforeBet + "\n" +
+                        "Bet amount: " + BetAmount + "\n" +
+                        "Balance after bet: "+ balanceAfterbet + "\n" + "\n" +
+                        "**** SETTLEMENT ****"+ "\n" +
+                        "Balance after settlement: " + actualBalance + "\n" +
+                        "Expected balance: " + expectedBalance + "\n" );
+
+
+        System.out.println("rrrrrrrrrrrrrrrrrr" + testResult);
+
+
+/*           try {
                // String result = "test result";
                 URL url = new URL("https://api.telegram.org/bot5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg/sendMessage?chat_id=-1001766036425&text=" +reportRsult);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -290,7 +312,7 @@ public class Betting {
             } catch (IOException e) {
                 e.printStackTrace();
 
-            }
+            }*/
 
         }
     }
