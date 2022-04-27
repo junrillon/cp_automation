@@ -5,6 +5,7 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -196,6 +197,7 @@ public class CasinoBettingRT {
             int int_winnings;
             int int_stake;
             do {
+
                 boolean balanceValue_isPresent = balanceDisplay.isDisplayed();
                 actualBalanceBeforeBet = balanceDisplay.getText(); //Get balance before betting
                 balanceBeforeBetNoFormat = actualBalanceBeforeBet;
@@ -222,18 +224,18 @@ public class CasinoBettingRT {
 
 
                 //Wait until the current balance is not the same with the balance before bet.
-                ///wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
-                try {
-                    boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
-                    System.out.println("The balance is still the same.");
-
-                } catch (TimeoutException e) {
-                    boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
-                    wait.until(ExpectedConditions.elementToBeClickable(innerPlayButton));
-                    innerPlayButton.click();
-                    System.out.println("Click play button 2");
-
-                }
+                wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
+//                try {
+//                    boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
+//                    System.out.println("The balance is still the same.");
+//
+//                } catch (TimeoutException e) {
+//                    //boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
+//                    wait.until(ExpectedConditions.elementToBeClickable(innerPlayButton));
+//                    innerPlayButton.click();
+//                    System.out.println("Click play button 2");
+//
+//                }
 
                 //Get the balance after betting and remove the word "PHP"
                 actualBalanceAfterBet = CasinoGames.balanceValue.getText();
@@ -292,7 +294,7 @@ public class CasinoBettingRT {
                 }
 
                 //delay 2s
-                //Thread.sleep(2000);
+                Thread.sleep(2000);
             } while (int_winnings == (int_stake * -1));
 
         } else {

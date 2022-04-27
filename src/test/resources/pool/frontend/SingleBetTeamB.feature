@@ -1,4 +1,4 @@
-@Smoke
+@poolSmokeTesting
 Feature: Frontend betting player 2
 
   Background: player login

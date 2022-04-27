@@ -54,44 +54,35 @@ public class JiraObjects{
     @CacheLookup
     public WebElement cardDetails;
 
-    @FindBy(how = How.XPATH, using = ".//h2[contains(text(), 'Sprint')]") //<-- details
-    @CacheLookup
+    @FindBy(how = How.XPATH, using = ".//h2[contains(text(), 'Story Points')]") //<-- details
     public WebElement sprintDisplayInsideCard;
 
     @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' sc-1ddwfnu-3 ') and contains(text(), 'TestRail: Cases')]")
-    @CacheLookup
     public WebElement testCases;
 
     @FindBy(how = How.XPATH, using = ".//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Cases')]")
-    @CacheLookup
     public WebElement testCasesBack;
 
     @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' sc-1ddwfnu-3 fXigRG ') and contains(text(), 'TestRail: Runs')]")
-    @CacheLookup
     public WebElement testRuns;
 
     @FindBy(how = How.XPATH, using = ".//div[@class='anythr-2 gphqXW' and contains(text(), 'TestRail: Runs')]")
-    @CacheLookup
     public WebElement testRunsBack;
 
     @FindBy(how = How.XPATH, using = ".//p[@class='bottom']/a[@class='button']")
-    @CacheLookup
     public WebElement loginToTestRailButton;
 
     @FindBy(how = How.XPATH, using = ".//iframe[contains(@id,'com.testrail.jira.testrail-plugin__panel-references')]")
-    @CacheLookup
     public WebElement tcIframe1;
 
     @FindBy(how = How.XPATH, using = ".//iframe[@id='tr-frame-panel-references']")
-    @CacheLookup
+
     public WebElement tcIframe2;
 
     @FindBy(how = How.XPATH, using = ".//iframe[contains(@id,'com.testrail.jira.testrail-plugin__panel-runsreferences')]")
-    @CacheLookup
     public WebElement trIframe1;
 
     @FindBy(how = How.XPATH, using = ".//iframe[@id='tr-frame-panel-runsreferences']")
-    @CacheLookup
     public WebElement trIframe2;
     //---------------------------------------------------
 
@@ -100,19 +91,15 @@ public class JiraObjects{
     public List<WebElement> TestrailUrl;
 
     @FindBy(how = How.XPATH, using = ".//section[@id='content']/p")
-    @CacheLookup
     public List<WebElement> testCases_status;
 
     @FindBy(how = How.XPATH, using = ".//section[@id='content']/p")
-    @CacheLookup
     public List<WebElement> testRuns_status;
 
     @FindBy(how = How.XPATH, using = ".//section[@id='content']//p[@class='top']/em")
-    @CacheLookup
     public List<WebElement> loginToTestRail;
 
     @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' ghx-sprint-planned ')][1]")
-    @CacheLookup
     public WebElement advanceSprintXpathWE;
 
     public String advanceSprintXpath = ".//div[contains(concat(' ',@class,' '), ' ghx-sprint-planned ')][1]";

@@ -293,15 +293,12 @@ public class JiraCardChecking {
             } else {
                 extractedCardAssignee = "Assignee: None";
             }
-            System.out.println("1");
 
             //check cards inside sprint and then click
             WebElement cardNumber = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardNumberXpath));
             String extractedCardNumber = cardNumber.getAttribute("title");
             wait.until(ExpectedConditions.elementToBeClickable(cardNumber));
             cardNumber.click();
-
-            System.out.println("2");
 
             //check sprint element inside detailed view then scroll to it
             wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));

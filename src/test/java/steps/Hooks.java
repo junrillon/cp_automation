@@ -30,7 +30,7 @@ public class Hooks {
     }
 
     @After()
-   public void after() {
+    public void after() {
         driver.close();
     }
 }
