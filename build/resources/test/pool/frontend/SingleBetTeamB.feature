@@ -8,7 +8,7 @@ Feature: Frontend betting player 2
     | Username   | Password |
     | gcme4151t1 | 123123   |
 
-  Scenario: Player bet on team B
+  Scenario: Single bet on team B
     Given I click the pool header button
     When I click the test sports
     And I select team and input bet amount

@@ -7,7 +7,9 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.plugin.event.Node;
 import org.junit.Assert;
+import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -23,6 +25,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import io.cucumber.java.Scenario;
+import steps.CucumberLauncher;
 
 public class Betting {
 
@@ -33,11 +37,15 @@ public class Betting {
     }
 
 
+
+
     StringBuffer reportRsult = new StringBuffer();
     @Given("I click the pool header button")
     public void iClickThePoolHeaderButton() {
         Dashboard page = new Dashboard(driver);  //Click pool header button
         page.EsportsHeaderBtn.click();
+
+
     }
 
     String balanceBeforeBet; String pUsername;
@@ -136,34 +144,33 @@ public class Betting {
     @And("place bet success")
     public void placeBetSuccess() throws InterruptedException {
         driver.switchTo().defaultContent(); //switch back to dashboard content
-/*        var BB = Double.valueOf(balanceBeforeBet);
-        var BA = Double.valueOf(BetAmount);*/
 
         BigDecimal BB = new BigDecimal(balanceBeforeBet);
         BigDecimal BA = new BigDecimal(BetAmount);
-        //var balanceAfterbet = (BB - BA); //balance b4 bet minus bet amount
-        balanceAfterbet = new BigDecimal(String.valueOf(BB)).subtract(BA);
+        balanceAfterbet = BB.subtract(BA);
         System.out.println("Expected New BB: " + BB );
         System.out.println("Expected New BA: " + BA );
         System.out.println("Expected balance after bet: " + balanceAfterbet);
-        //balanceAfterbetFinal = new BigDecimal(balanceAfterbet).setScale(2); //set 2 decimal for expected new balance
-        //System.out.println("Expected New balance: " + balanceAfterbetFinal);
         Thread.sleep(5000); //delay for checking the wallet broadcast
 
         Dashboard page = new Dashboard(driver);
         var actualBalanceAfterBetTrim = page.walletBalance.getText().replace(",","");;
-        //var actualBalanceAfterBet = Double.valueOf(actualBalanceAfterBetTrim);
         actualBalanceAfterBetFinal =  new BigDecimal(actualBalanceAfterBetTrim);
         System.out.println("Actual balance After Bet: " + actualBalanceAfterBetFinal);
         Assert.assertEquals(balanceAfterbet, actualBalanceAfterBetFinal);
 
         ////////////////////////
-         reportRsult.append("Username:" + pUsername + "%0A" +
+
+
+         reportRsult.append(
+                            "Username:" + pUsername + "%0A" +
                             "Balance before bet:" + balanceBeforeBet + "%0A" +
-                            "Place bet on " + OddsName + "%0A" + " bet amount:" + BetAmount + "%0A" +
+                          //  "Place bet on " + OddsName + "%0A" +
+                            "Bet amount:" + BetAmount + "%0A" +
                             "Balance after bet:"+balanceAfterbet);
 
-        String testResult = ("Username:" + pUsername + "\n" +
+        String testResult = (
+                "Username:" + pUsername + "\n" +
                 "Current balance:" + balanceBeforeBet + "\n" +
                 "Place bet on " + OddsName + "\n" + "Bet amount:" + BetAmount + "\n" +
                 "Balance after bet:"+balanceAfterbet);
@@ -208,14 +215,14 @@ public class Betting {
         //var actualBalanceAfterSettlement = Double.valueOf(actualBalanceAfterSettlementTrim);
         var actualBalanceAfterSettlementFinal =  new BigDecimal(actualBalanceAfterSettlementTrim);
         var balanceBeforeBetFinal =  new BigDecimal(balanceBeforeBet);
-        if(Double.valueOf(oddsTeamA) <= 0.01 || Double.valueOf(oddsTeamA) >= 99.99)  {   // if odds is canceled
+        if(oddsTeamA <= 0.01 || oddsTeamA >= 99.99)  {   // if odds is canceled
             System.out.println("match is cancel return bet amount and cancelled match is displayed");
             System.out.println("balance b4  betting " + balanceBeforeBetFinal);
             System.out.println("expected balance after  cancel " + actualBalanceAfterSettlementFinal);
             Assert.assertEquals(balanceBeforeBetFinal, actualBalanceAfterSettlementFinal);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
             wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
-        }else if(Integer.parseInt(matchWinner) == 3 && !(Double.valueOf(oddsTeamA) <= 0.01) || Double.valueOf(oddsTeamA) >= 99.99) { // match winner draw
+        }else if(Integer.parseInt(matchWinner) == 3 && (!(oddsTeamA <= 0.01) || !(oddsTeamA >= 99.99))) { // match winner draw
                 if(BetSelection == 3) { //Draw win and bet selection is draw (win amount will add to wallet balance)
                     System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
                     var drawWin = oddsDraw * Double.valueOf(BetAmount); //win amount from draw odds
@@ -235,7 +242,7 @@ public class Betting {
                     wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
                 }
-            }else if(BetSelection == Integer.parseInt(matchWinner) && Integer.parseInt(matchWinner) != 3 && (!(Double.valueOf(oddsTeamA) <= 0.01) || !(Double.valueOf(oddsTeamA) >= 99.99)))  { //Team A or B win and bet selection is A or B
+            }else if(BetSelection == Integer.parseInt(matchWinner) && Integer.parseInt(matchWinner) != 3 && (!(oddsTeamA <= 0.01) || !(oddsTeamA >= 99.99)))  { //Team A or B win and bet selection is A or B
                 if(Integer.parseInt(matchWinner) == 1) { // Player win Team A
                     System.out.println("you WIN! compute team A odds x bet amount and winner is displayed");
                     var teamAWin = oddsTeamA * Double.valueOf(BetAmount); //win amount from draw odds
@@ -259,7 +266,7 @@ public class Betting {
                     wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
                 }
             }
-            else if(!(Double.valueOf(oddsTeamA) <= 0.01) || !(Double.valueOf(oddsTeamA) >= 99.99)){ //Player lose
+            else if(!(oddsTeamA <= 0.01) || !(oddsTeamA >= 99.99)){ //Player lose
                 System.out.println("you LOSE! no settlement amount will deduct or return");
                 System.out.println("balance after betting " + actualBalanceAfterBetFinal);
                 System.out.println("expected balance after Settlement " + actualBalanceAfterSettlementFinal);

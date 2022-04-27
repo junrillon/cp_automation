@@ -3,7 +3,10 @@ package steps;
 import engine.Driver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import org.junit.BeforeClass;
+import io.cucumber.java.Scenario;
+import io.cucumber.plugin.event.Node;
+
+import java.util.Collection;
 
 
 public class Hooks {
@@ -15,7 +18,13 @@ public class Hooks {
     }
 
     @Before()
-    public void before() {
+    public void before(Scenario scenario) {
+     Collection<String> tag = scenario.getSourceTagNames();
+     String sdf = scenario.getName();
+
+
+        System.out.print("Tag: " + tag);
+        System.out.print("scenario: " + sdf);
         driver.start();
     }
 

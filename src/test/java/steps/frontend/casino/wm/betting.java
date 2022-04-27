@@ -1,4 +1,4 @@
-package steps.casino.wm;
+package steps.frontend.casino.wm;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
