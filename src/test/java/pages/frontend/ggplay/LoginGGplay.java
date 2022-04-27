@@ -97,10 +97,6 @@ public class LoginGGplay {
     @CacheLookup
     public WebElement providerFilter;
 
-    public void locateProviderFilter(){
-        providerFilter.isDisplayed();
-    }
-
     // Game card
     @FindBy(how = How.XPATH, using =  ".//div[@class=\"game-card\"]")
     @CacheLookup
@@ -109,48 +105,6 @@ public class LoginGGplay {
     @FindBy(how = How.XPATH, using =  ".//div[@class='game-content']/div[2]")
     @CacheLookup
     public WebElement casinoGamesContainer;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@class='play-button-transition']/button")
-    @CacheLookup
-    public WebElement playButton;
-
-    public void clickPlayButton(){
-        playButton.isDisplayed();
-        playButton.click();
-    }
-
-    @FindBy(how = How.XPATH, using =  ".//section[@class='game-view']")
-    @CacheLookup
-    public WebElement maintenanceNotif;
-
-    @FindBy(how = How.XPATH, using =  ".//iframe[@class='w-100 h-100 border-none']")
-    @CacheLookup
-    public WebElement gameIframe;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@id='slotContainer']/iframe")
-    @CacheLookup
-    public WebElement gameIframe2;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@class='btn-circle-inner-play-button']")
-    @CacheLookup
-    public WebElement innerPlayButton;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@class='statistics-field-value']")
-    @CacheLookup
-    public WebElement balanceValue;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@class='stake-value']")
-    @CacheLookup
-    public WebElement stakeValue;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@class='win-text']")
-    @CacheLookup
-    public WebElement winIndicator;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@class='win-text']/canvas")
-    @CacheLookup
-    public WebElement winIndicator2;
-
 
 
 }

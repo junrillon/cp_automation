@@ -1,4 +1,4 @@
-@regression
+@poolSmokeTesting
 Feature: Settle Match
 
   Background: Pool login

@@ -26,8 +26,10 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.8.2'
 
-    testImplementation 'io.cucumber:cucumber-java:7.2.3'
-    testImplementation 'io.cucumber:cucumber-junit:7.2.3'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
+
+    testImplementation 'io.cucumber:cucumber-java:7.3.2'
+    testImplementation 'io.cucumber:cucumber-junit:7.3.2'
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
     testImplementation 'io.github.bonigarcia:selenium-jupiter:4.1.0'
@@ -51,7 +53,7 @@ task jirachecker(type: JavaExec) {
 
 }
 
-task cucumber(type: JavaExec) {
+task poolSmokeTesting(type: JavaExec) {
     dependsOn assemble, testClasses
     mainClass = "steps.CucumberLauncher"
     classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
@@ -59,7 +61,7 @@ task cucumber(type: JavaExec) {
             '--plugin', 'pretty',
             '--plugin', 'html:build/cucumber-report.html',
             '--glue', 'steps',
-            '--tags', '@regression',
+            '--tags', '@poolSmokeTesting',
             '--dir0', 'src/test/resources/pool/backoffice',
             '--dir1', 'src/test/resources/pool/frontend/SingleBetTeamA.feature',
             '--dir2', 'src/test/resources/pool/frontend/SingleBetTeamB.feature'

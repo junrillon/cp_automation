@@ -1,21 +1,24 @@
 package steps.frontend.casino;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.frontend.ggplay.CasinoGames;
 import pages.frontend.ggplay.LoginGGplay;
+import steps.frontend.ggplay.Login;
 
-import java.io.*;
-import java.util.HashMap;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 public class CasinoBettingRT {
@@ -37,38 +40,39 @@ public class CasinoBettingRT {
 
     }
 
+    public String provider;
     @When("I select provider")
-    public void iSelectProvider(DataTable providerDetails) throws InterruptedException {
+    public void iSelectProvider(DataTable providerDetails) {
         LoginGGplay page = new LoginGGplay(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         List<List<String>> sportsDetails = providerDetails.asLists(String.class);
-        String provider = sportsDetails.get(1).get(0);
+        provider = sportsDetails.get(1).get(0);
 
-        //Navigate to games casino
-        page.locateProviderFilter();
+        //wait for the provider filter check box
+        wait.until(ExpectedConditions.visibilityOf(page.providerFilter));
 
+        //wait for the casino games display (game card)
         wait.until(ExpectedConditions.visibilityOf(page.gameCard));
 
+        //declare web element for casino provider check box and then click
         WebElement providerFilter = driver.findElement(By.xpath(".//label[contains(text(), '"+provider+"')]"));
         wait.until(ExpectedConditions.visibilityOf(providerFilter));
         providerFilter.click();
 
-        WebElement rad = driver.findElement(By.xpath(".//label[contains(text(), '"+provider+"')]//preceding-sibling::input[@type='checkbox']"));
-        wait.until(ExpectedConditions.elementToBeSelected(rad));
     }
 
     @When("I wait for casino games to load")
     public void iWaitCasinoGamesToLoad(){
-        LoginGGplay page = new LoginGGplay(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
+        CasinoGames CasinoGames = new CasinoGames(driver);
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][2]//div[@class='game-card']")));
-        WebElement i = driver.findElement(By.xpath(".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][2]//div[@class='game-card']//img"));
+        wait.until(ExpectedConditions.visibilityOf(CasinoGames.gameCard));
+        wait.until(ExpectedConditions.visibilityOf(CasinoGames.gameCardImage));
 
-        int h = i.getSize().height;
+        int h = CasinoGames.gameCardImage.getSize().height;
         while(h < 100) {
-            h = i.getSize().height;
+            h = CasinoGames.gameCardImage.getSize().height;
 
             if (h > 100) {
                 System.out.println("Game image loaded.");
@@ -78,247 +82,251 @@ public class CasinoBettingRT {
     }
 
     @When("I play casino game")
-    public void playAvailableGames() throws IOException, InterruptedException, CsvValidationException {
-        LoginGGplay page = new LoginGGplay(driver);
+    public void iPlayCasinoGame() throws InterruptedException {
+
+        CasinoGames CasinoGames = new CasinoGames(driver);
         Actions action = new Actions(driver);
 
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        WebDriverWait longwait = new WebDriverWait(driver, 20);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebDriverWait longwait = new WebDriverWait(driver, 60);
 
-        String oldTab = driver.getWindowHandle();
-        CSVReader reader = new CSVReader(new FileReader("D:\\ids.csv"));
-        int rows = 0;
-        String[] csvCell;
+        String report;
+        String result;
 
-        int int_stake = 0;
-        int int_winnings = 0;
-        int int_actualBalanceBeforeBet = 0;
-        int int_actualBalanceAfterBet = 0;
-        int int_expectedBalanceAfterBet = 0;
-        int int_expectedBalanceAfterWin = 0;
+        String settlementStatus = null;
+        String betStatus;
+        String balanceBeforeBetNoFormat;
 
-        String separator = ","; //<-- will use it in saving data in csv file
-        String gameLaunch_status = "";
-        String betStatus = "";
-        String settlementStatus = "";
-        String string_winnings = "";
-        String string_balanceAfter = "";
+        String actualBalanceBeforeBet;
+        String actualBalanceAfterBet;
+        String stakeValue;
 
-        String actualBalanceBeforeBet = "";
-        String actualBalanceAfterBet = "";
-        String stakeValue = "";
+        //Performing the mouse hover action on the target element.
+        wait.until(ExpectedConditions.visibilityOf(CasinoGames.gameCard));
+        action.moveToElement(CasinoGames.gameCard).perform();
+        System.out.println("Hover at game card");
 
+        //Wait for play button to be visible and clickable
+        wait.until(ExpectedConditions.visibilityOf(CasinoGames.gameCardPlayButton));
+        wait.until(ExpectedConditions.elementToBeClickable(CasinoGames.gameCardPlayButton));
+        CasinoGames.gameCardPlayButton.click();
+        System.out.println("Click play button");
 
-        HashMap<String, String> updates = new HashMap<>();
+        String checkIfMaintenance = CasinoGames.maintenanceNotif.getText();
+        if(!checkIfMaintenance.contains("Game under maintenance")){
+            //WebElement for iframe and switch focus to iframe
+            WebElement iframe = CasinoGames.gameIframe1;
 
-        while ((csvCell = reader.readNext()) != null) {
-            String gameId = csvCell[0];
-            String gameName = csvCell[1];
-            gameName = gameName.replace(","," ");
-            rows++;
-
-            //Check if the cell has a value, if empty end the testing
-            if(gameId.isEmpty()){
-                System.out.println("End of testing.");
-                break;
-            }
-
-            //Creating object of an Actions class
-            longwait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='game-content']/div/div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3' and position()="+rows+"]")));
-            WebElement gameCard = driver.findElement(By.xpath("//div[@class='game-content']/div/div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3' and position()="+rows+"]"));
-
-            //Locate the position of the gameId
-            int position = driver.findElements(By.xpath("//a[@href='/launch-game/"+gameId+"/play?scc=1']/preceding::div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3']")).size() + 1;
-
-            //Creating object of an Actions class2, for the located gameId
-            longwait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='game-content']/div/div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3' and position()="+position+"]")));
-            WebElement gameCard2 = driver.findElement(By.xpath("//div[@class='game-content']/div/div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3' and position()="+position+"]"));
-
-
-            //Performing the mouse hover action on the target element.
-            boolean gameCard_isPresent = gameCard2.isDisplayed();
-            if (gameCard_isPresent) {
-                wait.until(ExpectedConditions.visibilityOf(gameCard2));
-                action.moveToElement(gameCard2).perform();
-            }
-
-            WebElement extracted_gameId = driver.findElement(By.xpath("//a[@href='/launch-game/"+gameId+"/play?scc=1']"));
-            boolean extracted_gameId_isPresent = extracted_gameId.isDisplayed();
-            if (extracted_gameId_isPresent) {
-                wait.until(ExpectedConditions.elementToBeClickable(extracted_gameId));
-                extracted_gameId.click();
-                System.out.println("is_present: " + extracted_gameId_isPresent);
-            }//section[//h1[@id='section-name']]
-            //div[@class='header-left']/div[contains(text(),'Sprint 45')]/following-sibling::div[@class='ghx-issue-count']/preceding::div[@class='header-left]
-            //div[//div[@class='ghx-meta plan-inline-create-inside']]
-            //./ancestor-or-self::[@class="box"]
-            //Switch to game launch tab
-            for(String winHandle : driver.getWindowHandles()){
-                driver.switchTo().window(winHandle);
-            }
-            System.out.println("Switch");
-            System.out.println("Switch 1");
-
-            String checkIfMaintenance = page.maintenanceNotif.getText();
-            //System.out.println(checkIfMaintenance);
-
-            if(!checkIfMaintenance.contains("Game under maintenance")){
-                //WebElement for iframe and switch focus to iframe
-                WebElement iframe = page.gameIframe;
-
+            longwait.until(ExpectedConditions.visibilityOf(iframe));
+            boolean iframe1_isPresent = iframe.isDisplayed();
+            if (iframe1_isPresent) {
+                //Wait and switch focus to iframe1
                 longwait.until(ExpectedConditions.visibilityOf(iframe));
-                boolean iframe1_isPresent = iframe.isDisplayed();
-                if (iframe1_isPresent) {
-                    longwait.until(ExpectedConditions.visibilityOf(iframe));
-                    driver.switchTo().frame(iframe);
-                    System.out.println("Done switching to iframe1");
+                driver.switchTo().frame(iframe);
+                System.out.println("Done switching to iframe1");
 
-                    //Thread.sleep(1500);
-                    WebElement loadingScreen = driver.findElement(By.xpath("//div[@class='loading-screen']"));
-                    boolean loading_isPresent = loadingScreen.isDisplayed();
-                    while(loading_isPresent){
-                        loading_isPresent = loadingScreen.isDisplayed();
+                //Check and wait for loading screen
+                wait.until(ExpectedConditions.visibilityOf(CasinoGames.casinoLoadingScreen));
+                boolean loading_isPresent = CasinoGames.casinoLoadingScreen.isDisplayed();
+                while(loading_isPresent){
+                    loading_isPresent = CasinoGames.casinoLoadingScreen.isDisplayed();
 
-                        if(!loading_isPresent){
-                            gameLaunch_status = "OK";
-                            break;
-                        }
+                    if(!loading_isPresent){
+                        break;
                     }
                 }
+            }
 
-                //WebElement for iframe2 and switch focus to iframe
-                longwait.until(ExpectedConditions.visibilityOf(page.gameIframe2));
-                driver.switchTo().frame(page.gameIframe2);
-                System.out.println("Done switching to iframe2");
+            //Wait and switch focus to iframe2
+            WebElement iframe2 = CasinoGames.gameIframe2;
+            longwait.until(ExpectedConditions.visibilityOf(iframe2));
+            driver.switchTo().frame(iframe2);
+            System.out.println("Done switching to iframe2");
 
-                //WebElement for play button and will wait for 20 secs
-                WebElement playButton = page.playButton;
+            //Close the debugger
+            if(CasinoGames.debugComponent.size() > 0){
+                wait.until(ExpectedConditions.visibilityOf(CasinoGames.debugComponent.get(0)));
+                wait.until(ExpectedConditions.elementToBeClickable(CasinoGames.debugComponent.get(0)));
+                CasinoGames.debugComponent.get(0).click();
+            }
 
-                //Thread.sleep(3000);
-                int playButton_isPresent = driver.findElements(By.xpath("//div[@class='play-button-transition']/button")).size();
-                if(playButton_isPresent == 1){
-                    wait.until(ExpectedConditions.elementToBeClickable(playButton));
-                    playButton.click();
-                    System.out.println("playButton_isPresent: " + playButton_isPresent);
+            //WebElement for play button and will wait for 20 secs
+            WebElement playButton = CasinoGames.playButton;
+            wait.until(ExpectedConditions.elementToBeClickable(playButton));
 
-                } else {
-                    WebElement gameScreen = driver.findElement(By.xpath("//canvas[@id='stage']"));
-                    wait.until(ExpectedConditions.visibilityOf(gameScreen));
+            //Check if play button is present, if yes then click
+            boolean playButton_isPresent = playButton.isDisplayed();
+            if(playButton_isPresent){
+                wait.until(ExpectedConditions.elementToBeClickable(playButton));
+                playButton.click();
 
-                    int gameScreen_isPresent = driver.findElements(By.xpath("//canvas[@id='stage']")).size();
+            } else {
+                WebElement gameScreen = CasinoGames.canvasPlayButton;
+                wait.until(ExpectedConditions.visibilityOf(gameScreen));
 
-                    var canvas_dimensions = gameScreen.getSize();
-                    var canvas_center_x = canvas_dimensions.getWidth() / 2;
-                    var canvas_center_y = canvas_dimensions.getHeight() / 2;
-                    int button_x = (canvas_center_x / 14);
-                    int button_y = (canvas_center_y / 11) * 8;
+                var canvas_dimensions = gameScreen.getSize();
+                var canvas_center_x = canvas_dimensions.getWidth() / 2;
+                var canvas_center_y = canvas_dimensions.getHeight() / 2;
+                int button_x = (canvas_center_x / 14);
+                int button_y = (canvas_center_y / 11) * 8;
 
-                    action.moveToElement(gameScreen, button_x, button_y).perform();
-                    new Actions(driver)
-                            .moveToElement(gameScreen, button_x, button_y)
-                            .click()
-                            .perform();
-                }
+                action.moveToElement(gameScreen, button_x, button_y).perform();
+                new Actions(driver)
+                        .moveToElement(gameScreen, button_x, button_y)
+                        .click()
+                        .perform();
 
-                int overlay_message = driver.findElements(By.xpath(".//div[@class='v-dialog__content v-dialog__content--active']//div[@class='v-card__text dark-overlay message-contents']")).size();
-                if(overlay_message == 1){
-                    WebElement overlay_exitButton = driver.findElement(By.xpath(".//button[@class='v-btn v-btn--icon theme--dark']"));
-                    wait.until(ExpectedConditions.elementToBeClickable(overlay_exitButton));
-                    overlay_exitButton.click();
-                }
+            }
 
-                //WebElements for inner play button, balance display and win indicator
-                WebElement innerPlayButton = page.innerPlayButton;
-                WebElement balanceDisplay = page.balanceValue;
+            //Forgot what is this
+            int overlay_message = driver.findElements(By.xpath(".//div[@class='v-dialog__content v-dialog__content--active']//div[@class='v-card__text dark-overlay message-contents']")).size();
+            if(overlay_message == 1){
+                WebElement overlay_exitButton = driver.findElement(By.xpath(".//button[@class='v-btn v-btn--icon theme--dark']"));
+                wait.until(ExpectedConditions.elementToBeClickable(overlay_exitButton));
+                overlay_exitButton.click();
+            }
 
-                //Wait for balance to display first before getting the value of the balance
-                longwait.until(ExpectedConditions.visibilityOf(balanceDisplay));
+            //WebElements for inner play button, balance display and win indicator
+            WebElement innerPlayButton = CasinoGames.innerPlayButton;
+            WebElement balanceDisplay = CasinoGames.balanceValue;
 
+            //Wait for balance to display first before getting the value of the balance
+            longwait.until(ExpectedConditions.visibilityOf(balanceDisplay));
+
+            int int_winnings;
+            int int_stake;
+            do {
                 boolean balanceValue_isPresent = balanceDisplay.isDisplayed();
-                if(balanceValue_isPresent){
+                actualBalanceBeforeBet = balanceDisplay.getText(); //Get balance before betting
+                balanceBeforeBetNoFormat = actualBalanceBeforeBet;
+                stakeValue = CasinoGames.stakeValue.getText(); //Get the stake amount
+
+                if (balanceValue_isPresent) {
                     wait.until(ExpectedConditions.visibilityOf(balanceDisplay));
                     wait.until(ExpectedConditions.elementToBeClickable(innerPlayButton));
                     innerPlayButton.click();
                 }
 
-                actualBalanceBeforeBet = page.balanceValue.getText(); //Get balance before betting
-                stakeValue = page.stakeValue.getText(); //Get the stake amount
-
-                System.out.println("----------------- Start betting: " + gameName);
-                System.out.println("Balance before bet: " + actualBalanceBeforeBet);
+                //System.out.println("----------------- Start betting: " + gameName);
+                System.out.println("\nBalance before bet: " + actualBalanceBeforeBet);
 
                 //Remove the strings inside the balance
-                actualBalanceBeforeBet = actualBalanceBeforeBet.replace("PHP","");
-                actualBalanceBeforeBet = actualBalanceBeforeBet.replace(",","");
-                actualBalanceBeforeBet = actualBalanceBeforeBet.replace(".00","");
+                actualBalanceBeforeBet = actualBalanceBeforeBet.replace("PHP", "");
+                actualBalanceBeforeBet = actualBalanceBeforeBet.replace(",", "");
+                actualBalanceBeforeBet = actualBalanceBeforeBet.replace(".00", "");
 
                 //Remove the strings inside the stake
-                stakeValue = stakeValue.replace("PHP","");
-                stakeValue = stakeValue.replace(",","");
-                stakeValue = stakeValue.replace(".00","");
+                stakeValue = stakeValue.replace("PHP", "");
+                stakeValue = stakeValue.replace(",", "");
+                stakeValue = stakeValue.replace(".00", "");
 
-                Thread.sleep(10000);
 
-                //Get balance after betting and remove the word "PHP"
-                actualBalanceAfterBet = page.balanceValue.getText();
-                actualBalanceAfterBet = actualBalanceAfterBet.replace("PHP","");
-                actualBalanceAfterBet = actualBalanceAfterBet.replace(",","");
-                actualBalanceAfterBet = actualBalanceAfterBet.replace(".00","");
+                //Wait until the current balance is not the same with the balance before bet.
+                ///wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
+                try {
+                    boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
+                    System.out.println("The balance is still the same.");
 
-                //Start of computation
-                int_stake = Integer.parseInt(stakeValue);
-                int_actualBalanceBeforeBet = Integer.parseInt(actualBalanceBeforeBet);
-                int_actualBalanceAfterBet = Integer.parseInt(actualBalanceAfterBet);
-                int_expectedBalanceAfterBet = int_actualBalanceBeforeBet - int_stake;
-                int_winnings = (int_actualBalanceAfterBet - int_actualBalanceBeforeBet);
-
-                //start of conditions
-                if(int_winnings == (int_stake * -1)){
-                    System.out.println("Stake: " + int_stake + " | Winnings: " + int_winnings);
-
-                    if(int_expectedBalanceAfterBet == int_actualBalanceAfterBet){
-                        betStatus = "OK";
-                    } else {
-                        betStatus = "NOT OKAY";
-                    }
-                    System.out.println("Actual Balance: " + int_actualBalanceAfterBet + " | Expected Balance: " + int_expectedBalanceAfterBet);
-
-                } else {
-                    System.out.println("Stake: " + int_stake + " | Winnings: " + int_winnings);
-                    int_expectedBalanceAfterWin = int_actualBalanceBeforeBet + int_winnings;
-                    if(int_expectedBalanceAfterBet == int_actualBalanceAfterBet){
-                        settlementStatus = "OK";
-                    } else {
-                        settlementStatus = "NOT OKAY";
-                    }
-                    System.out.println("Actual Balance: " + int_actualBalanceAfterBet + " | Expected Balance: " + int_expectedBalanceAfterWin);
+                } catch (TimeoutException e) {
+                    boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
+                    wait.until(ExpectedConditions.elementToBeClickable(innerPlayButton));
+                    innerPlayButton.click();
+                    System.out.println("Click play button 2");
 
                 }
 
-            }
+                //Get the balance after betting and remove the word "PHP"
+                actualBalanceAfterBet = CasinoGames.balanceValue.getText();
+                actualBalanceAfterBet = actualBalanceAfterBet.replace("PHP", "");
+                actualBalanceAfterBet = actualBalanceAfterBet.replace(",", "");
+                actualBalanceAfterBet = actualBalanceAfterBet.replace(".00", "");
 
-            File location = new File("D:\\newfile.csv");
-            FileWriter fr = new FileWriter(location, true);
-            BufferedWriter br = new BufferedWriter(fr);
+                //Start of computation
+                int_stake = Integer.parseInt(stakeValue);
+                int int_actualBalanceBeforeBet = Integer.parseInt(actualBalanceBeforeBet);
+                int int_actualBalanceAfterBet = Integer.parseInt(actualBalanceAfterBet);
+                int int_expectedBalanceAfterBet = int_actualBalanceBeforeBet - int_stake;
+                int int_expectedBalanceAfterWin;
 
-            //--- Input data in csv
-            br.append(gameName);
-            br.append(separator).append(gameLaunch_status);
-            br.append(separator).append(betStatus);
-            br.append(separator).append(String.valueOf(int_actualBalanceBeforeBet));
-            br.append(separator).append(String.valueOf(int_stake));
-            br.append(separator).append(String.valueOf(int_actualBalanceAfterBet));
-            br.append(separator).append(String.valueOf(int_winnings));
-            br.newLine();
-            br.flush();
+                //To check if win or lose; if difference is equal to the (stake * -1) or if the difference is different from the (stake * -1)
+                int_winnings = (int_actualBalanceAfterBet - int_actualBalanceBeforeBet);
 
-//            Thread.sleep(1000);
-//            driver.close();
-//
-//            Thread.sleep(500);
-//            driver.switchTo().window(oldTab);
+                //Start of conditions
+                //LOSE
+                if (int_winnings == (int_stake * -1)) {
+                    result = "Lose";
+                    System.out.println("Stake: " + int_stake + " | Winnings: " + int_winnings);
 
+                    if (int_expectedBalanceAfterBet == int_actualBalanceAfterBet) {
+                        betStatus = "Tally";
+                    } else {
+                        betStatus = "Not Tally";
+                    }
+                    System.out.println("Balance after bet: " + int_actualBalanceAfterBet +
+                            "\nStatus: " + betStatus);
+
+                //WINNING
+                } else {
+                    result = "Win";
+                    System.out.println("Stake: " + int_stake + " | Winnings: " + int_winnings);
+                    int_expectedBalanceAfterWin = int_actualBalanceBeforeBet + int_winnings;
+
+                    if (int_expectedBalanceAfterWin == int_actualBalanceAfterBet) {
+                        settlementStatus = "Tally";
+                    } else {
+                        settlementStatus = "Not Tally";
+                    }
+                    System.out.println("Balance after winning: " + balanceDisplay.getText() +
+                            "\nStatus: " + settlementStatus);
+                }
+
+                //Assigning value for the variable "report"
+                report = ("Balance before betting: " + balanceBeforeBetNoFormat + "%0A" +
+                        "Stake: " + int_stake + "  |  Winnings: " + int_winnings + "%0A" +
+                        "Balance after winning: " + balanceDisplay.getText() + "%0A" +
+                        "Status: " + settlementStatus + "%0A");
+
+                //Check the result if won; if yes append else do not append
+                if(result.equals("Win")){
+                    resultContent.append(report);
+                }
+
+                //delay 2s
+                //Thread.sleep(2000);
+            } while (int_winnings == (int_stake * -1));
+
+        } else {
+            System.out.println("The game is under maintenance.");
         }
 
-        }
     }
+
+    StringBuffer resultContent = new StringBuffer();
+    @Then("I send RT betting result in telegram")
+    public void sendRTBettingResult(DataTable telegramCreds){
+        List<List<String>> data = telegramCreds.asLists(String.class);
+        String token = data.get(1).get(0);
+        String chatId = data.get(1).get(1);
+
+        String resultContentString = resultContent.toString();
+        String username = Login.user;
+
+        try {
+            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+
+                    "&text=Provider: "+provider+"%0AUsername: "+username+"%0A"+resultContentString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+
+            int status = connection.getResponseCode();
+            System.out.println(status + ": " + url);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+
+    }
+
+}

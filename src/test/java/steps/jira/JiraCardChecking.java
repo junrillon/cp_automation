@@ -2,16 +2,13 @@ package steps.jira;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.PageModelBase;
 import pages.jira.JiraObjects;
 import pages.testrail.TestRailObjects;
 
@@ -23,8 +20,11 @@ import java.util.List;
 public class JiraCardChecking {
 
     private final WebDriver driver;
-    public JiraCardChecking (Driver driver){
+    public PageModelBase page;
+
+    public JiraCardChecking (PageModelBase page, Driver driver){
         this.driver = driver.get();
+        this.page = page;
     }
 
     StringBuffer resultContent = new StringBuffer();
@@ -118,8 +118,8 @@ public class JiraCardChecking {
         String oldTab = driver.getWindowHandle();
 
         //check cards inside sprint and then click
-        WebElement sprintHeader = driver.findElement(By.xpath(jiraObjects.advanceSprintXpath));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sprintHeader);
+        wait.until(ExpectedConditions.visibilityOf(jiraObjects.advanceSprintXpathWE));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", jiraObjects.advanceSprintXpathWE);
         System.out.println("Scrolled into per card");
 
         WebElement cardNumber = driver.findElement(By.xpath(jiraObjects.perCardNumberXpath + "[1]"));
@@ -202,6 +202,7 @@ public class JiraCardChecking {
 
         String result;
 
+        WebElement sprint = jiraObjects.sprintDisplayInsideCard;
         String issueCount = driver.findElement(By.xpath(jiraObjects.issueCountXpath)).getText();
         String count = issueCount.replace(" issues","");
         int converted_issueCount = Integer.parseInt(count);
@@ -281,6 +282,7 @@ public class JiraCardChecking {
             } else {
                 extractedCardTester = "None";
             }
+            System.out.println(extractedCardTester);
 
             //check if card has assignee/dev
             int cardAssignee_isNull = driver.findElements(By.xpath(perCardXpath + "["+i+"]" + perCardAssignee)).size();
@@ -291,6 +293,7 @@ public class JiraCardChecking {
             } else {
                 extractedCardAssignee = "Assignee: None";
             }
+            System.out.println("1");
 
             //check cards inside sprint and then click
             WebElement cardNumber = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardNumberXpath));
@@ -298,10 +301,12 @@ public class JiraCardChecking {
             wait.until(ExpectedConditions.elementToBeClickable(cardNumber));
             cardNumber.click();
 
+            System.out.println("2");
+
             //check sprint element inside detailed view then scroll to it
             wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
-            wait.until(ExpectedConditions.visibilityOf(jiraObjects.sprintDisplayInsideCard));
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", jiraObjects.sprintDisplayInsideCard);
+            wait.until(ExpectedConditions.visibilityOf(sprint));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sprint);
 
             //check testcases element inside detailed view then click
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));

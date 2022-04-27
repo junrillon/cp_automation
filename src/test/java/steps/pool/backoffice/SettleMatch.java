@@ -30,7 +30,6 @@ public class SettleMatch {
 
     String cMatchStatus;
     public static String winningTeam;
-    public static By email;
 
     @When("I navigate to matches page")
     public void clickMatches() {

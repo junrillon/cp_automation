@@ -2,6 +2,7 @@ package pages.pool.backoffice;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
@@ -18,37 +19,46 @@ public class Matches {
      */
     //Create match button
     @FindBy(how = How.ID, using =  "btn-match-create")
+    @CacheLookup
     public WebElement createMatchBtn;
 
     //sports dropdown from create matches
     @FindBy(how = How.CSS, using =  "#sport-list")
+    @CacheLookup
     public WebElement sportsDropdown;
 
     //league dropdown from create matches
     @FindBy(how = How.ID, using =  "league-list")
+    @CacheLookup
     public WebElement leagueDropdown;
 
     //input match date from create matches
     @FindBy(how = How.ID, using =  "datepicker")
+    @CacheLookup
     public WebElement datePicker;
 
     //input match count from create matches
     @FindBy(how = How.ID, using =  "match-count-create")
+    @CacheLookup
     public WebElement matchCountTxt;
 
     //Submit button
     @FindBy(how = How.ID, using =  "create-match-btn")
+    @CacheLookup
     public WebElement submitBtn;
 
     //Match page empty table
-    @FindBy(how = How.XPATH, using = "//table[@id='DataTables_Table_0']//tbody")
+    @FindBy(how = How.XPATH, using = ".//table[@id='DataTables_Table_0']//tbody")
+    @CacheLookup
     public WebElement matchPageMatchesTable;
 
     //Action button
     @FindBy(how = How.CSS, using =  "select.custom-select.match-action")
+    @CacheLookup
     public WebElement actionDrpdown;
 
-    @FindBy(how = How.XPATH, using = "//input[@type='search']")
+    @FindBy(how = How.XPATH, using = ".//input[@type='search']")
+    @CacheLookup
     public WebElement searchField;
 
 
