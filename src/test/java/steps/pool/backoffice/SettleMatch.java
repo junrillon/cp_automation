@@ -268,12 +268,19 @@ public class SettleMatch {
                 betSelections.add(option.getText());
             }
 
-        betSelections.remove(0); //<-Remove the first index which is "Select Winner"
-        Random r = new Random(); //<-Select Random Text/Index in a List<String>
-        int selection = r.nextInt(betSelections.size()); //<-Get the size/length of List<String> Texts
-        winningTeam = betSelections.get(selection); //<-Assign the random selection to the variable winning team
+        //Remove the first index which is "Select Winner"
+        betSelections.remove(0);
+        betSelections.remove(4);
 
-        driver.findElement(By.xpath("//div[@id='modal-select-winner']//select[@id='winner']//option[contains(text(),'"+winningTeam+"')]")).click();
+        //<-Select Random Text/Index in a List<String>
+        Random r = new Random();
+
+        //<-Get the size/length of List<String> Texts
+        int selection = r.nextInt(betSelections.size());
+
+        //<-Assign the random selection to the variable winning team
+        winningTeam = betSelections.get(selection);
+        driver.findElement(By.xpath(".//div[@id='modal-select-winner']//select[@id='winner']//option[contains(text(),'"+winningTeam+"')]")).click();
 
         System.out.println("Bet Selections: " + betSelections);
         System.out.println("Selected Match Winner: " + winningTeam);
