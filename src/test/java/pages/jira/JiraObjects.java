@@ -47,11 +47,9 @@ public class JiraObjects{
     public WebElement backlog;
 
     @FindBy(how = How.ID, using = "ghx-detail-view")
-    @CacheLookup
     public WebElement cardDetailedView;
 
     @FindBy(how = How.XPATH, using = ".//div[@class='mffpf0-2 bWvVtC']") //<-- details
-    @CacheLookup
     public WebElement cardDetails;
 
     @FindBy(how = How.XPATH, using = ".//h2[contains(text(), 'Story Points')]") //<-- details

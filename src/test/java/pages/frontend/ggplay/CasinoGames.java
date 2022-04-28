@@ -16,7 +16,7 @@ public class CasinoGames {
         PageFactory.initElements(driver, this);
     }
 
-    // gameCard //
+    // gameCard
     @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][2]//div[@class='game-card']")
     @CacheLookup
     public WebElement gameCard;
