@@ -85,7 +85,6 @@ public class JiraObjects{
     //---------------------------------------------------
 
     @FindBy(how = How.XPATH, using = ".//a[contains(@href, 'index.php?/auth/login')]")
-    @CacheLookup
     public List<WebElement> TestrailUrl;
 
     @FindBy(how = How.XPATH, using = ".//section[@id='content']/p")
