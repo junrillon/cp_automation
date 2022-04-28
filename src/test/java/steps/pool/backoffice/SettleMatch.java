@@ -270,7 +270,7 @@ public class SettleMatch {
 
         //Remove the first index which is "Select Winner"
         betSelections.remove(0);
-        betSelections.remove(4);
+        betSelections.remove(3);
 
         //<-Select Random Text/Index in a List<String>
         Random r = new Random();
