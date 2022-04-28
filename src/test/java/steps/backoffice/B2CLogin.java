@@ -1,4 +1,4 @@
-package steps.b2cBackoffice;
+package steps.backoffice;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
@@ -8,7 +8,7 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.b2cBackoffice.B2CBackofficeObjects;
+import pages.backoffice.Dashboard;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class B2CLogin {
 
     @When("^I login on b2c backoffice")
     public void inputTheUsernameAndPassword(DataTable credentials) throws InterruptedException{
-        B2CBackofficeObjects page = new B2CBackofficeObjects(driver);
+        Dashboard page = new Dashboard(driver);
         WebDriverWait wait = new WebDriverWait(driver, 10);
 
         List<List<String>> data = credentials.asLists(String.class);
@@ -55,7 +55,7 @@ public class B2CLogin {
         if(currentPage.contains("Dashboard")){
             System.out.println("You're in Dashboard.");
 
-        } else if(currentPage.contains("steps.frontend.ggplay.Login")){
+        } else if(currentPage.contains("steps.frontend.Login")){
             System.out.println("You're still not logged in.");
 
         } else {

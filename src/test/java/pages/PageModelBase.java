@@ -8,8 +8,10 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import utilities.Tools;
 
 import java.time.Duration;
+import java.util.List;
 
 import static utilities.Tools.logger;
 
@@ -51,6 +53,58 @@ public class PageModelBase {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+
+        logger().traceExit();
+    }
+
+    /**
+     * @param element attempts to click on element normally but if it fails we click on it with
+     *     JavascriptExecutor
+     */
+    public void click(WebElement element) {
+        Tools.logger().traceEntry();
+
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        try {
+            element.click();
+        } catch (Exception e) {
+            js.executeScript("arguments[0].click();", element);
+        }
+        Tools.logger().traceExit();
+    }
+
+    /**
+     * @param elems list of elements to click on
+     * @param index index to start clicking from
+     * @param amount how many times to click on elements Sequentially
+     */
+    public void clickSequentially(List<WebElement> elems, Integer index, Integer amount) {
+        logger().traceEntry();
+
+        int clicked = 0;
+
+        while (clicked < amount) {
+            elems.get(index).click();
+            clicked++;
+            index++;
+        }
+
+        logger().traceExit();
+    }
+
+    /**
+     * @param element element that we want to click on
+     * @param amount how many times to click on element
+     */
+    public void clickMultiple(WebElement element, Integer amount) {
+        logger().traceEntry();
+
+        int clicked = 0;
+
+        while (clicked < amount) {
+            element.click();
+            clicked++;
         }
 
         logger().traceExit();

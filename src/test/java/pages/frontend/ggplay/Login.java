@@ -8,8 +8,8 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class LoginGGplay {
-    public LoginGGplay(WebDriver driver) {
+public class Login {
+    public Login(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
 
@@ -86,25 +86,6 @@ public class LoginGGplay {
     @FindBy(how = How.XPATH, using =  ".//div[@class='react-confirm-alert-button-group']/button[1]")
     @CacheLookup
     public WebElement activeSessionContinuebtn;
-
-    // Games Casino
-    @FindBy(how = How.XPATH, using =  ".//ul[@class='navbar-nav mr-auto']/li/a[@href='/casino/casino']")
-    @CacheLookup
-    public WebElement navGamesCasino;
-
-    // Provider filter
-    @FindBy(how = How.XPATH, using =  ".//div[@class='custom-control custom-checkbox']")
-    @CacheLookup
-    public WebElement providerFilter;
-
-    // Game card
-    @FindBy(how = How.XPATH, using =  ".//div[@class=\"game-card\"]")
-    @CacheLookup
-    public WebElement gameCard;
-
-    @FindBy(how = How.XPATH, using =  ".//div[@class='game-content']/div[2]")
-    @CacheLookup
-    public WebElement casinoGamesContainer;
 
 
 }

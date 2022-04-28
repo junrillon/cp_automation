@@ -73,14 +73,14 @@ public class JiraObjects{
     @FindBy(how = How.XPATH, using = ".//iframe[contains(@id,'com.testrail.jira.testrail-plugin__panel-references')]")
     public WebElement tcIframe1;
 
-    @FindBy(how = How.XPATH, using = ".//iframe[@id='tr-frame-panel-references']")
+    @FindBy(how = How.ID, using = "tr-frame-panel-references")
 
     public WebElement tcIframe2;
 
     @FindBy(how = How.XPATH, using = ".//iframe[contains(@id,'com.testrail.jira.testrail-plugin__panel-runsreferences')]")
     public WebElement trIframe1;
 
-    @FindBy(how = How.XPATH, using = ".//iframe[@id='tr-frame-panel-runsreferences']")
+    @FindBy(how = How.ID, using = "tr-frame-panel-runsreferences")
     public WebElement trIframe2;
     //---------------------------------------------------
 
@@ -109,10 +109,5 @@ public class JiraObjects{
     public String perCardAssigneeXpath = "//span[@class='ghx-end ghx-items-container']/img"; // <-- get Alt
     public String perCardTesterXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[3]/span";
     public String perCardStatusXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[1]/span";
-
-    public void scrollIntoSprint(){
-        sprintDisplayInsideCard.isDisplayed();
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sprintDisplayInsideCard);
-    }
 
 }

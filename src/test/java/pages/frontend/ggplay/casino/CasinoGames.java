@@ -1,4 +1,4 @@
-package pages.frontend.ggplay;
+package pages.frontend.ggplay.casino;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

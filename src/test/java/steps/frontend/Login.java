@@ -1,14 +1,11 @@
-package steps.frontend.ggplay;
+package steps.frontend;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.frontend.ggplay.LoginGGplay;
 
 import java.util.List;
 
@@ -29,7 +26,7 @@ public class Login {
         try {
             //Click Banner Exit button
             WebDriverWait wait = new WebDriverWait(driver, 20);
-            LoginGGplay pageLogin = new  LoginGGplay(driver);
+            pages.frontend.ggplay.Login pageLogin = new pages.frontend.ggplay.Login(driver);
 
             //  base.Driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             wait.until(ExpectedConditions.elementToBeClickable(pageLogin.bannerExitBtn));
@@ -50,7 +47,7 @@ public class Login {
 
 
         //Input username and password
-        LoginGGplay pageLogin = new  LoginGGplay(driver);
+        pages.frontend.ggplay.Login pageLogin = new pages.frontend.ggplay.Login(driver);
         pageLogin.Login(user, pass);
 
         // wait for captcha removal

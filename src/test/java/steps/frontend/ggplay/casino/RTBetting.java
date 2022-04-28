@@ -1,85 +1,29 @@
-package steps.frontend.casino;
+package steps.frontend.ggplay.casino;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.Assert;
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import pages.frontend.ggplay.CasinoGames;
-import pages.frontend.ggplay.LoginGGplay;
-import steps.frontend.ggplay.Login;
+import pages.frontend.ggplay.casino.CasinoGames;
+import steps.frontend.GamesCasino;
+import steps.frontend.Login;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-public class CasinoBettingRT {
+public class RTBetting {
     private final WebDriver driver;
 
-    public CasinoBettingRT(Driver driver) {
+    public RTBetting(Driver driver) {
         this.driver = driver.get();
-    }
-
-    @Given("I navigate to games casino")
-    public void iNavigateToGamesCasino() {
-        LoginGGplay page = new LoginGGplay(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        WebElement gamesCasino = page.navGamesCasino;
-        wait.until(ExpectedConditions.visibilityOf(gamesCasino));
-        wait.until(ExpectedConditions.elementToBeClickable(gamesCasino));
-        gamesCasino.click();
-
-    }
-
-    public String provider;
-    @When("I select provider")
-    public void iSelectProvider(DataTable providerDetails) {
-        LoginGGplay page = new LoginGGplay(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        List<List<String>> sportsDetails = providerDetails.asLists(String.class);
-        provider = sportsDetails.get(1).get(0);
-
-        //wait for the provider filter check box
-        wait.until(ExpectedConditions.visibilityOf(page.providerFilter));
-
-        //wait for the casino games display (game card)
-        wait.until(ExpectedConditions.visibilityOf(page.gameCard));
-
-        //declare web element for casino provider check box and then click
-        WebElement providerFilter = driver.findElement(By.xpath(".//label[contains(text(), '"+provider+"')]"));
-        wait.until(ExpectedConditions.visibilityOf(providerFilter));
-        providerFilter.click();
-
-    }
-
-    @When("I wait for casino games to load")
-    public void iWaitCasinoGamesToLoad(){
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-        CasinoGames CasinoGames = new CasinoGames(driver);
-
-        wait.until(ExpectedConditions.visibilityOf(CasinoGames.gameCard));
-        wait.until(ExpectedConditions.visibilityOf(CasinoGames.gameCardImage));
-
-        int h = CasinoGames.gameCardImage.getSize().height;
-        while(h < 100) {
-            h = CasinoGames.gameCardImage.getSize().height;
-
-            if (h > 100) {
-                System.out.println("Game image loaded.");
-                break;
-            }
-        }
     }
 
     @When("I play casino game")
@@ -303,6 +247,7 @@ public class CasinoBettingRT {
 
     }
 
+    String provider = GamesCasino.provider;
     StringBuffer resultContent = new StringBuffer();
     @Then("I send RT betting result in telegram")
     public void sendRTBettingResult(DataTable telegramCreds){

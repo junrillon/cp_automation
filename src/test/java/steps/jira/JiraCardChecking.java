@@ -63,8 +63,7 @@ public class JiraCardChecking {
     }
 
     @When("I select project {string}")
-    public void iSelectProjectBC(String projectName) throws InterruptedException {
-        JiraObjects jiraObjects = new JiraObjects(driver);
+    public void iSelectProjectBC(String projectName) {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //locate for p element that contains {projectName}
@@ -297,6 +296,7 @@ public class JiraCardChecking {
             //check cards inside sprint and then click
             WebElement cardNumber = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardNumberXpath));
             String extractedCardNumber = cardNumber.getAttribute("title");
+            wait.until(ExpectedConditions.visibilityOf(cardNumber));
             wait.until(ExpectedConditions.elementToBeClickable(cardNumber));
             cardNumber.click();
 

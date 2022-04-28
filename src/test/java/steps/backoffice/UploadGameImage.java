@@ -1,4 +1,4 @@
-package steps.b2cBackoffice;
+package steps.backoffice;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -7,7 +7,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -15,7 +14,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.PageModelBase;
-import pages.b2cBackoffice.B2CBackofficeObjects;
+import pages.backoffice.GameList;
+import pages.backoffice.Dashboard;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class UploadGameImage {
 
     @Given("I go to gamelist page")
     public void IGoToGamelistPage() {
-        B2CBackofficeObjects page = new B2CBackofficeObjects(driver);
+        Dashboard page = new Dashboard(driver);
         WebElement nav_casino = page.navCasino;
 
         //Wait
@@ -51,7 +51,7 @@ public class UploadGameImage {
 
     @When("I upload the image per game")
     public void iUploadImagePerGame(DataTable FileDetails) throws IOException, CsvValidationException, InterruptedException {
-        B2CBackofficeObjects B2CBackofficeObjects = new B2CBackofficeObjects(driver);
+        GameList GameList = new GameList(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //File Details
@@ -60,7 +60,7 @@ public class UploadGameImage {
         String fileType = source.get(1).get(1);
         String fileLocation = source.get(1).get(2);
         String csvLocation = source.get(1).get(3);
-        Select casinoRoomDrpDown = new Select(B2CBackofficeObjects.casinoRoomFilter);
+        Select casinoRoomDrpDown = new Select(GameList.casinoRoomFilter);
         casinoRoomDrpDown.selectByVisibleText(provider);
 
         CSVReader reader = new CSVReader(new FileReader(csvLocation));
@@ -72,56 +72,56 @@ public class UploadGameImage {
             String fileName = csvCell[1];
 
             //Clear Game Name filter before send keys
-            wait.until(ExpectedConditions.visibilityOf(B2CBackofficeObjects.gameNameFilter));
-            B2CBackofficeObjects.gameNameFilter.sendKeys(Keys.CONTROL + "a");
-            B2CBackofficeObjects.gameNameFilter.sendKeys(Keys.DELETE);
+            wait.until(ExpectedConditions.visibilityOf(GameList.gameNameFilter));
+            GameList.gameNameFilter.sendKeys(Keys.CONTROL + "a");
+            GameList.gameNameFilter.sendKeys(Keys.DELETE);
 
             //Input game name from CSV File to game name filter
-            B2CBackofficeObjects.gameNameFilter.sendKeys(game_name);
-            wait.until(ExpectedConditions.visibilityOf(B2CBackofficeObjects.casinoRoomFilter));
+            GameList.gameNameFilter.sendKeys(game_name);
+            wait.until(ExpectedConditions.visibilityOf(GameList.casinoRoomFilter));
             casinoRoomDrpDown.selectByVisibleText(provider); //<-- Select provider in casino room dropdown
 
             //wait for apply button to be clickable
-            wait.until(ExpectedConditions.elementToBeClickable(B2CBackofficeObjects.applyFilterButton));
-            B2CBackofficeObjects.applyFilterButton.click(); //<-- Click apply filter button
+            wait.until(ExpectedConditions.elementToBeClickable(GameList.applyFilterButton));
+            GameList.applyFilterButton.click(); //<-- Click apply filter button
 
             //Check if modalCloseButton isPresents
-            page.waitForVisibility(B2CBackofficeObjects.WE_gDetailsModal,20);
-            int gameDetails = B2CBackofficeObjects.gDetailsModal.size();
+            page.waitForVisibility(GameList.WE_gDetailsModal,20);
+            int gameDetails = GameList.gDetailsModal.size();
             if(gameDetails > 0){
-                page.waitForVisibility(B2CBackofficeObjects.modalCloseButton,20);
-                wait.until(ExpectedConditions.elementToBeClickable(B2CBackofficeObjects.modalCloseButton));
-                B2CBackofficeObjects.modalCloseButton.click();
+                page.waitForVisibility(GameList.modalCloseButton,20);
+                wait.until(ExpectedConditions.elementToBeClickable(GameList.modalCloseButton));
+                GameList.modalCloseButton.click();
             } else {
                 System.out.println("Game Details Modal not closed.");
             }
 
             //Check if gameImage isPresent
 
-            wait.until(ExpectedConditions.visibilityOf(B2CBackofficeObjects.gameImage));
-            boolean gameImage_isPresent = B2CBackofficeObjects.gameImage.isDisplayed();
+            wait.until(ExpectedConditions.visibilityOf(GameList.gameImage));
+            boolean gameImage_isPresent = GameList.gameImage.isDisplayed();
             if (gameImage_isPresent) {
-                page.waitForVisibility(B2CBackofficeObjects.gameImage,20);
-                wait.until(ExpectedConditions.elementToBeClickable(B2CBackofficeObjects.gameImage));
-                B2CBackofficeObjects.gameImage.click();
+                page.waitForVisibility(GameList.gameImage,20);
+                wait.until(ExpectedConditions.elementToBeClickable(GameList.gameImage));
+                GameList.gameImage.click();
             } else {
                 Assert.fail("Game image object is not present.");
             }
 
             //
-            wait.until(ExpectedConditions.visibilityOf(B2CBackofficeObjects.uploadImageForm));
+            wait.until(ExpectedConditions.visibilityOf(GameList.uploadImageForm));
 
             //Check if gameImage isPresent
-            wait.until(ExpectedConditions.visibilityOf(B2CBackofficeObjects.chooseFileButton));
-            boolean chooseFileButton_isPresent = B2CBackofficeObjects.chooseFileButton.isDisplayed();
+            wait.until(ExpectedConditions.visibilityOf(GameList.chooseFileButton));
+            boolean chooseFileButton_isPresent = GameList.chooseFileButton.isDisplayed();
             if (chooseFileButton_isPresent) {
-                B2CBackofficeObjects.chooseFileButton.sendKeys(fileLocation + fileName + fileType);
-                String actualFile = B2CBackofficeObjects.chooseFileButton.getAttribute("value");
+                GameList.chooseFileButton.sendKeys(fileLocation + fileName + fileType);
+                String actualFile = GameList.chooseFileButton.getAttribute("value");
 
                 if (actualFile.equalsIgnoreCase(fakePath + fileName + fileType)) {
                     System.out.println(actualFile);
-                    wait.until(ExpectedConditions.elementToBeClickable(B2CBackofficeObjects.saveButton));
-                    B2CBackofficeObjects.saveButton.click();
+                    wait.until(ExpectedConditions.elementToBeClickable(GameList.saveButton));
+                    GameList.saveButton.click();
 
                 } else {
                     Assert.fail("Check the file. " +
@@ -133,8 +133,8 @@ public class UploadGameImage {
             }
 
             //Check if note_success isPresent
-            wait.until(ExpectedConditions.visibilityOf(B2CBackofficeObjects.noteSuccess));
-            boolean noteSuccess_isPresent = B2CBackofficeObjects.noteSuccess.isDisplayed();
+            wait.until(ExpectedConditions.visibilityOf(GameList.noteSuccess));
+            boolean noteSuccess_isPresent = GameList.noteSuccess.isDisplayed();
             if (noteSuccess_isPresent) {
                 System.out.println("Image Successfully uploaded. \n---------------");
             } else {
