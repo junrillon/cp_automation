@@ -5,8 +5,8 @@ Feature: Frontend betting player 3
   Given I logged in on frontend page https://staging.ggplay.co/login/
 
    # user login  credentials (player balance must > 1,000)
-    | Username   | Password |
-    | gcme4151t1 | 123123   |
+    | Username | Password |
+    | buldugan | 123123   |
 
   Scenario: Single bet on Draw
     Given I click the pool header button

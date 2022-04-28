@@ -40,7 +40,7 @@ public class Betting {
 
 
 
-
+    String scenarioTitle = Hooks.sce;
     StringBuffer reportRsult = new StringBuffer();
     @Given("I click the pool header button")
     public void iClickThePoolHeaderButton() {
@@ -97,7 +97,7 @@ public class Betting {
         List<List<String>> data = matchDetails.asLists(String.class); //get the value list from feature file
         BetSelection = Integer.parseInt(data.get(1).get(0));
         BetAmount = data.get(1).get(1);
-        WebDriverWait wait = new WebDriverWait(driver, 10); //wait for odds to be clickable
+        WebDriverWait wait = new WebDriverWait(driver, 20); //wait for odds to be clickable
         wait.until(ExpectedConditions.elementToBeClickable(page.selectionA));
         switch(BetSelection) { //betting selection
             case 1:
@@ -196,6 +196,20 @@ public class Betting {
         ResultSet resultValue = DatabaseConnection.execDBQuery(getWinner);
         String matchWinner = resultValue.getString("team_winner");
         System.out.println("match winner : " + matchWinner);
+        String settlementResult = null;
+        switch(Integer.parseInt(matchWinner)) {
+            case 1:
+                settlementResult = "Team A WIN!";
+                break;
+            case 2:
+                settlementResult = "Team B WIN!";
+                break;
+            case 3:
+                settlementResult = "Draw WIN!";
+            default:
+                System.out.println("WRONG result FORMAT!");
+                break;
+        }
         driver.switchTo().defaultContent(); //switch back to dashboard content
         var actualBalanceAfterSettlementTrim = page2.walletBalance.getText().replace(",",""); //get new wallet balance after settlement
         var actualBalanceAfterSettlementFinal =  new BigDecimal(actualBalanceAfterSettlementTrim);
@@ -211,6 +225,7 @@ public class Betting {
             Assert.assertEquals(expectedBalance, actualBalance);
             wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
             wait.until(ExpectedConditions.visibilityOfAllElements(page.cancelledBroadcast));
+            settlementResult = "Odds cancelled";
         }else if(Integer.parseInt(matchWinner) == 3 && (!(oddsTeamA <= 0.01) || !(oddsTeamA >= 99.99))) { // match winner draw
                 if(BetSelection == 3) { //Draw win and bet selection is draw (win amount will add to wallet balance)
                     System.out.println("you WIN! compute draw odds x bet amount and draw winner is displayed");
@@ -269,9 +284,8 @@ public class Betting {
                 Assert.assertEquals(expectedBalance, actualBalance);
                 wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page2.iFramePool));
                 wait.until(ExpectedConditions.visibilityOfAllElements(page.winBroadcast));
-            }
 
-        String scenarioTitle = Hooks.sce;
+            }
 
 
         reportRsult.append("**** BETTING ****" + "%0A" +
@@ -281,8 +295,14 @@ public class Betting {
                         "Bet amount:" + BetAmount + "%0A" +
                         "Balance after bet:"+balanceAfterbet + "%0A" + "%0A" +
                         "**** SETTLEMENT ****" + "%0A" +
+                        "Team A odds: " + oddsTeamA + "%0A" +
+                        "Team B odds: " + oddsTeamB + "%0A" +
+                        "Draw odds: " + oddsDraw + "%0A" +
+                        "Winner: " + settlementResult + "%0A" +
                         "Balance after settlement: " + actualBalance + "%0A" +
                         "Expected balance: " + expectedBalance + "%0A");
+
+
 
         String testResult = ("**** BETTING ****" + "\n" +
                         "Scenario: " + scenarioTitle + "\n" +
@@ -291,29 +311,28 @@ public class Betting {
                         "Bet amount: " + BetAmount + "\n" +
                         "Balance after bet: "+ balanceAfterbet + "\n" + "\n" +
                         "**** SETTLEMENT ****"+ "\n" +
+                        "Team A odds: " + oddsTeamA + "\n" +
+                        "Team B odds: " + oddsTeamB + "\n" +
+                        "Draw odds: " + oddsDraw + "\n" +
+                        "Winner: " + settlementResult + "\n" +
                         "Balance after settlement: " + actualBalance + "\n" +
                         "Expected balance: " + expectedBalance + "\n" );
 
 
         System.out.println("rrrrrrrrrrrrrrrrrr" + testResult);
 
-
-/*           try {
+           try {
                // String result = "test result";
                 URL url = new URL("https://api.telegram.org/bot5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg/sendMessage?chat_id=-1001766036425&text=" +reportRsult);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
-
                 int status = connection.getResponseCode();
                 System.out.println(status + ": " + url);
-
             } catch (IOException e) {
                 e.printStackTrace();
-
-            }*/
-
+            }
         }
     }
 

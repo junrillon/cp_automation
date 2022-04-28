@@ -8,6 +8,8 @@ import io.cucumber.plugin.event.Node;
 
 import java.util.Collection;
 
+import static java.lang.Thread.*;
+
 
 public class Hooks {
 
@@ -22,6 +24,7 @@ public class Hooks {
     public void before(Scenario scenario) {
      Collection<String> tag = scenario.getSourceTagNames();
      sce = scenario.getName();
+
 
 
         System.out.print("Tag: " + tag);
