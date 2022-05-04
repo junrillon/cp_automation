@@ -288,13 +288,16 @@ public class Betting {
             }
 
 
-        reportRsult.append("**** BETTING ****" + "%0A" +
-                        "Scenario: " + scenarioTitle + "%0A" +
+        reportRsult.append("***** POOL SMOKE TESTING *****" + "%0A" +
+                        "••• Player details •••" + "%0A" +
+                      //  "Scenario: " + scenarioTitle + "%0A" +
                         "Username: " + pUsername + "%0A" +
-                        "Balance before bet: " + balanceBeforeBet + "%0A" +
+                        "Balance before bet: " + balanceBeforeBet + "%0A" + "%0A" +
+                        "••• Bet details •••" + "%0A" +
                         "Bet amount:" + BetAmount + "%0A" +
+                        "Bet Selection: " + OddsName + "%0A" +
                         "Balance after bet:"+balanceAfterbet + "%0A" + "%0A" +
-                        "**** SETTLEMENT ****" + "%0A" +
+                        "••• Settlement details •••" + "%0A" +
                         "Team A odds: " + oddsTeamA + "%0A" +
                         "Team B odds: " + oddsTeamB + "%0A" +
                         "Draw odds: " + oddsDraw + "%0A" +
@@ -314,6 +317,7 @@ public class Betting {
                         "Team A odds: " + oddsTeamA + "\n" +
                         "Team B odds: " + oddsTeamB + "\n" +
                         "Draw odds: " + oddsDraw + "\n" +
+                        "Bet Selection: " + OddsName + "\n" +
                         "Winner: " + settlementResult + "\n" +
                         "Balance after settlement: " + actualBalance + "\n" +
                         "Expected balance: " + expectedBalance + "\n" );
