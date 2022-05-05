@@ -99,7 +99,7 @@ public class Betting {
         BetAmount = data.get(1).get(1);
         WebDriverWait wait = new WebDriverWait(driver, 20); //wait for odds to be clickable
         wait.until(ExpectedConditions.elementToBeClickable(page.selectionA));
-        Thread.sleep(5000);
+        Thread.sleep(3000);
         switch(BetSelection) { //betting selection
             case 1:
                 page.selectionA.click();
