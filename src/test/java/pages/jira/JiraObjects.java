@@ -74,7 +74,6 @@ public class JiraObjects{
     public WebElement tcIframe1;
 
     @FindBy(how = How.ID, using = "tr-frame-panel-references")
-
     public WebElement tcIframe2;
 
     @FindBy(how = How.XPATH, using = ".//iframe[contains(@id,'com.testrail.jira.testrail-plugin__panel-runsreferences')]")
@@ -103,6 +102,7 @@ public class JiraObjects{
     public String activeSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-active js-sprint-container ghx-open ui-droppable'][1]";
     public String perCardXpath = advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]";
     public String issueCountXpath = advanceSprintXpath + "//div[@class='ghx-issue-count']";
+    public String issueContentXpath = perCardXpath + "//div[@class='ghx-issue-content']";
     public String sprintNumberXpath = advanceSprintXpath +"//div[@class='ghx-name']";
     public String perCardTitleXpath = "//span[@class='ghx-inner']";
     public String perCardNumberXpath = "//span[@class='ghx-end ghx-items-container']/a";

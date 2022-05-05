@@ -12,9 +12,9 @@ Feature: Jira
       | username                  | password     |
       | qa.testrail@clickplay.org | Clickplay123 |
     And I check cards in future sprint
-    Then I send results in telegram
-      | token                                          | chatId     |
-      | 5266678102:AAFdXQxtUGGhRn14vWmXISQMZh2dK3dwkRg | -643306593 |
+#    Then I send results in telegram
+#      | token                                          | chatId     |
+#      | 5266678102:AAFdXQxtUGGhRn14vWmXISQMZh2dK3dwkRg | -643306593 |
 
     #-643306593 ,-1001771171564,
     #file_id (lets go): CgACAgUAAx0CaZHu7AADjmIuqQ0Y6JP39b-ZmyXkgvcN_VWYAAKDBQACxjU5VdiUGEsONAH2IwQ

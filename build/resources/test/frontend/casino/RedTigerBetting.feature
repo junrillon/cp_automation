@@ -14,10 +14,10 @@ Feature: Frontend casino betting - Red Tiger
       | provider |
       | Red Tiger|
     And I wait for casino games to load
-    And I play casino game
-    Then I send RT betting result in telegram
-      | token                                          | chatId     |
-      | 5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg | -1001766036425 |
+#    And I play casino game
+#    Then I send RT betting result in telegram
+#      | token                                          | chatId     |
+#      | 5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg | -1001766036425 |
 
 
 

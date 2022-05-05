@@ -200,8 +200,6 @@ public class JiraCardChecking {
         String testRuns_stats;
 
         String result;
-
-        WebElement sprint = jiraObjects.sprintDisplayInsideCard;
         String issueCount = driver.findElement(By.xpath(jiraObjects.issueCountXpath)).getText();
         String count = issueCount.replace(" issues","");
         int converted_issueCount = Integer.parseInt(count);
@@ -209,28 +207,29 @@ public class JiraCardChecking {
         System.out.println("Checking every card now.");
 
         for(int i = 1; i <= converted_issueCount; i++){
+            String perCard = perCardXpath + "["+i+"]";
+            WebElement issueContent = driver.findElement(By.xpath(jiraObjects.issueContentXpath));
+
             //locate card status element and get text
             System.out.println("Checking card status");
-            WebElement cardStatus = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardStatus));
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cardStatus);
+            WebElement cardStatus = driver.findElement(By.xpath(perCard + perCardStatus));
             wait.until(ExpectedConditions.visibilityOf(cardStatus));
             String extractedCardStatus = cardStatus.getText();
 
             //locate card title element and get text
             System.out.println("Checking card title");
-            WebElement cardTitle = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardTitleXpath));
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cardTitle);
+            WebElement cardTitle = driver.findElement(By.xpath(perCard + perCardTitleXpath));
             wait.until(ExpectedConditions.visibilityOf(cardTitle));
             String extractedCardTitle = cardTitle.getText();
 
             //check if card has tester
             System.out.println("Checking card tester");
-            int cardTester_isNull = driver.findElements(By.xpath(perCardXpath + "["+i+"]" + perCardTester)).size();
+            int cardTester_isNull = driver.findElements(By.xpath(perCard + perCardTester)).size();
             String extractedCardTester;
 
             if(cardTester_isNull > 0){
                 //locate card title element and get text
-                extractedCardTester = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardTester)).getText();
+                extractedCardTester = driver.findElement(By.xpath(perCard + perCardTester)).getText();
                 //String testerName = extractedCardTester;
                 String[] splitStr = extractedCardTester.split("\\s+");
 
@@ -284,23 +283,26 @@ public class JiraCardChecking {
             System.out.println(extractedCardTester);
 
             //check if card has assignee/dev
-            int cardAssignee_isNull = driver.findElements(By.xpath(perCardXpath + "["+i+"]" + perCardAssignee)).size();
+            int cardAssignee_isNull = driver.findElements(By.xpath(perCard + perCardAssignee)).size();
             String extractedCardAssignee;
             if(cardAssignee_isNull > 0){
                 //locate card assignee element and get text
-                extractedCardAssignee = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardAssignee)).getAttribute("alt");
+                extractedCardAssignee = driver.findElement(By.xpath(perCard + perCardAssignee)).getAttribute("alt");
             } else {
                 extractedCardAssignee = "Assignee: None";
             }
 
             //check cards inside sprint and then click
-            WebElement cardNumber = driver.findElement(By.xpath(perCardXpath + "["+i+"]" + perCardNumberXpath));
-            String extractedCardNumber = cardNumber.getAttribute("title");
+            WebElement cardNumber = driver.findElement(By.xpath(perCard + perCardNumberXpath));
             wait.until(ExpectedConditions.visibilityOf(cardNumber));
-            wait.until(ExpectedConditions.elementToBeClickable(cardNumber));
-            cardNumber.click();
+            String extractedCardNumber = cardNumber.getAttribute("title");
+
+            //Click card
+            wait.until(ExpectedConditions.elementToBeClickable(issueContent));
+            issueContent.click();
 
             //check sprint element inside detailed view then scroll to it
+            WebElement sprint = jiraObjects.sprintDisplayInsideCard;
             wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
             wait.until(ExpectedConditions.visibilityOf(sprint));
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", sprint);
