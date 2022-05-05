@@ -168,13 +168,18 @@ public class Betting {
 
     @And("I wait for the match to settle")
     public void iWaitForTheMatchToSettle() throws SQLException, InterruptedException {
-        int settlementStatus;
+        int settlementStatus = 0;
         do { //check p match if settlement status is already settled
+
+            try{
                 String getSettlementStatus = "SELECT settlement_status FROM `stage_pool_betting`.`p_match` WHERE sport_id = 83 AND league_id = 191";
                 ResultSet settlementResult = DatabaseConnection.execDBQuery(getSettlementStatus);
                 settlementStatus = Integer.parseInt(settlementResult.getString("settlement_status"));
                 System.out.println("match settlement status is: " + settlementStatus);
                 Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }while(settlementStatus != 2);
              System.out.println("Match is already settled!!");
     }
