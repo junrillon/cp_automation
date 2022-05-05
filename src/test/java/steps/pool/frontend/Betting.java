@@ -294,7 +294,7 @@ public class Betting {
             }
 
 
-        reportRsult.append("•• Player details ••" + "%0A" +
+        reportRsult.append("••• Player details •••" + "%0A" +
                       //  "Scenario: " + scenarioTitle + "%0A" +
                         "Username: " + pUsername + "%0A" +
                         "Balance before bet: " + balanceBeforeBet + "%0A" + "%0A" +
