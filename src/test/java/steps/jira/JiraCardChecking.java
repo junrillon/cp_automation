@@ -208,7 +208,8 @@ public class JiraCardChecking {
 
         for(int i = 1; i <= converted_issueCount; i++){
             String perCard = perCardXpath + "["+i+"]";
-            WebElement issueContent = driver.findElement(By.xpath(jiraObjects.issueContentXpath));
+            WebElement issueContent = driver.findElement(By.xpath(perCard));
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", issueContent);
 
             //locate card status element and get text
             System.out.println("Checking card status");

@@ -102,7 +102,7 @@ public class JiraObjects{
     public String activeSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-active js-sprint-container ghx-open ui-droppable'][1]";
     public String perCardXpath = advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]";
     public String issueCountXpath = advanceSprintXpath + "//div[@class='ghx-issue-count']";
-    public String issueContentXpath = perCardXpath + "//div[@class='ghx-issue-content']";
+    public String issueContentXpath = "//div[@class='ghx-issue-content']";
     public String sprintNumberXpath = advanceSprintXpath +"//div[@class='ghx-name']";
     public String perCardTitleXpath = "//span[@class='ghx-inner']";
     public String perCardNumberXpath = "//span[@class='ghx-end ghx-items-container']/a";

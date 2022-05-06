@@ -24,11 +24,8 @@ public class Hooks {
     public void before(Scenario scenario) {
      Collection<String> tag = scenario.getSourceTagNames();
      sce = scenario.getName();
-
-
-
-        System.out.print("Tag: " + tag);
-        System.out.print("scenario: " + sce);
+        System.out.println("Tag: " + tag);
+        System.out.println("scenario: " + sce);
         driver.start();
     }
 

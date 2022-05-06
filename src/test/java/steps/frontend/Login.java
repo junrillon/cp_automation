@@ -13,6 +13,8 @@ public class Login {
 
     private WebDriver driver;
     public static String user;
+    public static String userId;
+
     public Login(Driver driver) {
         this.driver = driver.get();
 
@@ -42,9 +44,7 @@ public class Login {
         user = data.get(1).get(0);
         String pass = data.get(1).get(1);
 
-
-        System.out.println("username and password is "+ user + pass);
-
+        System.out.println("username and password is "+ user +", "+ pass);
 
         //Input username and password
         pages.frontend.ggplay.Login pageLogin = new pages.frontend.ggplay.Login(driver);

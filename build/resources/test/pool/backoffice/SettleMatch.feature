@@ -20,10 +20,10 @@ Feature: Settle Match
     And I verify if has bets
       | sport_id | league_id| totalBetCount | betSelection1 | betSelection2 | betSelection3 |
       | 83       | 191      | 3             | 0             | 0             | 0             |
-        And I check the current settlement status and match status
-        And I close the match
-        And I select winner
-        And I settle match
+    And I check the current settlement status and match status
+    And I close the match
+    And I select winner
+#    And I settle match
 
 
 

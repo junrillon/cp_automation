@@ -55,10 +55,13 @@ public class Betting {
     public void iClickTheAvailableSports() throws InterruptedException {
         Dashboard page = new Dashboard(driver);
         WebDriverWait wait = new WebDriverWait(driver, 10);
+
         wait.until(ExpectedConditions.visibilityOfAllElements(page.walletBalance)); //get wallet balance display before betting
         String balanceBeforeBetOrigin = page.walletBalance.getText();
+
         balanceBeforeBet = balanceBeforeBetOrigin.replace(",","");
         pUsername = page.tcxtUsername.getText();
+
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePool)); // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.elementToBeClickable(page.TestSport)); //Click the test sports
         page.TestSport.click();
