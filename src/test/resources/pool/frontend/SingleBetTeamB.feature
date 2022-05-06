@@ -14,7 +14,7 @@ Feature: Frontend betting player 2
     And I select team and input bet amount
      #Selection 1 = TEAM A, 2 = TEAM B, 3 = DRAW
       | Selection | Amount |
-      | 2         | 100    |
+      | 2         | 200    |
     And place bet success
     And I wait for the match to settle
     Then settlement is correct
