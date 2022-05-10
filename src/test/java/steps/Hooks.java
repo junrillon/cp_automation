@@ -31,6 +31,6 @@ public class Hooks {
 
     @After()
     public void after() {
-        //driver.close();
+        driver.close();
     }
 }
