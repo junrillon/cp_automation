@@ -11,16 +11,25 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
+import pages.frontend.ggplay.LoginGGplay;
 import pages.frontend.sports.Pinnacle;
+import pages.pool.frontend.MatchDetails;
+import steps.Hooks;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class PinnacleBetting {
+public class PinnacleBettingSingleBet {
     private WebDriver driver;
 
-    public PinnacleBetting(Driver driver) {this.driver = driver.get();}
+    public PinnacleBettingSingleBet(Driver driver) {this.driver = driver.get();}
+
+    String scenarioTitle = Hooks.sce;
+    StringBuffer reportResult = new StringBuffer();
 
     @Given("I click the sports pinnacle header button")
     public void iClickTheSportsHeaderButton() {
@@ -30,7 +39,7 @@ public class PinnacleBetting {
         page.SportsHeaderBtn.click();
     }
 
-    String balanceBeforeBet;
+    String balanceBeforeBet; String pUsername;
     @When("I click the early matches")
     public void iClickTheEarlyMatches() {
 
@@ -42,6 +51,7 @@ public class PinnacleBetting {
         wait.until(ExpectedConditions.visibilityOfAllElements(page2.walletBalance));
         String balanceBeforeBetOrigin = page2.walletBalance.getText();
         balanceBeforeBet = balanceBeforeBetOrigin.replace(",","");
+        pUsername = page2.tcxtUsername.getText();
 
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePinnacle));
@@ -57,7 +67,7 @@ public class PinnacleBetting {
 
     }
 
-    String BetAmount; int BetSelection;
+    String BetAmount; int BetSelection; String odds;
     @And("I select team A odds and input bet amount")
     public void iSelectTeamAoddsAndInputBetAmount(DataTable pinnacle) throws InterruptedException{
 
@@ -77,33 +87,35 @@ public class PinnacleBetting {
                 switch(BetSelection) {
                     case 1:
                         page.TeamAOddsML.click();
+                        odds = page.TeamAOddsML.getText();
                         //input bet amount
-                        wait.until(ExpectedConditions.visibilityOf(page.PinnacleBetAmount));
+                        wait.until(ExpectedConditions.visibilityOf(page.SinglePinnacleBetAmount));
                         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                        page.PinnacleBetAmount.sendKeys(BetAmount);
+                        page.SinglePinnacleBetAmount.sendKeys(BetAmount);
 
                         //Click Accept Better Odds button
                         wait.until(ExpectedConditions.elementToBeClickable(page.AcceptBetterOdds));
                         page.AcceptBetterOdds.click();
 
                         //Click Place Bet Button
-                        wait.until(ExpectedConditions.elementToBeClickable(page.PinnaclePlaceBetButton));
-                        page.PinnaclePlaceBetButton.click();
+                        wait.until(ExpectedConditions.elementToBeClickable(page.SinglePlaceBetButton));
+                        page.SinglePlaceBetButton.click();
                         break;
                     case 2:
                         page.TeamBOddsML.click();
+                        odds = page.TeamBOddsML.getText();
                         //input bet amount
-                        wait.until(ExpectedConditions.visibilityOf(page.PinnacleBetAmount));
+                        wait.until(ExpectedConditions.visibilityOf(page.SinglePinnacleBetAmount));
                         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                        page.PinnacleBetAmount.sendKeys(BetAmount);
+                        page.SinglePinnacleBetAmount.sendKeys(BetAmount);
 
                         //Click Accept Better Odds button
                         wait.until(ExpectedConditions.elementToBeClickable(page.AcceptBetterOdds));
                         page.AcceptBetterOdds.click();
 
                         //Click Place Bet Button
-                        wait.until(ExpectedConditions.elementToBeClickable(page.PinnaclePlaceBetButton));
-                        page.PinnaclePlaceBetButton.click();
+                        wait.until(ExpectedConditions.elementToBeClickable(page.SinglePlaceBetButton));
+                        page.SinglePlaceBetButton.click();
                         break;
                     default:
                         System.out.println("WRONG SELECTION FORMAT!");
@@ -168,11 +180,13 @@ public class PinnacleBetting {
 
     }
 
-    @And("I click the pinnacle my bet")
-    public void iClickPinnacleMyBet() {
+    String MyBetswagerID;
+    @Then("pinnacle bet ticket is displayed")
+    public void pinnacleBetTicketIsDisplayed() {
 
         Pinnacle page = new Pinnacle(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
+
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePinnacle));
 
@@ -186,19 +200,47 @@ public class PinnacleBetting {
             driver.switchTo().window(winHandle);
         }
 
-    }
-
-    String MyBetswagerID;
-    @Then("pinnacle bet ticket is displayed")
-    public void pinnacleBetTicketIsDisplayed() {
-
-        Pinnacle page = new Pinnacle(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
         //get My Bets wager ID
         wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
         MyBetswagerID= page.MyBetsWagerID.getText();
         Assert.assertEquals(wagerID, MyBetswagerID);
+
+        driver.close();
+        driver.switchTo().window(winHandleBefore);
+
+        reportResult.append("**** PINNACLE BETTING ****" + "%0A" +
+                "Scenario: " + scenarioTitle + "%0A" +
+                "Username: " + pUsername + "%0A" +
+                "Balance before bet: " + balanceBeforeBet + "%0A" +
+                "Bet amount: " + BetAmount + "%0A" +
+                "Balance after bet: "+balanceAfterbet + "%0A" +
+                "Selected Odds: " + odds + "\n");
+
+
+
+        String testResult = ("**** PINNACLE BETTING ****" + "\n" +
+                "Scenario: " + scenarioTitle + "\n" +
+                "Username: " + pUsername + "\n" +
+                "Balance before bet: " + balanceBeforeBet + "\n" +
+                "Bet amount: " + BetAmount + "\n" +
+                "Balance after bet: "+ balanceAfterbet + "\n" +
+                "Selected Odds: " + odds + "\n");
+
+
+        System.out.println("rrrrrrrrrrrrrrrrrr" + testResult);
+
+        try {
+            // String result = "test result";
+            URL url = new URL("https://api.telegram.org/bot5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg/sendMessage?chat_id=-1001766036425&text=" +reportResult);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setConnectTimeout(5000);
+            connection.setReadTimeout(5000);
+            int status = connection.getResponseCode();
+            System.out.println(status + ": " + url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
