@@ -23,7 +23,7 @@ Feature: Settle Match
     And I check the current settlement status and match status
     And I close the match
     And I select winner
-#    And I settle match
+    And I settle match
 
 
 

@@ -351,8 +351,8 @@ public class JiraCardChecking {
             driver.switchTo().defaultContent();
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRunsBack));
             jiraObjects.testRunsBack.click();
-
-            result = ("⚠ (" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
+            //⚠
+            result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
                     "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "%0A" +
                     "•Status: " + extractedCardStatus + "%0A" +
                     "- Test Cases: " + testCases_stats + "%0A" + "- Test Runs: " + testRuns_stats + "%0A%0A");
