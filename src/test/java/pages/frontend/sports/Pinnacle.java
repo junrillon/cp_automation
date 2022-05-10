@@ -28,23 +28,23 @@ public class Pinnacle {
      * Single Bet Object repository
      */
 
-    //Hockey Button
-    @FindBy(how = How.XPATH, using = ".//li/child::a[@title=\"Hockey\"]")
+    //Basketball Button
+    @FindBy(how = How.XPATH, using = ".//li/child::a[@title=\"Basketball\"]")
     @CacheLookup
     public WebElement BasketballButton;
 
     //Early Matches Button
-    @FindBy(how = How.XPATH, using = ".//li[@data-name=\"Hockey\"]/descendant::span[text()=\"Early\"]/parent::a")
+    @FindBy(how = How.XPATH, using = ".//li[@data-name=\"Basketball\"]/descendant::span[text()=\"Early\"]/parent::a")
     @CacheLookup
     public WebElement EarlyMatchButton;
 
     //Team 1 Odds of any ML market
-    @FindBy(how = How.XPATH, using = ".//div[@class=\"double-line  \"]/descendant::td[@class=\"col-1x2 col-1x2-0\"]/child::a[@data-team-type=\"1\"]")
+    @FindBy(how = How.XPATH, using = ".//div[@class=\"early-mk\"]/descendant::td[@class=\"col-1x2 col-1x2-0\"]/child::a[@data-team-type=\"1\"]")
     @CacheLookup
     public WebElement TeamAOddsML;
 
     //Team 2 Odds of any ML market
-    @FindBy(how = How.XPATH, using = ".//div[@class=\"double-line  \"]/descendant::td[@class=\"col-1x2 col-1x2-0\"]/child::a[@data-team-type=\"0\"]")
+    @FindBy(how = How.XPATH, using = ".//div[@class=\"early-mk\"]/descendant::td[@class=\"col-1x2 col-1x2-0\"]/child::a[@data-team-type=\"0\"]")
     @CacheLookup
     public WebElement TeamBOddsML;
 
@@ -95,6 +95,11 @@ public class Pinnacle {
     @FindBy(how = How.XPATH, using = ".//div[@class=\"bs-tab parlay\"]")
     @CacheLookup
     public WebElement ParlayTabButton;
+
+    //In Play Collapsible Tab
+    @FindBy(how = How.XPATH, using = ".//div[@class=\"s-tab\"]/h3[text()=\"In-Play Now\"]")
+    @CacheLookup
+    public WebElement LiveCollapseButton;
 
     //Sports Collapsible Tab
     @FindBy(how = How.XPATH, using = ".//div[@class=\"s-tab\"]/h3[text()=\"Sports\"]")

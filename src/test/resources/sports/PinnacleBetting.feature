@@ -27,7 +27,7 @@ Feature: Frontend betting player 1
     #ParlayOddsOne 1 = TEAM A ML, 2 = TEAM B ML
     #ParlayOddsTwo 1 = TEAM A OU, 2 = TEAM B OU
       | BetOddsSelectedOne | BetOddsSelectedTwo | Amount |
-      | 1         | 1                 | 100    |
+      | 1                  | 1                  | 100    |
     And I confirm my parlay place bet in pinnacle
     And pinnacle parlay place bet success
     Then pinnacle parlay bet ticket is displayed
@@ -39,7 +39,7 @@ Feature: Frontend betting player 1
     #TeaserOddsOne 1 = TEAM A HDP, 2 = TEAM B HDP
     #TeaserOddsTwo 1 = TEAM A OU, 2 = TEAM B OU
       | BetOddsSelectedOne | BetOddsSelectedTwo | Amount |
-      | 1         | 1                 | 100    |
+      | 1                  | 1                  | 100    |
     And I confirm my teaser place bet in pinnacle
     And pinnacle teaser place bet success
     Then pinnacle teaser bet ticket is displayed
