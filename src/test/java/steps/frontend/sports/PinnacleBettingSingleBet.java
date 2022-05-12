@@ -12,7 +12,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
 import pages.frontend.sports.Pinnacle;
-import pages.pool.frontend.MatchDetails;
 import steps.Hooks;
 
 import java.io.IOException;
@@ -67,7 +66,7 @@ public class PinnacleBettingSingleBet {
     }
 
     String BetAmount; int BetSelection; String odds;
-    @And("I select team A odds and input bet amount")
+    @When("I place a bet on single bet")
     public void iSelectTeamAoddsAndInputBetAmount(DataTable pinnacle) throws InterruptedException{
 
         Pinnacle page = new Pinnacle(driver);
@@ -130,7 +129,7 @@ public class PinnacleBettingSingleBet {
 
     }
 
-    @And("I confirm my place bet in pinnacle")
+    @When("I confirm my place bet in pinnacle")
     public void iClickPinnacleConfirmBet() throws InterruptedException {
         Pinnacle page = new Pinnacle(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -148,7 +147,7 @@ public class PinnacleBettingSingleBet {
     }
 
     BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbet; String wagerID;
-    @And("pinnacle place bet success")
+    @When("pinnacle place bet success")
     public void pinnaclePlaceBetSuccess() throws InterruptedException {
 
         Pinnacle page = new Pinnacle(driver);
@@ -169,7 +168,8 @@ public class PinnacleBettingSingleBet {
         System.out.println("Expected New BB: " + BB );
         System.out.println("Expected New BA: " + BA );
         System.out.println("Expected balance after bet: " + balanceAfterbet);
-        Thread.sleep(5000); //delay for checking the wallet broadcast
+        //Thread.sleep(5000); //delay for checking the wallet broadcast
+        wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(page2.walletBalance, balanceBeforeBet)));
 
 
         var actualBalanceAfterBetTrim = page2.walletBalance.getText().replace(",","");

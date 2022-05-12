@@ -61,7 +61,7 @@ public class PinnacleBettingTeaserBet {
     }
 
     String BetAmount; int BetOddsSelectedOne; int BetOddsSelectedTwo; String Teaseroddsone; String Teaseroddstwo;
-    @And("I select teaser two market odds and input bet amount")
+    @When("I place a bet on teaser bet")
     public void iSelectTeamAoddsAndInputBetAmount(DataTable pinnacle) throws InterruptedException{
 
         Pinnacle page = new Pinnacle(driver);
@@ -144,7 +144,7 @@ public class PinnacleBettingTeaserBet {
 
     }
 
-    @And("I confirm my teaser place bet in pinnacle")
+    @When("I confirm my teaser place bet in pinnacle")
     public void iClickPinnacleConfirmBet() throws InterruptedException {
         Pinnacle page = new Pinnacle(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -162,7 +162,7 @@ public class PinnacleBettingTeaserBet {
     }
 
     BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbet; String wagerID;
-    @And("pinnacle teaser place bet success")
+    @When("pinnacle teaser place bet success")
     public void pinnaclePlaceBetSuccess() throws InterruptedException {
 
         Pinnacle page = new Pinnacle(driver);
@@ -183,7 +183,8 @@ public class PinnacleBettingTeaserBet {
         System.out.println("Expected New BB: " + BB );
         System.out.println("Expected New BA: " + BA );
         System.out.println("Expected balance after bet: " + balanceAfterbet);
-        Thread.sleep(5000); //delay for checking the wallet broadcast
+        //Thread.sleep(5000); //delay for checking the wallet broadcast
+        wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(page2.walletBalance, balanceBeforeBet)));
 
 
         var actualBalanceAfterBetTrim = page2.walletBalance.getText().replace(",","");
