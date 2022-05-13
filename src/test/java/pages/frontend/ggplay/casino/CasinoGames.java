@@ -56,6 +56,10 @@ public class CasinoGames {
     @CacheLookup
     public WebElement playButton;
 
+    @FindBy(how = How.XPATH, using =  ".//div[@class='play-button-transition']/button")
+    @CacheLookup
+    public WebElement ogPlayButton;
+
     @FindBy(how = How.ID, using =  "stage")
     @CacheLookup
     public WebElement canvasPlayButton;
