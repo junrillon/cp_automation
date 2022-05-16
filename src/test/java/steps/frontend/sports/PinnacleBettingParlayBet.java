@@ -7,6 +7,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -59,8 +60,17 @@ public class PinnacleBettingParlayBet {
         page.ParlayTabButton.click();
 
         //Click the Basketball filter
-        wait.until(ExpectedConditions.elementToBeClickable(page.ParlayBasketballButton));
-        page.ParlayBasketballButton.click();
+        for(int i=0; i<=2;i++){
+            try{
+                wait.until(ExpectedConditions.elementToBeClickable(page.ParlayBasketballButton));
+                page.ParlayBasketballButton.click();
+                break;
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+
         Thread.sleep(5000);
 
 

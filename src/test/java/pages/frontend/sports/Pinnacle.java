@@ -89,9 +89,13 @@ public class Pinnacle {
      * Parlay Bet Object repository
      */
 
+    //Loading Element
+    @FindBy(how = How.XPATH, using = ".//div[@class=\"full-loading\"]")
+    @CacheLookup
+    public WebElement Loading;
+
     //Parlay Tab Button
     @FindBy(how = How.XPATH, using = ".//div[@class=\"bs-tab parlay\"]")
-    @CacheLookup
     public WebElement ParlayTabButton;
 
     //In Play Collapsible Tab
