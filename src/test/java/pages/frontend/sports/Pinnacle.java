@@ -7,6 +7,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.List;
+
 public class Pinnacle {
     public Pinnacle(WebDriver driver) {PageFactory.initElements(driver, this);}
 
@@ -82,7 +84,6 @@ public class Pinnacle {
 
     //My Bets Wager ID
     @FindBy(how = How.XPATH, using = ".//span[@class=\"wager_id\" and contains(text(),'')]")
-    @CacheLookup
     public WebElement MyBetsWagerID;
 
     /**
@@ -107,6 +108,10 @@ public class Pinnacle {
     @FindBy(how = How.XPATH, using = ".//div[@class=\"s-tab\"]/h3[text()=\"Sports\"]")
     @CacheLookup
     public WebElement SportsCollapseButton;
+
+    //Sports Location Tab
+    @FindBy(how = How.XPATH, using = ".//div[@class=\"s-tab\"]/h3[text()=\"Sports\"]")
+    public List<WebElement> SportsTab;
 
     //Esports Collapsible Tab
     @FindBy(how = How.XPATH, using = ".//div[@class=\"s-tab\"]/h3[text()=\"Esports\"]")

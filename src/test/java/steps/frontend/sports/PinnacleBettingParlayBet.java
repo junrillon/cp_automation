@@ -47,6 +47,20 @@ public class PinnacleBettingParlayBet {
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePinnacle));
 
+        try{
+            wait.until(ExpectedConditions.visibilityOfAllElements(page.SportsCollapseButton));
+            int sportsTab = page.SportsTab.size();
+            System.out.println(sportsTab);
+            if(sportsTab > 0){
+                System.out.println("Sports Tab is Present!");
+            } else {
+                driver.navigate().refresh();
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
         //Uncollapse Sports Tab
         wait.until(ExpectedConditions.elementToBeClickable(page.SportsCollapseButton));
         page.SportsCollapseButton.click();
@@ -59,20 +73,10 @@ public class PinnacleBettingParlayBet {
         wait.until(ExpectedConditions.elementToBeClickable(page.ParlayTabButton));
         page.ParlayTabButton.click();
 
-        //Click the Basketball filter
-        for(int i=0; i<=2;i++){
-            try{
-                wait.until(ExpectedConditions.elementToBeClickable(page.ParlayBasketballButton));
-                page.ParlayBasketballButton.click();
-                break;
-            }
-            catch(Exception e){
-                System.out.println(e.getMessage());
-            }
-        }
+        wait.until(ExpectedConditions.elementToBeClickable(page.ParlayBasketballButton));
+        page.ParlayBasketballButton.click();
 
         Thread.sleep(5000);
-
 
     }
 
@@ -199,7 +203,6 @@ public class PinnacleBettingParlayBet {
         System.out.println("Expected New BB: " + BB );
         System.out.println("Expected New BA: " + BA );
         System.out.println("Expected balance after bet: " + balanceAfterbet);
-        //Thread.sleep(5000); //delay for checking the wallet broadcast
         wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(page2.walletBalance, balanceBeforeBet)));
 
 
@@ -231,9 +234,17 @@ public class PinnacleBettingParlayBet {
         }
 
         //get My Bets wager ID
-        wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
-        MyBetswagerID= page.MyBetsWagerID.getText();
-        Assert.assertEquals(wagerID, MyBetswagerID);
+        for(int i=0; i<=2;i++){
+            try{
+                wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
+                MyBetswagerID= page.MyBetsWagerID.getText();
+                Assert.assertEquals(wagerID, MyBetswagerID);
+                break;
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
 
         driver.close();
         driver.switchTo().window(winHandleBefore);

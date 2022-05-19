@@ -6,7 +6,7 @@ Feature: Frontend betting player 1
 
    # user login  credentials (player balance must > 1,000)
       | Username   | Password |
-      | tesggp2 | qweqwe   |
+      | tesggp1 | qweqwe   |
 
   Scenario: Player bet on Single Bet
     Given I click the sports pinnacle header button

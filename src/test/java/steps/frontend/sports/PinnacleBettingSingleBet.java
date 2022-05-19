@@ -39,7 +39,7 @@ public class PinnacleBettingSingleBet {
 
     String balanceBeforeBet; String pUsername;
     @When("I click the early matches")
-    public void iClickTheEarlyMatches() {
+    public void iClickTheEarlyMatches() throws InterruptedException {
 
         Pinnacle page = new Pinnacle(driver);
         Dashboard page2 = new Dashboard(driver);
@@ -54,6 +54,20 @@ public class PinnacleBettingSingleBet {
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePinnacle));
 
+        try{
+            wait.until(ExpectedConditions.visibilityOfAllElements(page.SportsCollapseButton));
+            int sportsTab = page.SportsTab.size();
+            System.out.println(sportsTab);
+            if(sportsTab > 0){
+                System.out.println("Sports Tab is Present!");
+            } else {
+                driver.navigate().refresh();
+            }
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
         //Click Basketball Button
         wait.until(ExpectedConditions.elementToBeClickable(page.BasketballButton));
         page.BasketballButton.click();
@@ -61,7 +75,6 @@ public class PinnacleBettingSingleBet {
         //Click the early match button
         wait.until(ExpectedConditions.elementToBeClickable(page.EarlyMatchButton));
         page.EarlyMatchButton.click();
-
 
     }
 
@@ -168,7 +181,6 @@ public class PinnacleBettingSingleBet {
         System.out.println("Expected New BB: " + BB );
         System.out.println("Expected New BA: " + BA );
         System.out.println("Expected balance after bet: " + balanceAfterbet);
-        //Thread.sleep(5000); //delay for checking the wallet broadcast
         wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(page2.walletBalance, balanceBeforeBet)));
 
 
@@ -200,9 +212,19 @@ public class PinnacleBettingSingleBet {
         }
 
         //get My Bets wager ID
-        wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
-        MyBetswagerID= page.MyBetsWagerID.getText();
-        Assert.assertEquals(wagerID, MyBetswagerID);
+        for(int i=0; i<=2;i++){
+            try{
+                wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
+                MyBetswagerID= page.MyBetsWagerID.getText();
+                Assert.assertEquals(wagerID, MyBetswagerID);
+                break;
+            }
+            catch(Exception e){
+                System.out.println(e.getMessage());
+            }
+        }
+
+
 
         driver.close();
         driver.switchTo().window(winHandleBefore);
