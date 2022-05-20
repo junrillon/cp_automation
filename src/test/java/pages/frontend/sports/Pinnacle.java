@@ -86,6 +86,10 @@ public class Pinnacle {
     @FindBy(how = How.XPATH, using = ".//span[@class=\"wager_id\" and contains(text(),'')]")
     public WebElement MyBetsWagerID;
 
+    //My Bets Wager ID Location
+    @FindBy(how = How.XPATH, using = ".//span[@class=\"wager_id\" and contains(text(),'')]")
+    public List<WebElement> WagerIDLocation;
+
     /**
      * Parlay Bet Object repository
      */

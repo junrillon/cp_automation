@@ -49,19 +49,21 @@ public class PinnacleBettingParlayBet {
 
         try{
             wait.until(ExpectedConditions.visibilityOfAllElements(page.SportsCollapseButton));
-            int sportsTab = page.SportsTab.size();
-            System.out.println(sportsTab);
-            if(sportsTab > 0){
-                System.out.println("Sports Tab is Present!");
-            } else {
-                driver.navigate().refresh();
-            }
         }
         catch(Exception e){
             System.out.println(e.getMessage());
         }
 
+        int sportsTab = page.SportsTab.size();
+        System.out.println(sportsTab);
+        if(sportsTab > 0){
+            System.out.println("Sports Tab is Present!");
+        } else {
+            driver.navigate().refresh();
+        }
+
         //Uncollapse Sports Tab
+        wait.until(ExpectedConditions.visibilityOf(page.SportsCollapseButton));
         wait.until(ExpectedConditions.elementToBeClickable(page.SportsCollapseButton));
         page.SportsCollapseButton.click();
 
@@ -234,17 +236,24 @@ public class PinnacleBettingParlayBet {
         }
 
         //get My Bets wager ID
-        for(int i=0; i<=2;i++){
-            try{
-                wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
-                MyBetswagerID= page.MyBetsWagerID.getText();
-                Assert.assertEquals(wagerID, MyBetswagerID);
-                break;
-            }
-            catch(Exception e){
-                System.out.println(e.getMessage());
-            }
+        try{
+            wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
         }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        int wagerid = page.WagerIDLocation.size();
+        System.out.println(wagerid);
+        if(wagerid > 0){
+            System.out.println("Wager ID is Present!");
+        } else {
+            driver.navigate().refresh();
+        }
+
+        wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
+        MyBetswagerID= page.MyBetsWagerID.getText();
+        Assert.assertEquals(wagerID, MyBetswagerID);
 
         driver.close();
         driver.switchTo().window(winHandleBefore);

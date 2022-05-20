@@ -12,7 +12,7 @@ Feature: Frontend betting player 1
     Given I click the sports pinnacle header button
     When I click the early matches
     And I place a bet on single bet
-     #Selection 1 = TEAM A, 2 = TEAM B
+     #Selection 1 = TEAM A, 2 = TEAM Bd
      | Selection | Amount |
      | 1         | 100    |
     And I confirm my place bet in pinnacle
