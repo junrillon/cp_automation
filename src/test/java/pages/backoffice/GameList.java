@@ -18,11 +18,9 @@ public class GameList {
 
     // ----- Start of filters
     @FindBy(how = How.XPATH, using = ".//div[@class='filter']//input[@title='Game Name']") //<-- Game name filter
-    @CacheLookup
     public WebElement gameNameFilter;
 
     @FindBy(how = How.ID, using = "casinoRoom") //<-- Casino room filter
-    @CacheLookup
     public WebElement casinoRoomFilter;
 
     @FindBy(how = How.ID, using = "filterButton") //<-- Apply filter button
@@ -30,7 +28,6 @@ public class GameList {
     // ----- END of filters
 
     @FindBy(how = How.XPATH, using = ".//div[@class='page-title']/h1")
-    @CacheLookup
     public WebElement pageTitle;
 
     @FindBy(how = How.XPATH, using = ".//ul[@class='casino-room-accordion']")
