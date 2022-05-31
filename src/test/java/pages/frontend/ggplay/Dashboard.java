@@ -27,7 +27,7 @@ public class Dashboard {
      * Object repository
      */
     //User account name
-    @FindBy(how = How.XPATH, using =  ".//span[@class='wallet-balance' and contains(text(),',')]")
+    @FindBy(how = How.XPATH, using =  ".//span[@class='wallet-balance']")
     @CacheLookup
     public WebElement walletBalance;
 
@@ -76,6 +76,11 @@ public class Dashboard {
     @FindBy(how = How.XPATH, using =  ".//ul[@class='navbar-nav mr-auto']/li/a[@href='/casino/casino']")
     @CacheLookup
     public WebElement navGamesCasino;
+
+    // Live Casino
+    @FindBy(how = How.XPATH, using =  ".//ul[@class='navbar-nav mr-auto']/li/a[@href='/casino/live-casino']")
+    @CacheLookup
+    public WebElement navLiveCasino;
 
     // Provider filter
     @FindBy(how = How.XPATH, using =  ".//div[@class='custom-control custom-checkbox']")

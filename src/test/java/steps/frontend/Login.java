@@ -35,6 +35,7 @@ public class Login {
             pageLogin.bannerExitBtn.click();
         } catch (org.openqa.selenium.TimeoutException e) {
             return;
+
         }
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -48,30 +49,23 @@ public class Login {
 
         //Input username and password
         pages.frontend.ggplay.Login pageLogin = new pages.frontend.ggplay.Login(driver);
+        wait.until(ExpectedConditions.visibilityOf(pageLogin.txtUserName));
         pageLogin.Login(user, pass);
 
         // wait for captcha removal
         pageLogin.getAndInputCaptcha();
-        Thread.onSpinWait();
         pageLogin.clickLoginBtn();
 
 
         try {
-
             //Click continue
             wait.until(ExpectedConditions.elementToBeClickable(pageLogin.ContinueSession));
             pageLogin.ContinueSession.click();
 
-        }
-
-        catch (org.openqa.selenium.TimeoutException e)
-        {
+        } catch (org.openqa.selenium.TimeoutException e){
             return;
         }
 
-
-
     }
-
 
 }

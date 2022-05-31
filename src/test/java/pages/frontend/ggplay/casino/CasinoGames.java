@@ -26,6 +26,11 @@ public class CasinoGames {
     @CacheLookup
     public WebElement gameCardImage;
 
+    // gameCard image
+    @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][3]//div[@class='game-card']//img")
+    @CacheLookup
+    public WebElement liveCasinoBaccarat;
+
     // gameCard play button
     @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][2]//a[@class='btn btn-primary']")
     @CacheLookup

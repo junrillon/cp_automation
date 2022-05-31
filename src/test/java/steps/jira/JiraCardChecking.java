@@ -199,6 +199,7 @@ public class JiraCardChecking {
         String perCardTester = jiraObjects.perCardTesterXpath;
         String perCardStatus = jiraObjects.perCardStatusXpath;
         String perCardXpath = jiraObjects.perCardXpath;
+
         String testCases_stats;
         String testRuns_stats;
 
@@ -209,167 +210,176 @@ public class JiraCardChecking {
 
         System.out.println("Checking every card now.");
 
-        for(int i = 1; i <= converted_issueCount; i++){
-            String perCard = perCardXpath + "["+i+"]";
-            WebElement issueContent = driver.findElement(By.xpath(perCard));
-            js.executeScript("arguments[0].scrollIntoView(true);", issueContent);
+        for(int i = 1; i <= converted_issueCount; i++) {
+            String perCard = perCardXpath + "[" + i + "]";
+            String perCardIssueType = perCard + jiraObjects.perCardIssueType;
 
-            //locate card status element and get text
-            System.out.println("Checking card status");
-            WebElement cardStatus = driver.findElement(By.xpath(perCard + perCardStatus));
-            wait.until(ExpectedConditions.visibilityOf(cardStatus));
-            String extractedCardStatus = cardStatus.getText();
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCardIssueType)));
+            String issueType = driver.findElement(By.xpath(perCardIssueType)).getAttribute("title");
+            if (!issueType.equalsIgnoreCase("bug")) {
 
-            //locate card title element and get text
-            System.out.println("Checking card title");
-            WebElement cardTitle = driver.findElement(By.xpath(perCard + perCardTitleXpath));
-            wait.until(ExpectedConditions.visibilityOf(cardTitle));
-            String extractedCardTitle = cardTitle.getText();
+                WebElement issueContent = driver.findElement(By.xpath(perCard));
+                js.executeScript("arguments[0].scrollIntoView(true);", issueContent);
 
-            //check if card has tester
-            System.out.println("Checking card tester");
-            int cardTester_isNull = driver.findElements(By.xpath(perCard + perCardTester)).size();
-            String extractedCardTester;
+                //locate card status element and get text
+                System.out.println("Checking card status");
+                WebElement cardStatus = driver.findElement(By.xpath(perCard + perCardStatus));
+                wait.until(ExpectedConditions.visibilityOf(cardStatus));
+                String extractedCardStatus = cardStatus.getText();
 
-            if(cardTester_isNull > 0){
                 //locate card title element and get text
-                extractedCardTester = driver.findElement(By.xpath(perCard + perCardTester)).getText();
-                //String testerName = extractedCardTester;
-                String[] splitStr = extractedCardTester.split("\\s+");
+                System.out.println("Checking card title");
+                WebElement cardTitle = driver.findElement(By.xpath(perCard + perCardTitleXpath));
+                wait.until(ExpectedConditions.visibilityOf(cardTitle));
+                String extractedCardTitle = cardTitle.getText();
 
-                // Switch statement over above string
-                switch (splitStr[0]) {
-                    case "Jun":
-                        extractedCardTester = "@Juuuun";
-                        break;
-                    case "Christian":
-                        extractedCardTester = "@mxxx67";
-                        break;
-                    case "Jean":
-                        extractedCardTester = "@jeanpaola";
-                        break;
-                    case "jerald":
-                        extractedCardTester = "@jeraldmm";
-                        break;
-                    case "Marjorie":
-                        extractedCardTester = "@Marj0819";
-                        break;
-                    case "Robert":
-                        extractedCardTester = "@robertcaneta";
-                        break;
-                    case "Sherylle":
-                        extractedCardTester = "@Sheeey";
-                        break;
-                    case "Bianca":
-                        extractedCardTester = "@yangcavelez ";
-                        break;
-                    case "Arvin":
-                        switch(splitStr[1])
-                        {
-                            case "Dacio":
-                                extractedCardTester = "@daysofdash";
-                                break;
-                            case "Oliva":
-                                extractedCardTester = "@threem06";
-                                break;
-                            default:
-                        }
-                        break;
-                    case "sysadmin":
-                        extractedCardTester = "sysadmin";
-                        break;
-                    default:
-                        extractedCardTester = "None";
+                //check if card has tester
+                System.out.println("Checking card tester");
+                int cardTester_isNull = driver.findElements(By.xpath(perCard + perCardTester)).size();
+                String extractedCardTester;
+
+                if (cardTester_isNull > 0) {
+                    //locate card title element and get text
+                    extractedCardTester = driver.findElement(By.xpath(perCard + perCardTester)).getText();
+                    //String testerName = extractedCardTester;
+                    String[] splitStr = extractedCardTester.split("\\s+");
+
+                    // Switch statement over above string
+                    switch (splitStr[0]) {
+                        case "Jun":
+                            extractedCardTester = "@Juuuun";
+                            break;
+                        case "Christian":
+                            extractedCardTester = "@mxxx67";
+                            break;
+                        case "Jean":
+                            extractedCardTester = "@jeanpaola";
+                            break;
+                        case "jerald":
+                            extractedCardTester = "@jeraldmm";
+                            break;
+                        case "Marjorie":
+                            extractedCardTester = "@Marj0819";
+                            break;
+                        case "Robert":
+                            extractedCardTester = "@robertcaneta";
+                            break;
+                        case "Sherylle":
+                            extractedCardTester = "@Sheeey";
+                            break;
+                        case "Bianca":
+                            extractedCardTester = "@yangcavelez ";
+                            break;
+                        case "Arvin":
+                            switch (splitStr[1]) {
+                                case "Dacio":
+                                    extractedCardTester = "@daysofdash";
+                                    break;
+                                case "Oliva":
+                                    extractedCardTester = "@threem06";
+                                    break;
+                                default:
+                            }
+                            break;
+                        case "sysadmin":
+                            extractedCardTester = "sysadmin";
+                            break;
+                        default:
+                            extractedCardTester = "None";
+                    }
+                } else {
+                    extractedCardTester = "None";
                 }
+                System.out.println(extractedCardTester);
+
+                //check if card has assignee/dev
+                int cardAssignee_isNull = driver.findElements(By.xpath(perCard + perCardAssignee)).size();
+                String extractedCardAssignee;
+                if (cardAssignee_isNull > 0) {
+                    //locate card assignee element and get text
+                    extractedCardAssignee = driver.findElement(By.xpath(perCard + perCardAssignee)).getAttribute("alt");
+                } else {
+                    extractedCardAssignee = "Assignee: None";
+                }
+
+                //check cards inside sprint and then click
+                WebElement cardNumber = driver.findElement(By.xpath(perCard + perCardNumberXpath));
+                wait.until(ExpectedConditions.visibilityOf(cardNumber));
+                String extractedCardNumber = cardNumber.getAttribute("title");
+
+                //Click card
+                wait.until(ExpectedConditions.elementToBeClickable(issueContent));
+                js.executeScript("arguments[0].click()", issueContent);
+
+                //check sprint element inside detailed view then scroll to it
+                WebElement sprint = jiraObjects.sprintDisplayInsideCard;
+                wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
+                wait.until(ExpectedConditions.visibilityOf(sprint));
+                js.executeScript("arguments[0].scrollIntoView(true);", sprint);
+
+                //check testcases element inside detailed view then click
+                wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
+                jiraObjects.testCases.click();
+
+                //Switch to iframes (testcases iframe 1 and 2)
+                driver.switchTo().frame(jiraObjects.tcIframe1);
+                longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.tcIframe2));
+                driver.switchTo().frame(jiraObjects.tcIframe2);
+
+                int testCases = jiraObjects.testCases_status.size();
+                if (testCases > 0) {
+                    testCases_stats = "None";
+                } else {
+                    testCases_stats = "Already have test cases.";
+                }
+
+                //Switch back to default frame
+                driver.switchTo().defaultContent();
+                wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCasesBack));
+                jiraObjects.testCasesBack.click();
+
+                wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRuns));
+                jiraObjects.testRuns.click();
+
+                //Switch to iframes
+                driver.switchTo().frame(jiraObjects.trIframe1);
+                longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.trIframe2));
+                driver.switchTo().frame(jiraObjects.trIframe2);
+
+                //wait.until(ExpectedConditions.elementToBeClickable((WebElement) locator.testRuns_status()));
+                int testRuns = jiraObjects.testRuns_status.size();
+                if (testRuns > 0) {
+                    testRuns_stats = "None";
+                } else {
+                    testRuns_stats = "Already have test runs.";
+                }
+
+                driver.switchTo().defaultContent();
+                wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRunsBack));
+                jiraObjects.testRunsBack.click();
+                //⚠
+                result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
+                        "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "%0A" +
+                        "•Status: " + extractedCardStatus + "%0A" +
+                        "- Test Cases: " + testCases_stats + "%0A" + "- Test Runs: " + testRuns_stats + "%0A%0A");
+
+                boolean isAppended;
+                if (testCases > 0 || testRuns > 0) {
+                    isAppended = true;
+                    resultContent.append(result);
+                } else {
+                    isAppended = false;
+                }
+
+                System.out.println("isAppended: " + isAppended + "\n" +
+                        i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
+                        "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
+                        "•Status: " + extractedCardStatus + "\n" +
+                        "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
+
             } else {
-                extractedCardTester = "None";
+                System.out.println("Bug Card");
             }
-            System.out.println(extractedCardTester);
-
-            //check if card has assignee/dev
-            int cardAssignee_isNull = driver.findElements(By.xpath(perCard + perCardAssignee)).size();
-            String extractedCardAssignee;
-            if(cardAssignee_isNull > 0){
-                //locate card assignee element and get text
-                extractedCardAssignee = driver.findElement(By.xpath(perCard + perCardAssignee)).getAttribute("alt");
-            } else {
-                extractedCardAssignee = "Assignee: None";
-            }
-
-            //check cards inside sprint and then click
-            WebElement cardNumber = driver.findElement(By.xpath(perCard + perCardNumberXpath));
-            wait.until(ExpectedConditions.visibilityOf(cardNumber));
-            String extractedCardNumber = cardNumber.getAttribute("title");
-
-            //Click card
-            wait.until(ExpectedConditions.elementToBeClickable(issueContent));
-            js.executeScript("arguments[0].click()", issueContent);
-
-            //check sprint element inside detailed view then scroll to it
-            WebElement sprint = jiraObjects.sprintDisplayInsideCard;
-            wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
-            wait.until(ExpectedConditions.visibilityOf(sprint));
-            js.executeScript("arguments[0].scrollIntoView(true);", sprint);
-
-            //check testcases element inside detailed view then click
-            wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
-            jiraObjects.testCases.click();
-
-            //Switch to iframes (testcases iframe 1 and 2)
-            driver.switchTo().frame(jiraObjects.tcIframe1);
-            longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.tcIframe2));
-            driver.switchTo().frame(jiraObjects.tcIframe2);
-
-            int testCases = jiraObjects.testCases_status.size();
-            if (testCases > 0) {
-                testCases_stats = "None";
-            } else {
-                testCases_stats = "Already have test cases.";
-            }
-
-            //Switch back to default frame
-            driver.switchTo().defaultContent();
-            wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCasesBack));
-            jiraObjects.testCasesBack.click();
-
-            wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRuns));
-            jiraObjects.testRuns.click();
-
-            //Switch to iframes
-            driver.switchTo().frame(jiraObjects.trIframe1);
-            longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.trIframe2));
-            driver.switchTo().frame(jiraObjects.trIframe2);
-
-            //wait.until(ExpectedConditions.elementToBeClickable((WebElement) locator.testRuns_status()));
-            int testRuns = jiraObjects.testRuns_status.size();
-            if (testRuns > 0) {
-                testRuns_stats = "None";
-            } else {
-                testRuns_stats = "Already have test runs.";
-            }
-
-            driver.switchTo().defaultContent();
-            wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRunsBack));
-            jiraObjects.testRunsBack.click();
-            //⚠
-            result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
-                    "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "%0A" +
-                    "•Status: " + extractedCardStatus + "%0A" +
-                    "- Test Cases: " + testCases_stats + "%0A" + "- Test Runs: " + testRuns_stats + "%0A%0A");
-
-            boolean isAppended;
-            if(testCases > 0 || testRuns > 0){
-                isAppended = true;
-                resultContent.append(result);
-            } else {
-                isAppended = false;
-            }
-
-            System.out.println("isAppended: " + isAppended + "\n" +
-                    i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
-                    "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
-                    "•Status: " + extractedCardStatus + "\n" +
-                    "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
         }
     }
 

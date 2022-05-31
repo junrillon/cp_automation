@@ -75,21 +75,21 @@ public class Betting {
         }
                 System.out.println("no match prompt " + noMatchAvailable);
         if(noMatchAvailable == "true") {
-                do {
+            do {
+                tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
+                page.noLivegames.click();
+                tryWait.until(ExpectedConditions.elementToBeClickable(page.TestSport));
+                page.TestSport.click();
+                try {
                     tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
-                    page.noLivegames.click();
-                    tryWait.until(ExpectedConditions.elementToBeClickable(page.TestSport));
-                    page.TestSport.click();
-                    try {
-                        tryWait.until(ExpectedConditions.elementToBeClickable(page.noLivegames));
-                        noMatchAvailable = String.valueOf(page.noLivegames.isDisplayed());
+                    noMatchAvailable = String.valueOf(page.noLivegames.isDisplayed());
 
+                }
+                    catch (org.openqa.selenium.TimeoutException e) {
+                            return;
                     }
-                        catch (org.openqa.selenium.TimeoutException e) {
-                                return;
-                        }
-                    Thread.sleep(5000);
-                } while(noMatchAvailable == "true");
+                Thread.sleep(5000);
+            } while(noMatchAvailable == "true");
         }
     }
 

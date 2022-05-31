@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
 import pages.frontend.ggplay.casino.CasinoGames;
+import pages.frontend.ggplay.casino.LiveGames;
 
 import java.util.List;
 
@@ -53,6 +54,25 @@ public class GamesCasino {
         int h = CasinoGames.gameCardImage.getSize().height;
         while(h < 100) {
             h = CasinoGames.gameCardImage.getSize().height;
+
+            if (h > 100) {
+                System.out.println("Game image loaded.");
+                break;
+            }
+        }
+    }
+
+    @When("I wait for live games to load")
+    public void iWaitLiveGamesToLoad(){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        LiveGames LiveGames = new LiveGames(driver);
+
+        wait.until(ExpectedConditions.visibilityOf(LiveGames.gameCard));
+        wait.until(ExpectedConditions.visibilityOf(LiveGames.gameCardImage));
+
+        int h = LiveGames.gameCardImage.getSize().height;
+        while(h < 100) {
+            h = LiveGames.gameCardImage.getSize().height;
 
             if (h > 100) {
                 System.out.println("Game image loaded.");

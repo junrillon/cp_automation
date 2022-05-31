@@ -25,4 +25,16 @@ public class Dashboard {
         gamesCasino.click();
 
     }
+
+    @Given("I navigate to live casino")
+    public void iNavigateToLiveCasino() {
+        pages.frontend.ggplay.Dashboard page = new pages.frontend.ggplay.Dashboard(driver);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        WebElement liveCasino = page.navLiveCasino;
+        wait.until(ExpectedConditions.visibilityOf(liveCasino));
+        wait.until(ExpectedConditions.elementToBeClickable(liveCasino));
+        liveCasino.click();
+
+    }
 }

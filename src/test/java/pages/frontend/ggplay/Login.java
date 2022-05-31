@@ -38,9 +38,11 @@ public class Login {
     public WebElement getCaptcha;
 
     // login button .//button[@type='submit' and contains(text()
-    @FindBy(how = How.XPATH, using =  ".//div[@class='login-page']//button[@class=\"btn btn-primary\" and contains(text(),\"Login\")]")
+    @FindBy(how = How.XPATH, using =  ".//div[@class='login-page']//button[@class=\"btn btn-primary\"]")
     @CacheLookup
     public WebElement loginBtn;
+
+    //.//div[@class='login-page']//button[@class="btn btn-primary" and contains(text(),"Login")]
 
 
     // banner exit button
