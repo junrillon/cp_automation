@@ -9,6 +9,7 @@ import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
@@ -30,7 +31,7 @@ public class PinnacleBettingParlayBet {
     String scenarioTitle = Hooks.sce;
     StringBuffer reportResult = new StringBuffer();
 
-    String balanceBeforeBet; String pUsername;
+    String balanceBeforeBet; String balanceBeforeBet_formatted; String pUsername;
     @When("I click parlay tab button")
     public void iClickParlayTabButton() throws InterruptedException{
 
@@ -39,16 +40,20 @@ public class PinnacleBettingParlayBet {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //get wallet balance display before betting
-        wait.until(ExpectedConditions.visibilityOfAllElements(page2.walletBalance));
-        String balanceBeforeBetOrigin = page2.walletBalance.getText();
-        balanceBeforeBet = balanceBeforeBetOrigin.replace(",","");
+        wait.until(ExpectedConditions.visibilityOf(page2.walletBalance));
+        WebElement balanceBeforeBetOrigin = page2.walletBalance;
+
+        //get the text of the inGameBalance, then remove the comma and PHP
+        balanceBeforeBet = balanceBeforeBetOrigin.getText();
+        balanceBeforeBet_formatted = balanceBeforeBet.replace(",","");
         pUsername = page2.tcxtUsername.getText();
+        System.out.println("Expected New BB: " + balanceBeforeBet_formatted );
 
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePinnacle));
 
         try{
-            wait.until(ExpectedConditions.visibilityOfAllElements(page.SportsCollapseButton));
+            wait.until(ExpectedConditions.visibilityOf(page.SportsCollapseButton));
         }
         catch(Exception e){
             System.out.println(e.getMessage());
@@ -72,6 +77,7 @@ public class PinnacleBettingParlayBet {
         page.EsportsCollapseButton.click();
 
         //Click Parlay Tab Button
+        wait.until(ExpectedConditions.visibilityOf(page.ParlayTabButton));
         wait.until(ExpectedConditions.elementToBeClickable(page.ParlayTabButton));
         page.ParlayTabButton.click();
 
@@ -199,7 +205,7 @@ public class PinnacleBettingParlayBet {
         //switch back to dashboard content
         driver.switchTo().defaultContent();
 
-        BigDecimal BB = new BigDecimal(balanceBeforeBet);
+        BigDecimal BB = new BigDecimal(balanceBeforeBet_formatted);
         BigDecimal BA = new BigDecimal(BetAmount);
         balanceAfterbet = BB.subtract(BA);
         System.out.println("Expected New BB: " + BB );
@@ -251,13 +257,18 @@ public class PinnacleBettingParlayBet {
             driver.navigate().refresh();
         }
 
+        //Click the Pinnacle My Bets Submit Filter Button
+        wait.until(ExpectedConditions.elementToBeClickable(page.MyBetsSubmit));
+        page.MyBetsSubmit.click();
+
+        //Wager ID assertion
         wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
         MyBetswagerID= page.MyBetsWagerID.getText();
         Assert.assertEquals(wagerID, MyBetswagerID);
 
         driver.close();
         driver.switchTo().window(winHandleBefore);
-
+/*
         reportResult.append("**** PINNACLE BETTING ****" + "%0A" +
                 "Scenario: " + scenarioTitle + "%0A" +
                 "Username: " + pUsername + "%0A" +
@@ -293,7 +304,7 @@ public class PinnacleBettingParlayBet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+*/
     }
 
 
