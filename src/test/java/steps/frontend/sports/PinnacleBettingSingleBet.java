@@ -244,7 +244,7 @@ public class PinnacleBettingSingleBet {
 
         driver.close();
         driver.switchTo().window(winHandleBefore);
-/*
+
         reportResult.append("**** PINNACLE BETTING ****" + "%0A" +
                 "Scenario: " + scenarioTitle + "%0A" +
                 "Username: " + pUsername + "%0A" +
@@ -278,7 +278,7 @@ public class PinnacleBettingSingleBet {
         } catch (IOException e) {
             e.printStackTrace();
         }
-*/
+
     }
 
 
