@@ -215,6 +215,7 @@ public class Betting {
                 break;
             case 3:
                 settlementResult = "Draw WIN!";
+                break;
             default:
                 System.out.println("WRONG result FORMAT!");
                 break;
