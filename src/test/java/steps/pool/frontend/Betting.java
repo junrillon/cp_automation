@@ -54,7 +54,7 @@ public class Betting {
     @When("I click the test sports")
     public void iClickTheAvailableSports() throws InterruptedException {
         Dashboard page = new Dashboard(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
 
         wait.until(ExpectedConditions.visibilityOfAllElements(page.walletBalance)); //get wallet balance display before betting
         String balanceBeforeBetOrigin = page.walletBalance.getText();
