@@ -45,6 +45,8 @@ public class Betting {
     @Given("I click the pool header button")
     public void iClickThePoolHeaderButton() {
         Dashboard page = new Dashboard(driver);  //Click pool header button
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.elementToBeClickable(page.walletBalance));
         page.EsportsHeaderBtn.click();
 
 
@@ -332,7 +334,7 @@ public class Betting {
                         "Expected balance: " + expectedBalance + "\n" );
 
 
-        System.out.println("rrrrrrrrrrrrrrrrrr" + testResult);
+        System.out.println("wwwwwwwwwwwwwwww" + testResult);
 
            try {
                // String result = "test result";
