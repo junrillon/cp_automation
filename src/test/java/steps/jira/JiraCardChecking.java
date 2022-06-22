@@ -15,6 +15,9 @@ import pages.testrail.TestRailObjects;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class JiraCardChecking {
@@ -247,36 +250,36 @@ public class JiraCardChecking {
                     // Switch statement over above string
                     switch (splitStr[0]) {
                         case "Jun":
-                            extractedCardTester = "@Juuuun";
+                            extractedCardTester = "Juuuun";
                             break;
                         case "Christian":
-                            extractedCardTester = "@mxxx67";
+                            extractedCardTester = "mxxx67";
                             break;
                         case "Jean":
-                            extractedCardTester = "@jeanpaola";
+                            extractedCardTester = "jeanpaola";
                             break;
                         case "jerald":
-                            extractedCardTester = "@jeraldmm";
+                            extractedCardTester = "jeraldmm";
                             break;
                         case "Marjorie":
-                            extractedCardTester = "@Marj0819";
+                            extractedCardTester = "Marj0819";
                             break;
                         case "Robert":
-                            extractedCardTester = "@robertcaneta";
+                            extractedCardTester = "robertcaneta";
                             break;
                         case "Sherylle":
-                            extractedCardTester = "@Sheeey";
+                            extractedCardTester = "Sheeey";
                             break;
                         case "Bianca":
-                            extractedCardTester = "@yangcavelez ";
+                            extractedCardTester = "yangcavelez ";
                             break;
                         case "Arvin":
                             switch (splitStr[1]) {
                                 case "Dacio":
-                                    extractedCardTester = "@daysofdash";
+                                    extractedCardTester = "daysofdash";
                                     break;
                                 case "Oliva":
-                                    extractedCardTester = "@threem06";
+                                    extractedCardTester = "threem06";
                                     break;
                                 default:
                             }
@@ -358,10 +361,10 @@ public class JiraCardChecking {
                 wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRunsBack));
                 jiraObjects.testRunsBack.click();
                 //⚠
-                result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "%0A" +
-                        "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "%0A" +
-                        "•Status: " + extractedCardStatus + "%0A" +
-                        "- Test Cases: " + testCases_stats + "%0A" + "- Test Runs: " + testRuns_stats + "%0A%0A");
+                result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
+                        "•Tester: @" + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
+                        "•Status: " + extractedCardStatus + "\n" +
+                        "- Test Cases: " + testCases_stats + "\n" + "- Test Runs: " + testRuns_stats + "\n\n");
 
                 boolean isAppended;
                 if (testCases > 0 || testRuns > 0) {
@@ -373,7 +376,7 @@ public class JiraCardChecking {
 
                 System.out.println("isAppended: " + isAppended + "\n" +
                         i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
-                        "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
+                        "•Tester: @" + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                         "•Status: " + extractedCardStatus + "\n" +
                         "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
 
@@ -397,14 +400,15 @@ public class JiraCardChecking {
         }
 
         try {
-            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+resultContentString);
+            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+ URLEncoder.encode(resultContentString, StandardCharsets.UTF_8));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
 
             int status = connection.getResponseCode();
-            System.out.println(status + ": " + url);
+            String errorMessage = connection.getResponseMessage();
+            System.out.println(status + ": " + errorMessage + "\n" + url);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -413,4 +417,5 @@ public class JiraCardChecking {
 
     }
 }
+
 

@@ -39,13 +39,26 @@ public class LiveGames {
     @CacheLookup
     public WebElement maintenanceNotif;
 
+//    @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'loading-screen ') and contains(@style,'display: flex;')]")
+//    public WebElement casinoLoadingScreen;
+
     @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'loading-screen ') and contains(@style,'display: flex;')]")
-    @CacheLookup
-    public WebElement casinoLoadingScreen;
+    public List<WebElement> casinoLoadingScreen;
+
+    @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), ' finish-progress')]")
+    public List<WebElement> casinoFinishProgress;
 
     @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'wrap-inner ListLobbyTablesInner')]")
     @CacheLookup
     public WebElement tableList;
+
+    @FindBy(how = How.XPATH, using =  ".//section[@id='category-recently_played']")
+    @CacheLookup
+    public WebElement recentlyPlayed;
+
+    @FindBy(how = How.XPATH, using =  ".//div[@id='category-grid-recently_played']//li")
+    @CacheLookup
+    public WebElement firstRecentlyPlayedGame;
 
     @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'lobby-table-block')][14]")
     @CacheLookup

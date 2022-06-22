@@ -8,6 +8,8 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import java.util.List;
+
 public class Login {
     public Login(WebDriver driver) {
         PageFactory.initElements(driver, this);
@@ -48,12 +50,18 @@ public class Login {
     // banner exit button
     @FindBy(how = How.XPATH, using =  ".//i[@class='fa fa-times-circle fa-2x']")
     @CacheLookup
-    public WebElement bannerExitBtn;
+    public List<WebElement> bannerExitBtn;
 
     // continue button
-    @FindBy(how = How.XPATH, using =  ".//i[@class=\"fa fa-check\"]")
+    @FindBy(how = How.ID, using = "react-confirm-alert")
+    @CacheLookup
+    public List<WebElement> AlertModal;
+
+    // continue button
+    @FindBy(how = How.XPATH, using = ".//div[@class='react-confirm-alert-button-group']//i[@class=\"fa fa-check\"]")
     @CacheLookup
     public WebElement ContinueSession;
+
 
 
 
@@ -74,7 +82,6 @@ public class Login {
     }
 
     public void clickLoginBtn(){
-
         loginBtn.click();
     }
 

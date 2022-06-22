@@ -1,16 +1,15 @@
 
-Feature: Frontend casino betting - Red Tiger
+Feature: Frontend casino betting - Evolution
 
   Background:
-#    Given I clear the casino data
-#      | Username |
-#      | gg241red2   |
+    Given I clear the casino data
+      | Username |
+      | gg241red2|
 
-    Given I logged in on frontend page https://staging.brasilplay.com/login/
+    Given I logged in on frontend page https://staging.ggplay.co/login/
      # user login  credentials aff1pl 123123 https://staging.brasilplay.com/ gg241red2 456456
       | Username   | Password |
-      | aff1pl  | 123123   |
-
+      | gg241red2  | 456456   |
 
 
   Scenario:

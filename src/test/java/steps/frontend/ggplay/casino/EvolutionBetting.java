@@ -55,15 +55,14 @@ public class EvolutionBetting {
         LiveGames liveGames = new LiveGames(driver);
         Actions action = new Actions(driver);
 
+        String oldTab = driver.getWindowHandle();
+
         String inGame_BalAfterWin;
         String inGame_BalAfterWin_formatted;
 
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
         WebDriverWait longwait = new WebDriverWait(driver, 60);
-
-        String navBalance = dashboard.walletBalance.getText();
-        String navBalance_formatted = navBalance.replace(",", "");
 
         //Performing the mouse hover action on the target element.
         wait.until(ExpectedConditions.visibilityOf(liveGames.gameCard));
@@ -87,37 +86,29 @@ public class EvolutionBetting {
                 //Wait and switch focus to iframe1
                 longwait.until(ExpectedConditions.visibilityOf(iframe));
                 driver.switchTo().frame(iframe);
-                System.out.println("Done switching to iframe1");
+                System.out.println("Done switching to iframe");
 
                 //Check and wait for loading screen
-                wait.until(ExpectedConditions.visibilityOf(liveGames.casinoLoadingScreen));
-                boolean loading_isPresent = liveGames.casinoLoadingScreen.isDisplayed();
-                while(loading_isPresent){
-                    loading_isPresent = liveGames.casinoLoadingScreen.isDisplayed();
+                int loading_isPresent = 1;
+                do {
+                    loading_isPresent = liveGames.casinoLoadingScreen.size();
 
-                    if(!loading_isPresent){
-                        break;
-                    }
-                }
+                } while (loading_isPresent != 0);
             }
 
-            wait.until(ExpectedConditions.visibilityOf(liveGames.tableList));
-            wait.until(ExpectedConditions.visibilityOf(liveGames.baccaratA));
-            wait.until(ExpectedConditions.elementToBeClickable(liveGames.baccaratA));
-            liveGames.baccaratA.click();
+            wait.until(ExpectedConditions.visibilityOf(liveGames.recentlyPlayed));
+            wait.until(ExpectedConditions.visibilityOf(liveGames.firstRecentlyPlayedGame));
+            wait.until(ExpectedConditions.elementToBeClickable(liveGames.firstRecentlyPlayedGame));
+            liveGames.firstRecentlyPlayedGame.click();
 
-            //Check and wait for loading screen
-            wait.until(ExpectedConditions.visibilityOf(liveGames.casinoLoadingScreen));
-            boolean loading_isPresent = liveGames.casinoLoadingScreen.isDisplayed();
-            while(loading_isPresent){
-                loading_isPresent = liveGames.casinoLoadingScreen.isDisplayed();
+            //Check and wait for loading screen to finish
+            int finishLoading_isPresent = 0;
+            do {
+                finishLoading_isPresent = liveGames.casinoFinishProgress.size();
 
-                if(!loading_isPresent){
-                    break;
-                }
-            }
+            } while (finishLoading_isPresent <= 0);
 
-
+            //Will bet until it wins
             boolean notWinning = true;
             String isCollapsed;
             while(notWinning) {
@@ -127,7 +118,8 @@ public class EvolutionBetting {
                 WebElement minBetAmount = liveGames.minBetAmount;
                 betValue = minBetAmount.getAttribute("data-value");
 
-                //element for total bet display, wait for element to visible
+                //element for to
+                // tal bet display, wait for element to visible
                 WebElement totalBetDisplay = liveGames.totalBet;
                 wait.until(ExpectedConditions.visibilityOf(totalBetDisplay));
 
@@ -135,6 +127,7 @@ public class EvolutionBetting {
                 String totalBet = totalBetDisplay.getText();
                 totalBet_formatted = totalBet.replace(",", "");
 
+                //Check if betting is open
                 if (isCollapsed.equalsIgnoreCase("false")) {
                     if (totalBet_formatted.equals("0")) {
 
@@ -149,7 +142,7 @@ public class EvolutionBetting {
                         System.out.println("\nBalance before bet: " + inGame_BalBeforeBet);
                         //resultContent.append("Balance before bet: ").append(inGame_BalBeforeBet).append("%0A");
 
-                        //wait for betAmountSelection to be visibile and minBetAmount to be clickable
+                        //wait for betAmountSelection to be visible and minBetAmount to be clickable
                         wait.until(ExpectedConditions.visibilityOf(liveGames.betAmountSelection));
                         wait.until(ExpectedConditions.elementToBeClickable(minBetAmount));
                         minBetAmount.click();
@@ -207,14 +200,28 @@ public class EvolutionBetting {
                                     System.out.println("Winnings: " + winnings +
                                             "\nBalance after win: " + inGame_BalAfterWin);
 
-                                    result = ("Balance before bet: " + inGame_BalBeforeBet + "%0A" +
-                                                "Bet Amount: "+ betValue + "%0A" +
-                                                "Bet Selection: " + betLabel + "%0A" +
-                                                "Winnings: " + winnings + "%0A" +
-                                                "Balance after win: " + inGame_BalAfterWin + "%0A");
+                                    //Switch back to old window handler
+                                    driver.switchTo().window(oldTab);
 
-                                    resultContent.append(result);
-                                    notWinning = false;
+                                    wait.until(ExpectedConditions.visibilityOf(dashboard.walletBalance));
+                                    String navBalance = dashboard.walletBalance.getText();
+                                    String navBalance_formatted = navBalance
+                                            .replace(",", "")
+                                            .replace(".00", "");
+
+                                    System.out.println("Nav balance: "+navBalance);
+
+                                    if(expectedBalanceAfterWin.toString().equals(navBalance_formatted)){
+                                        result = ("Balance before bet: " + inGame_BalBeforeBet + "%0A" +
+                                                    "Bet Amount: "+ betValue + "%0A" +
+                                                    "Bet Selection: " + betLabel + "%0A" +
+                                                    "Winnings: " + winnings + "%0A" +
+                                                    "Balance after win: " + inGame_BalAfterWin + "%0A");
+
+                                        resultContent.append(result);
+                                        notWinning = false;
+
+                                    }
 
                                 } else {
                                     System.out.println("Balance not tally after win");

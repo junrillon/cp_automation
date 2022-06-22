@@ -46,7 +46,6 @@ public class Dashboard {
     @CacheLookup
     public WebElement selectGameTxt;
 
-
     //test
     @FindBy(how = How.XPATH, using =  ".//div[@class='small' and contains(text(),'Automation Sports')]")
     @CacheLookup
@@ -67,9 +66,9 @@ public class Dashboard {
     @CacheLookup
     public WebElement noLivegames;
 
- //confirm button
- @FindBy(how = How.ID, using =  "navbarDropdownMenuLinkUserAccount")
- public WebElement tcxtUsername;
+    //confirm button
+    @FindBy(how = How.ID, using =  "navbarDropdownMenuLinkUserAccount")
+    public WebElement tcxtUsername;
 
 
     // Games Casino
