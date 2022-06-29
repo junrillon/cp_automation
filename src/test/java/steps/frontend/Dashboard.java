@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.frontend.sports.Altenar;
 
 public class Dashboard {
     private final WebDriver driver;
@@ -37,4 +38,24 @@ public class Dashboard {
         liveCasino.click();
 
     }
+
+    @Given("I navigate to altenar sports")
+    public void iNavigateToSports() {
+        pages.frontend.ggplay.Dashboard page = new pages.frontend.ggplay.Dashboard(driver);
+        Altenar altenar = new Altenar(driver);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        WebElement navSports = wait.until(ExpectedConditions.visibilityOf(page.navSports));
+        wait.until(ExpectedConditions.elementToBeClickable(navSports));
+        navSports.click();
+
+        //Wait for brasil frame
+        WebElement brasilFrame = wait.until(ExpectedConditions.visibilityOf(altenar.altenar));
+        boolean isPresent = brasilFrame.isDisplayed();
+        if(isPresent){
+            System.out.println("Brasil frame is present.");
+        }
+
+    }
+
 }

@@ -19,8 +19,6 @@ public class Dashboard {
     
        PageFactory.initElements(driver, this);
 
-
-
     }
     
     /**
@@ -69,6 +67,12 @@ public class Dashboard {
     //confirm button
     @FindBy(how = How.ID, using =  "navbarDropdownMenuLinkUserAccount")
     public WebElement tcxtUsername;
+
+
+    //Sports
+    @FindBy(how = How.XPATH, using =  ".//a[contains(@href, '/sports/altenar')]")
+    @CacheLookup
+    public WebElement navSports;
 
 
     // Games Casino
