@@ -22,7 +22,9 @@ public class PageModelBase {
 
     }
 
-    /** @param element to scroll into view */
+    /**
+     * @param element to scroll into view
+     * @param  */
     public void scrollIntoView(WebElement element) {
         logger().traceEntry();
         JavascriptExecutor js = (JavascriptExecutor) driver;

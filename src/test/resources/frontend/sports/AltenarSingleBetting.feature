@@ -1,5 +1,5 @@
 
-Feature: Frontend sports betting - Altenar
+Feature: Frontend sports betting - Altenar (Single)
 
   Background:
     Given I logged in on frontend page https://staging.brasilplay.com/login
@@ -11,8 +11,8 @@ Feature: Frontend sports betting - Altenar
     Given I navigate to altenar sports
     When I check upcoming matches
     And I select one upcoming match
-    And I place bet on live matches
-    Then I check my bets
+    And I place a single bet on upcoming matches
+    Then I check my single bet
     Then I send brasil betting result in telegram
       | token                                          | chatId         |
       | 5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg | -1001766036425 |

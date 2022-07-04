@@ -98,6 +98,10 @@ public class JiraObjects{
     @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' ghx-sprint-planned ')][1]")
     public WebElement advanceSprintXpathWE;
 
+    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' ghx-sprint-planned ')][1]//div[contains(concat(' ',@class,' '), ' ghx-no-issues ')]")
+    public WebElement advanceSprintNoIssue;
+
+
     public String advanceSprintXpath = ".//div[contains(concat(' ',@class,' '), ' ghx-sprint-planned ')][1]";
     public String activeSprintXpath = "//div[@class='ghx-backlog-container ghx-sprint-active js-sprint-container ghx-open ui-droppable'][1]";
     public String perCardXpath = advanceSprintXpath + "//div[contains(concat(' ',@class,' '), ' ghx-backlog-card ')]";

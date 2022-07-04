@@ -108,3 +108,29 @@ task evolutionBetting(type: JavaExec) {
     ]
 
 }
+
+task altenarSingleBetting(type: JavaExec) {
+    dependsOn assemble, testClasses
+    mainClass = "steps.CucumberLauncher"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--dir0', 'src/test/resources/frontend/sports/AltenarSingleBetting.feature'
+    ]
+
+}
+
+task altenarParlayBetting(type: JavaExec) {
+    dependsOn assemble, testClasses
+    mainClass = "steps.CucumberLauncher"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--dir0', 'src/test/resources/frontend/sports/AltenarParlayBetting.feature'
+    ]
+
+}

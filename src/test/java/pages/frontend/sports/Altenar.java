@@ -8,6 +8,7 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.PageModelBase;
 
 import java.util.List;
 
@@ -15,6 +16,10 @@ public class Altenar {
 
     public Altenar(WebDriver driver) {
         PageFactory.initElements(driver, this);}
+
+    //Navigation .//nav[contains(concat(' ',@class,' '), ' navbar ')]
+    @FindBy(how = How.ID, using = "navbarSupportedContent")
+    public WebElement navigation;
 
     //Navigation Balance
     @FindBy(how = How.XPATH, using = ".//span[@class='wallet-balance']")
@@ -69,9 +74,8 @@ public class Altenar {
     public WebElement upcoming_EventName;
 
     //Upcoming Match Event
-    @FindBy(how = How.XPATH, using = ".//div[@name='asb-upcoming']//div[contains(concat(' ',@class,' '), ' _asb_events-table ')]/child::div[2]/div[1]")
-    public WebElement upcoming_5thEventName;
-
+    @FindBy(how = How.XPATH, using = ".//div[@name='asb-upcoming']//div[contains(concat(' ',@class,' '), ' _asb_events-table ')]/child::div[2]/div")
+    public List<WebElement> upcoming_EventList;
 
 
     //------------- END OF UPCOMING -------------
@@ -82,8 +86,12 @@ public class Altenar {
     public WebElement marketContainer;
 
     //Main market odds selection
-    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' _asb_event-details-market ')][1]//div[contains(concat(' ',@class,''), ' _asb_prices-column ')][1]")
-    public WebElement oddsSelection;
+    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' _asb_event-details-market ')][1]//div[contains(concat(' ',@class,''), ' _asb_prices-column ')]")
+    public List<WebElement> mainMarketOddsSelection;
+
+    //Match markets
+    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' _asb_event-details-market ')]")
+    public List<WebElement> matchMarkets;
 
     //Bet slip selector
     @FindBy(how = How.XPATH, using = ".//div[@title=\"Betslip\"]")
@@ -101,9 +109,8 @@ public class Altenar {
     @FindBy(how = How.XPATH, using = ".//div[@role='betslip-totals-stake']")
     public WebElement totalStake;
 
-
     //Bet slip selection details
-    @FindBy(how = How.XPATH, using = ".//div[@name=\"asb-mybets-betslip-selector\"]//div[@class=\"_asb_items-tabs-content \"]")
+    @FindBy(how = How.NAME, using = "asb-mybets-betslip-selector")
     public WebElement betSlipSelectionDetails;
 
     //Bet slip selection details (Empty)

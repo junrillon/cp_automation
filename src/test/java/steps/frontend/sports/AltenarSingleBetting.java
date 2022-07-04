@@ -2,7 +2,6 @@ package steps.frontend.sports;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
@@ -21,58 +20,19 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 
-public class AltenarSingleBetting {
+public class AltenarSingleBetting{
 
     private final WebDriver driver;
-    public PageModelBase page;
+    public PageModelBase PageModelBase;
 
-    public AltenarSingleBetting(PageModelBase page, Driver driver){
+    public AltenarSingleBetting(PageModelBase PageModelBase, Driver driver){
         this.driver = driver.get();
-        this.page = page;
+        this.PageModelBase = PageModelBase;
     }
 
-    boolean withLive = false;
     StringBuffer resultContent = new StringBuffer();
-
-    @When("I check live sports")
-    public void iCheckLiveSports() {
-        Altenar altenar = new Altenar(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        //wait for live tab then click
-        WebElement liveGamesTab = wait.until(ExpectedConditions.visibilityOf(altenar.live_MatchContainer));
-        boolean isPresent = liveGamesTab.isDisplayed();
-        if(isPresent){
-            withLive = true;
-        }
-
-    }
-
-    @When("I check live matches")
-    public void iCheckLiveMatches() {
-        Altenar altenar = new Altenar(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        if(withLive){
-            //wait for live sports
-            WebElement liveSports = wait.until(ExpectedConditions.visibilityOf(altenar.live_Sports));
-            String sportsName = liveSports.getAttribute("title");
-            liveSports.click();
-
-            //Get the 1st match's event name
-            String eventName = wait.until(ExpectedConditions.visibilityOf(altenar.live_EventName)).getAttribute("title");
-
-            //wait for live match then click
-            WebElement liveMatch = wait.until(ExpectedConditions.visibilityOf(altenar.live_Event));
-            wait.until(ExpectedConditions.elementToBeClickable(liveMatch));
-            liveMatch.click();
-
-        } else {
-            System.out.println("No live games");
-        }
-
-    }
 
     @When("I check upcoming matches")
     public void iCheckUpcomingMatches(){
@@ -82,7 +42,7 @@ public class AltenarSingleBetting {
 
         //wait for live tab then click
         WebElement upcomingGamesTab = wait.until(ExpectedConditions.visibilityOf(altenar.upcoming_MatchContainer));
-        js.executeScript("arguments[0].scrollIntoView(true);", upcomingGamesTab);
+        PageModelBase.scrollIntoView(upcomingGamesTab);
     }
 
     @When("I select one upcoming match")
@@ -98,8 +58,8 @@ public class AltenarSingleBetting {
         //Get the 1st match's event name
         String eventName = wait.until(ExpectedConditions.visibilityOf(altenar.upcoming_EventName)).getAttribute("title");
 
-        //scroll into 5th upcoming event
-        js.executeScript("arguments[0].scrollIntoView(true);", altenar.upcoming_MatchContainer);
+        //scroll into upcoming event
+        PageModelBase.scrollIntoView(altenar.upcoming_MatchContainer);
         Thread.sleep(1000);
 
         //wait for upcoming match then click
@@ -114,8 +74,8 @@ public class AltenarSingleBetting {
     String balanceAfter;
     String betAmount;
     String result;
-    @When("I place bet on live matches")
-    public void iPlaceBet() {
+    @When("I place a single bet on upcoming matches")
+    public void iPlaceSingleBet(){
         Altenar altenar = new Altenar(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
@@ -126,24 +86,36 @@ public class AltenarSingleBetting {
         //wait for market container to be visible
         wait.until(ExpectedConditions.visibilityOf(altenar.marketContainer));
 
-        //Click one odd in main market
-        WebElement oddsSelection = wait.until(ExpectedConditions.visibilityOf(altenar.oddsSelection));
-        wait.until(ExpectedConditions.elementToBeClickable(oddsSelection));
-        oddsSelection.click();
+        //Check and wait for loading to be done
+        int loading_isPresent = 1;
+        do {
+            loading_isPresent = altenar.loading.size();
 
-        //Change odds change selection
-        WebElement changeOddsSelection = wait.until(ExpectedConditions.visibilityOf(altenar.oddsChangeSelectAction));
-        wait.until(ExpectedConditions.elementToBeClickable(changeOddsSelection));
-        changeOddsSelection.click();
+        } while (loading_isPresent != 0);
 
-        //Accept any change odds
-        WebElement acceptAnyChangeOddsSelection = wait.until(ExpectedConditions.visibilityOf(altenar.acceptAnyChangeOdds));
-        wait.until(ExpectedConditions.elementToBeClickable(acceptAnyChangeOddsSelection));
-        acceptAnyChangeOddsSelection.click();
+        //Get the count of the selection in the main market
+        int min = 1;
+        int oddsSelections;
+        do {
+            oddsSelections = altenar.mainMarketOddsSelection.size();
+
+        } while (oddsSelections == 0);
+
+        //Select Random number bet min and max
+        Random r = new Random();
+        int randomNum = r.nextInt((oddsSelections - min) + 1);
+
+        //Wait for the element to be clickable, then click selected selection
+        wait.until(ExpectedConditions.visibilityOf(altenar.mainMarketOddsSelection.get(randomNum)));
+        wait.until(ExpectedConditions.elementToBeClickable(altenar.mainMarketOddsSelection.get(randomNum)));
+        altenar.mainMarketOddsSelection.get(randomNum).click();
 
         //Get bet amount value
         betAmount = wait.until(ExpectedConditions.visibilityOf(altenar.totalStake)).getText()
                 .replace(" R$","");
+
+        //Call acceptAnyOddsChange method
+        acceptAnyOddsChange(driver);
 
         //Place bet
         WebElement placeBet = wait.until(ExpectedConditions.visibilityOf(altenar.placeBetBtn));
@@ -151,7 +123,7 @@ public class AltenarSingleBetting {
         placeBet.click();
 
         //Check and wait for loading to be done
-        int loading_isPresent = 1;
+        loading_isPresent = 1;
         do {
             loading_isPresent = altenar.loading.size();
 
@@ -166,7 +138,9 @@ public class AltenarSingleBetting {
         BigDecimal BA = new BigDecimal(betAmount);
         BigDecimal expectedBalanceAfterWin = OB.subtract(BA);
 
-        //Get balance before bet
+        //Get balance after bet
+        wait.until(ExpectedConditions
+                .not(ExpectedConditions.textToBePresentInElement(altenar.balance, origBalance)));
         balanceAfter = altenar.balance.getText();
         String formatted_balanceAfter = balanceAfter.replace(",","");
         BigDecimal ABA = new BigDecimal(formatted_balanceAfter); //Actual balance after bet
@@ -175,21 +149,23 @@ public class AltenarSingleBetting {
             Assert.assertEquals(ABA,expectedBalanceAfterWin);
             result = ("Balance before bet: " + origBalance + "%0A" +
                     "Bet Amount: "+ betAmount + "%0A" +
-                    "Bet ID: " + betSlipId + "%0A" +
+                    "Bet ID: " + betSlipId + " (Single Bet)%0A" +
                     "Balance after bet: " + balanceAfter + "%0A");
 
-            System.out.println("\nBalance before bet: " + origBalance + "\n" +
-                    "Bet Amount: "+ betAmount + "\n" +
-                    "Bet ID: " + betSlipId + "\n" +
-                    "Balance after bet: " + balanceAfter + "\n");
+            String formattedResult = result.replace("%0A", "\n");
+            System.out.println(formattedResult);
 
             resultContent.append(result);
+
+        } else {
+            System.out.println("Actual balance after: " + ABA +
+                    "\n Expected balance after: " + expectedBalanceAfterWin);
         }
 
     }
 
-    @Then("I check my bets")
-    public void iCheckMyBets() {
+    @Then("I check my single bet")
+    public void iCheckMySingleBet() {
         Altenar altenar = new Altenar(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
@@ -202,8 +178,8 @@ public class AltenarSingleBetting {
         int size = generatedBetSlip.size();
         if(size > 0){
             Assert.assertEquals(size,1);
-        }
 
+        }
     }
 
     @Then("I send brasil betting result in telegram")
@@ -217,7 +193,7 @@ public class AltenarSingleBetting {
 
         try {
             URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+
-                    "&text=Provider: Brasil%0AUsername: "+username+"%0A"+resultContentString);
+                    "&text=Provider: Brasil%0AUsername: "+username+"%0A"+ resultContentString);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -233,4 +209,20 @@ public class AltenarSingleBetting {
         }
 
     }
+
+    public static void acceptAnyOddsChange(WebDriver driver){
+        Altenar altenar = new Altenar(driver);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        //Click odds change selection
+        WebElement changeOddsSelection = wait.until(ExpectedConditions.visibilityOf(altenar.oddsChangeSelectAction));
+        wait.until(ExpectedConditions.elementToBeClickable(changeOddsSelection));
+        changeOddsSelection.click();
+
+        //Accept any change odds option
+        WebElement acceptAnyChangeOddsSelection = wait.until(ExpectedConditions.visibilityOf(altenar.acceptAnyChangeOdds));
+        wait.until(ExpectedConditions.elementToBeClickable(acceptAnyChangeOddsSelection));
+        acceptAnyChangeOddsSelection.click();
+    }
+
 }
