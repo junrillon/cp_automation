@@ -15,6 +15,7 @@ import steps.frontend.GamesCasino;
 import steps.frontend.Login;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -36,9 +37,6 @@ public class RTBetting {
         WebDriverWait longwait = new WebDriverWait(driver, 60);
 
         String report;
-        String result;
-
-        String settlementStatus = null;
         String betStatus;
         String balanceBeforeBetNoFormat;
 
@@ -138,108 +136,115 @@ public class RTBetting {
             //Wait for balance to display first before getting the value of the balance
             longwait.until(ExpectedConditions.visibilityOf(balanceDisplay));
 
-            int int_winnings;
-            int int_stake;
+            BigDecimal bd_winnings;
+            BigDecimal bd_stake;
+            String result = "Lose";
+            String settlementStatus = "Not Tally";
+
             do {
+                //Wait for autoplay button to be enabled
+                int autoPlay_isDisabled = CasinoGames.autoPlayButton.size();
+                if(autoPlay_isDisabled == 0) {
 
-                boolean balanceValue_isPresent = balanceDisplay.isDisplayed();
-                actualBalanceBeforeBet = balanceDisplay.getText(); //Get balance before betting
-                balanceBeforeBetNoFormat = actualBalanceBeforeBet;
-                stakeValue = CasinoGames.stakeValue.getText(); //Get the stake amount
+                    balanceBeforeBetNoFormat = balanceDisplay.getText(); //Get balance before betting
+                    actualBalanceBeforeBet = balanceBeforeBetNoFormat
+                            .replace("PHP", "")
+                            .replace(",", "")
+                            .replace(".00", "");
 
-                if (balanceValue_isPresent) {
-                    wait.until(ExpectedConditions.visibilityOf(balanceDisplay));
+                    BigDecimal bd_actualBalanceBeforeBet = new BigDecimal(actualBalanceBeforeBet);
+
+                    //Get text and remove the strings inside the stake
+                    stakeValue = CasinoGames.stakeValue.getText()
+                            .replace("PHP", "")
+                            .replace(",", "")
+                            .replace(".00", ""); //Get the stake amount
+
+                    bd_stake = new BigDecimal(stakeValue);
+
+                    //Wait for play button to be clickable.
                     wait.until(ExpectedConditions.elementToBeClickable(innerPlayButton));
                     innerPlayButton.click();
-                }
 
-                //System.out.println("----------------- Start betting: " + gameName);
-                System.out.println("\nBalance before bet: " + actualBalanceBeforeBet);
+                    //System.out.println("----------------- Start betting: " + gameName);
+                    System.out.println("\nBalance before bet: " + balanceBeforeBetNoFormat);
 
-                //Remove the strings inside the balance
-                actualBalanceBeforeBet = actualBalanceBeforeBet.replace("PHP", "");
-                actualBalanceBeforeBet = actualBalanceBeforeBet.replace(",", "");
-                actualBalanceBeforeBet = actualBalanceBeforeBet.replace(".00", "");
+                    //Check if autoplay button is disabled
+                    int autoPlay_isDisabled2;
+                    do{
+                        autoPlay_isDisabled2 = CasinoGames.autoPlayButton.size();
 
-                //Remove the strings inside the stake
-                stakeValue = stakeValue.replace("PHP", "");
-                stakeValue = stakeValue.replace(",", "");
-                stakeValue = stakeValue.replace(".00", "");
+                    } while (autoPlay_isDisabled2 != 0);
 
+                    Thread.sleep(500);
+                    //Get the balance after betting and remove the word "PHP"
+                    actualBalanceAfterBet = balanceDisplay.getText()
+                            .replace("PHP", "")
+                            .replace(",", "")
+                            .replace(".00","");
 
-                //Wait until the current balance is not the same with the balance before bet.
-                wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
-//                try {
-//                    boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
-//                    System.out.println("The balance is still the same.");
-//
-//                } catch (TimeoutException e) {
-//                    //boolean checkBalance = wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(balanceDisplay, balanceBeforeBetNoFormat)));
-//                    wait.until(ExpectedConditions.elementToBeClickable(innerPlayButton));
-//                    innerPlayButton.click();
-//                    System.out.println("Click play button 2");
-//
-//                }
+                    //Start of computation
+                    BigDecimal bd_actualBalanceAfterBet = new BigDecimal(actualBalanceAfterBet);
+                    System.out.println("actualBalanceAfterBet: " + actualBalanceAfterBet);
 
-                //Get the balance after betting and remove the word "PHP"
-                actualBalanceAfterBet = CasinoGames.balanceValue.getText();
-                actualBalanceAfterBet = actualBalanceAfterBet.replace("PHP", "");
-                actualBalanceAfterBet = actualBalanceAfterBet.replace(",", "");
-                actualBalanceAfterBet = actualBalanceAfterBet.replace(".00", "");
+                    BigDecimal bd_expectedBalanceAfterBet = bd_actualBalanceBeforeBet.subtract(bd_stake);
+                    BigDecimal bd_expectedBalanceAfterWin = null;
+                    System.out.println("bd_expectedBalanceAfterBet: " + bd_expectedBalanceAfterBet);
 
-                //Start of computation
-                int_stake = Integer.parseInt(stakeValue);
-                int int_actualBalanceBeforeBet = Integer.parseInt(actualBalanceBeforeBet);
-                int int_actualBalanceAfterBet = Integer.parseInt(actualBalanceAfterBet);
-                int int_expectedBalanceAfterBet = int_actualBalanceBeforeBet - int_stake;
-                int int_expectedBalanceAfterWin;
+                    //To check if win or lose; if difference is equal to the (stake * -1) or if the difference is different from the (stake * -1)
+                    bd_winnings = (bd_actualBalanceAfterBet.subtract(bd_actualBalanceBeforeBet));
+                    System.out.println("bd_winnings: " + bd_winnings);
 
-                //To check if win or lose; if difference is equal to the (stake * -1) or if the difference is different from the (stake * -1)
-                int_winnings = (int_actualBalanceAfterBet - int_actualBalanceBeforeBet);
+                    //Start of conditions
+                    //LOSE
+                    if (bd_winnings.equals(bd_stake.negate())) {
+                        System.out.println("result: " + result);
+                        System.out.println("Stake: " + bd_stake + " | Winnings: " + bd_winnings);
 
-                //Start of conditions
-                //LOSE
-                if (int_winnings == (int_stake * -1)) {
-                    result = "Lose";
-                    System.out.println("Stake: " + int_stake + " | Winnings: " + int_winnings);
+                        if (bd_expectedBalanceAfterBet.equals(bd_actualBalanceAfterBet)) {
+                            betStatus = "Tally";
+                        } else {
+                            betStatus = "Not Tally";
+                        }
+                        System.out.println("Balance after bet: " + bd_actualBalanceAfterBet +
+                                "\nStatus: " + betStatus);
 
-                    if (int_expectedBalanceAfterBet == int_actualBalanceAfterBet) {
-                        betStatus = "Tally";
+                    //WINNING
                     } else {
-                        betStatus = "Not Tally";
-                    }
-                    System.out.println("Balance after bet: " + int_actualBalanceAfterBet +
-                            "\nStatus: " + betStatus);
+                        result = "Win";
+                        System.out.println("result: " + result);
+                        System.out.println("Stake: " + bd_stake + " | Winnings: " + bd_winnings);
 
-                //WINNING
-                } else {
-                    result = "Win";
-                    System.out.println("Stake: " + int_stake + " | Winnings: " + int_winnings);
-                    int_expectedBalanceAfterWin = int_actualBalanceBeforeBet + int_winnings;
+                        bd_expectedBalanceAfterWin = (bd_actualBalanceBeforeBet.add(bd_winnings));
 
-                    if (int_expectedBalanceAfterWin == int_actualBalanceAfterBet) {
-                        settlementStatus = "Tally";
-                    } else {
-                        settlementStatus = "Not Tally";
+                        if (bd_expectedBalanceAfterWin.equals(bd_actualBalanceAfterBet)) {
+                            settlementStatus = "Tally";
+                            System.out.println("\nbd_expectedBalanceAfterWin " + bd_expectedBalanceAfterWin);
+                            System.out.println("bd_actualBalanceAfterBet " + bd_actualBalanceAfterBet + "\n");
+
+                        } else {
+                            settlementStatus = "Not Tally";
+                            System.out.println("\n bd_expectedBalanceAfterWin " + bd_expectedBalanceAfterWin);
+                            System.out.println("bd_actualBalanceAfterBet " + bd_actualBalanceAfterBet + "\n");
+                        }
+                        System.out.println("Balance after winning: " + balanceDisplay.getText() +
+                                "\nStatus: " + settlementStatus);
                     }
-                    System.out.println("Balance after winning: " + balanceDisplay.getText() +
-                            "\nStatus: " + settlementStatus);
+
+                    //Assigning value for the variable "report"
+                    report = ("Balance before betting: " + balanceBeforeBetNoFormat + "%0A" +
+                            "Stake: " + bd_stake + "  |  Winnings: " + bd_winnings + "%0A" +
+                            "Balance after winning: " + balanceDisplay.getText() + "%0A" +
+                            "Status: " + settlementStatus + "%0A");
+
+                    //Check the result if won; if yes append else do not append
+                    if (result.equals("Win")) {
+                        resultContent.append(report);
+                    }
+
                 }
 
-                //Assigning value for the variable "report"
-                report = ("Balance before betting: " + balanceBeforeBetNoFormat + "%0A" +
-                        "Stake: " + int_stake + "  |  Winnings: " + int_winnings + "%0A" +
-                        "Balance after winning: " + balanceDisplay.getText() + "%0A" +
-                        "Status: " + settlementStatus + "%0A");
-
-                //Check the result if won; if yes append else do not append
-                if(result.equals("Win")){
-                    resultContent.append(report);
-                }
-
-                //delay 2s
-                Thread.sleep(2000);
-            } while (int_winnings == (int_stake * -1));
+            } while (!result.equals("Win"));
 
         } else {
             System.out.println("The game is under maintenance.");

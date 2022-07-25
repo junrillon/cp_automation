@@ -50,7 +50,7 @@ public class Login {
     // banner exit button
     @FindBy(how = How.XPATH, using =  ".//i[@class='fa fa-times-circle fa-2x']")
     @CacheLookup
-    public List<WebElement> bannerExitBtn;
+    public List<WebElement> bannerExitBtn; //div[contains(concat(' ',@class,' '), ' announcement-modal ')]
 
     // continue button
     @FindBy(how = How.ID, using = "react-confirm-alert")
@@ -61,6 +61,17 @@ public class Login {
     @FindBy(how = How.XPATH, using = ".//div[@class='react-confirm-alert-button-group']//i[@class=\"fa fa-check\"]")
     @CacheLookup
     public WebElement ContinueSession;
+
+    // age verification modal
+    @FindBy(how = How.XPATH, using = ".//div[@class='verify-content']")
+    @CacheLookup
+    public List<WebElement> ageVerificationModal;
+
+    //Yes, I'm over 21 button
+    @FindBy(how = How.XPATH, using =  ".//div[@class='verify-content']//button[@class='btn btn-primary']")
+    @CacheLookup
+    public List<WebElement> ageVerificationButton;
+
 
 
 

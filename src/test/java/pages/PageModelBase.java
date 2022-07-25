@@ -28,7 +28,12 @@ public class PageModelBase {
     public void scrollIntoView(WebElement element) {
         logger().traceEntry();
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
+//        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        String scrollElementIntoMiddle = "var viewPortHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);"
+                + "var elementTop = arguments[0].getBoundingClientRect().top;"
+                + "window.scrollBy(0, elementTop-(viewPortHeight/2));";
+
+        js.executeScript(scrollElementIntoMiddle, element);
 
         logger().traceExit();
     }

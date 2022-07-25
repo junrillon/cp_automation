@@ -30,10 +30,23 @@ public class Login {
         pages.frontend.ggplay.Login pageLogin = new pages.frontend.ggplay.Login(driver);
 
         //Check if banner exit button is present
+
+        int ageVerificationModal = pageLogin.ageVerificationModal.size();
+
+        if(ageVerificationModal > 0) {
+            System.out.println("Age Verification Modal Visible");
+            wait.until(ExpectedConditions.visibilityOf(pageLogin.ageVerificationButton.get(0)));
+            wait.until(ExpectedConditions.elementToBeClickable(pageLogin.ageVerificationButton.get(0)));
+            pageLogin.ageVerificationButton.get(0).click();
+        }
+
+        //Thread.sleep(1500);
         int bannerExitBtn = pageLogin.bannerExitBtn.size();
         if(bannerExitBtn > 0){
+            System.out.println("Banner Modal Visible");
             wait.until(ExpectedConditions.elementToBeClickable(pageLogin.bannerExitBtn.get(0)));
             pageLogin.bannerExitBtn.get(0).click();
+
         }
 
         //Get data table from feature file

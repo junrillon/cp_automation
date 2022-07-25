@@ -65,19 +65,20 @@ public class CasinoGames {
     public WebElement innerPlayButton;
 
     @FindBy(how = How.XPATH, using =  ".//div[@class='statistics-field-value']")
-    @CacheLookup
     public WebElement balanceValue;
 
-    @FindBy(how = How.XPATH, using =  ".//div[@class='stake-value']")
-    @CacheLookup
+    @FindBy(how = How.XPATH, using =  ".//dir[@class='bottom-bar-inner-wrap']//div[@class='stake-value']")
     public WebElement stakeValue;
 
+    @FindBy(how = How.XPATH, using =  ".//dir[@class='bottom-bar-inner-wrap']//button[contains(concat(' ',@class,' '), 'auto-button') and @disabled]")
+    public List<WebElement> autoPlayButton;
+
+    //dir[@class='bottom-bar-inner-wrap']//div[contains(concat(' ',@class,' '), 'stake-controls')]//button[@disabled='disabled'][1]
+
     @FindBy(how = How.XPATH, using =  ".//div[@class='win-text']")
-    @CacheLookup
     public WebElement winIndicator;
 
     @FindBy(how = How.XPATH, using =  ".//div[@class='win-text']/canvas")
-    @CacheLookup
     public WebElement winIndicator2;
 
     @FindBy(how = How.XPATH, using =  ".//div[@class='debug-component']//span[@class='close-btn-gui']")

@@ -80,7 +80,7 @@ public class LiveGames {
     public WebElement totalBet;
 
     @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'bettingGrid')]//div[contains(concat(' ',@class,' '), 'player')]")
-    public WebElement playerSelection;
+    public List<WebElement> playerSelection;
 
     @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'player')]//div[contains(concat(' ',@class,' '), 'title')]")
     public WebElement playerSelectionLabel;
@@ -91,6 +91,12 @@ public class LiveGames {
 
     @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'bettingGrid')]//div[contains(concat(' ',@class,' '), 'tie')]")
     public WebElement tieSelection;
+
+    @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'bettingGrid')]//div[contains(concat(' ',@class,' '), 'dragon')][1]")
+    public List<WebElement>  dragonSelection;
+
+    @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'dragon')]//div[contains(concat(' ',@class,' '), 'title')]")
+    public WebElement dragonSelectionLabel;
 
     @FindBy(how = How.XPATH, using =  ".//div[contains(concat(' ',@class,' '), 'chipStack')]")
     public WebElement betAmountContainer;

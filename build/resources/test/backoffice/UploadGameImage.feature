@@ -5,7 +5,7 @@ Feature: Upload Game Image
     Given I access b2c backoffice https://staging-admin.clickplaysports.net
     When I login on b2c backoffice
       | username | password  |
-      | adminjun | P@ssw0rd |
+      | shey.admin | Sheyadmin123 |
     Then I should access the dashboard
 
   Scenario: Upload Game Image

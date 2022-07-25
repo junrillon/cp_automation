@@ -1,13 +1,13 @@
 
-Feature: Frontend casino betting - Evolution
+Feature: Frontend casino betting - GGPlay Evolution
 
   Background:
     Given I clear the casino data
       | Username |
       | gg241red2|
 
-    Given I logged in on frontend page https://staging.ggplay.co/login/
-     # user login  credentials aff1pl 123123 https://staging.brasilplay.com/ gg241red2 456456
+    Given I logged in on frontend page https://staging.ggplay.co/login
+     # user login  credentials aff1pl 123123 https://staging.brasilplay.com/login gg241red2 456456
       | Username   | Password |
       | gg241red2  | 456456   |
 
@@ -18,6 +18,7 @@ Feature: Frontend casino betting - Evolution
       | provider |
       | Evolution|
     And I wait for live games to load
+    And I select live game
     And I play live casino
     Then I send EVO betting result in telegram
       | token                                          | chatId         |

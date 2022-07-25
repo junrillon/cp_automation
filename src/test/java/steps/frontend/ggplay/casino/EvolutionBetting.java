@@ -5,14 +5,12 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
-import pages.frontend.ggplay.casino.CasinoGames;
 import pages.frontend.ggplay.casino.LiveGames;
 import steps.frontend.GamesCasino;
 import steps.frontend.Login;
@@ -49,20 +47,12 @@ public class EvolutionBetting {
 
     String result;
 
-    @When("I play live casino")
-    public void iPlayLiveCasino() throws InterruptedException {
-        Dashboard dashboard = new Dashboard(driver);
+    @When("I select live game")
+    public void iSelectLiveGame() throws InterruptedException {
         LiveGames liveGames = new LiveGames(driver);
         Actions action = new Actions(driver);
 
-        String oldTab = driver.getWindowHandle();
-
-        String inGame_BalAfterWin;
-        String inGame_BalAfterWin_formatted;
-
-
         WebDriverWait wait = new WebDriverWait(driver, 20);
-        WebDriverWait longwait = new WebDriverWait(driver, 60);
 
         //Performing the mouse hover action on the target element.
         wait.until(ExpectedConditions.visibilityOf(liveGames.gameCard));
@@ -74,6 +64,34 @@ public class EvolutionBetting {
         wait.until(ExpectedConditions.elementToBeClickable(liveGames.gameCardPlayButton));
         liveGames.gameCardPlayButton.click();
         System.out.println("Click play button");
+
+
+    }
+
+    public void clickRecentGame(){
+        LiveGames liveGames = new LiveGames(driver);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        wait.until(ExpectedConditions.visibilityOf(liveGames.recentlyPlayed));
+        wait.until(ExpectedConditions.visibilityOf(liveGames.firstRecentlyPlayedGame));
+        wait.until(ExpectedConditions.elementToBeClickable(liveGames.firstRecentlyPlayedGame));
+        liveGames.firstRecentlyPlayedGame.click();
+
+    }
+
+    @When("I play live casino")
+    public void iPlayLiveCasino() throws InterruptedException {
+        Dashboard dashboard = new Dashboard(driver);
+        LiveGames liveGames = new LiveGames(driver);
+
+        String oldTab = driver.getWindowHandle();
+
+        String inGame_BalAfterWin;
+        String inGame_BalAfterWin_formatted;
+
+
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebDriverWait longwait = new WebDriverWait(driver, 60);
 
         String checkIfMaintenance = liveGames.maintenanceNotif.getText();
         if(!checkIfMaintenance.contains("Game under maintenance")){
@@ -89,20 +107,18 @@ public class EvolutionBetting {
                 System.out.println("Done switching to iframe");
 
                 //Check and wait for loading screen
-                int loading_isPresent = 1;
+                int loading_isPresent;
                 do {
                     loading_isPresent = liveGames.casinoLoadingScreen.size();
 
                 } while (loading_isPresent != 0);
             }
 
-            wait.until(ExpectedConditions.visibilityOf(liveGames.recentlyPlayed));
-            wait.until(ExpectedConditions.visibilityOf(liveGames.firstRecentlyPlayedGame));
-            wait.until(ExpectedConditions.elementToBeClickable(liveGames.firstRecentlyPlayedGame));
-            liveGames.firstRecentlyPlayedGame.click();
+            //Call clickRecentGame
+            clickRecentGame();
 
             //Check and wait for loading screen to finish
-            int finishLoading_isPresent = 0;
+            int finishLoading_isPresent;
             do {
                 finishLoading_isPresent = liveGames.casinoFinishProgress.size();
 
@@ -142,19 +158,48 @@ public class EvolutionBetting {
                         System.out.println("\nBalance before bet: " + inGame_BalBeforeBet);
                         //resultContent.append("Balance before bet: ").append(inGame_BalBeforeBet).append("%0A");
 
-                        //wait for betAmountSelection to be visible and minBetAmount to be clickable
-                        wait.until(ExpectedConditions.visibilityOf(liveGames.betAmountSelection));
-                        wait.until(ExpectedConditions.elementToBeClickable(minBetAmount));
-                        minBetAmount.click();
+                        if (isCollapsed.equalsIgnoreCase("false")) {
 
-                        //element for playerSelection, wait for element to be clickable
-                        WebElement playerSelection = liveGames.playerSelection;
-                        wait.until(ExpectedConditions.elementToBeClickable(playerSelection));
-                        playerSelection.click();
+                            //wait for betAmountSelection to be visible and minBetAmount to be clickable
+                            wait.until(ExpectedConditions.visibilityOf(liveGames.betAmountSelection));
+                            wait.until(ExpectedConditions.elementToBeClickable(minBetAmount));
+                            minBetAmount.click();
 
-                        //element for playerSelectionLabel, and then get the text
-                        WebElement playerSelectionLabel = liveGames.playerSelectionLabel;
-                        betLabel = playerSelectionLabel.getText();
+
+                            int playerSelection_isDisplayed = liveGames.playerSelection.size();
+                            int dragonSelection_isDisplayed  = liveGames.dragonSelection.size();
+
+                            if(playerSelection_isDisplayed > 0){
+                                //element for playerSelection, wait for element to be clickable
+                                WebElement playerSelection = liveGames.playerSelection.get(0);
+                                wait.until(ExpectedConditions.elementToBeClickable(playerSelection));
+                                playerSelection.click();
+
+                                System.out.println("Player Selection: " + true);
+
+
+                                //element for playerSelectionLabel, and then get the text
+                                WebElement playerSelectionLabel = liveGames.playerSelectionLabel;
+                                betLabel = playerSelectionLabel.getText();
+
+                            } else if(dragonSelection_isDisplayed > 0){
+                                //element for dragonSelection, wait for element to be clickable
+                                WebElement dragonSelection = liveGames.dragonSelection.get(0);
+                                wait.until(ExpectedConditions.elementToBeClickable(dragonSelection));
+                                dragonSelection.click();
+
+                                System.out.println("Dragon Selection: " + true);
+
+                                //element for dragonSelectionLabel, and then get the text
+                                WebElement dragonSelectionLabel = liveGames.dragonSelectionLabel;
+                                betLabel = dragonSelectionLabel.getText();
+
+                            } else {
+
+                                System.out.println("Player/Dragon Selection: " + false);
+                            }
+
+                        }
 
                         System.out.println("Bet Amount: "+ betValue +
                                 "\nBet Selection: " + betLabel);
@@ -230,7 +275,6 @@ public class EvolutionBetting {
 
                             Thread.sleep(1000);
                         } else {
-
                             BigDecimal BB = new BigDecimal(inGame_BalBeforeBet_formatted);
                             BigDecimal BA = new BigDecimal(betValue);
                             expectedBalanceAfterBet = BB.subtract(BA);
@@ -241,11 +285,13 @@ public class EvolutionBetting {
 
                             //Assert if expected balance is equals to actual balance after bet
                             Assert.assertEquals(expectedBalanceAfterBet, AB);
+
                         }
                     }
                 }
             }
 
+            Thread.sleep(1500);
         } else {
             System.out.println("The game is under maintenance.");
         }

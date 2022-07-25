@@ -23,7 +23,7 @@ public class GamesCasino {
 
     public static String provider;
     @When("I select provider")
-    public void iSelectProvider(DataTable providerDetails) {
+    public void iSelectProvider(DataTable providerDetails) throws InterruptedException {
         Dashboard page = new Dashboard(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 

@@ -54,8 +54,6 @@ public class AltenarParlayBetting {
     }
 
     public int marketSelection(){
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
         int eventIndex = eventSelection();
         String selectedEvent = eventList + "[" + eventIndex + "]";
         List<WebElement> marketSelection = driver.findElements(By.xpath(selectedEvent + marketList));
@@ -77,8 +75,6 @@ public class AltenarParlayBetting {
     }
 
     public void oddsSelectionPerEvent() throws InterruptedException {
-        Altenar altenar = new Altenar(driver);
-        JavascriptExecutor js = (JavascriptExecutor)driver;
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         int selectedEventIndex = eventSelection();
@@ -86,7 +82,7 @@ public class AltenarParlayBetting {
 
         //Scroll into the selected event
         WebElement selectedEvent = driver.findElement(By.xpath(eventList + "[" + selectedEventIndex + "]"));
-        PageModelBase.scrollIntoView(altenar.upcoming_MatchContainer);
+        PageModelBase.scrollIntoView(selectedEvent);
         Thread.sleep(1000);
 
         //Concat xpath of the selected event and selected market
@@ -127,6 +123,13 @@ public class AltenarParlayBetting {
 
         //Call market selection
         oddsSelectionPerEvent();
+
+        //Call market selection
+        Thread.sleep(500);
+        oddsSelectionPerEvent();
+
+        //Call market selection
+        Thread.sleep(500);
         oddsSelectionPerEvent();
 
         //Scroll up into betSlip details

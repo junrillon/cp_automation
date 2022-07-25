@@ -104,7 +104,20 @@ task evolutionBetting(type: JavaExec) {
             '--plugin', 'pretty',
             '--plugin', 'html:build/cucumber-report.html',
             '--glue', 'steps',
-            '--dir0', 'src/test/resources/frontend/casino/EvolutionBetting.feature'
+            '--dir0', 'src/test/resources/frontend/casino/GGPlayEvolutionBetting.feature'
+    ]
+
+}
+
+task brasilEvolutionBetting(type: JavaExec) {
+    dependsOn assemble, testClasses
+    mainClass = "steps.CucumberLauncher"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--dir0', 'src/test/resources/frontend/casino/BrasilEvolutionBetting.feature'
     ]
 
 }
