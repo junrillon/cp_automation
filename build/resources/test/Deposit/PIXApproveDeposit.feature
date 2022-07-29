@@ -5,8 +5,8 @@ Feature: Approve Deposit
 
   Scenario Outline: Approve Deposit
     When I get details in br_user_fund_transactions table
-      | transId |
-      | <transId> |
+      | transId | env |
+      | <transId> | stage_b2c |
 
     And I input deposit details
     And I input signature eRsecey1lBjW
@@ -16,5 +16,4 @@ Feature: Approve Deposit
     Examples:
       | transId |
       | C864AFB2 |
-      | FC157278 |
-
+      | 69CECB52 |

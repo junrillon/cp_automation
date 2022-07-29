@@ -46,10 +46,11 @@ public class ApproveDeposit {
         //get br_user_id from steps/frontend/Login
         List<List<String>> details = brUserFund.asLists(String.class);
         String transId = details.get(1).get(0);
+        String env = details.get(1).get(1);
 
         try {
-            //check report_casino if null
-            String query = "SELECT trans_id, reference_no, amount, created_at FROM `stage_b2c`.`br_user_fund_transactions` " +
+            //check report_casino if null stage_b2c
+            String query = "SELECT trans_id, reference_no, amount, created_at FROM `"+env+"`.`br_user_fund_transactions` " +
                     "WHERE trans_id = '"+transId+"'";
 
             System.out.println(query);
