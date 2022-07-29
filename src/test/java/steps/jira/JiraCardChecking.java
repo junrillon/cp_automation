@@ -188,6 +188,8 @@ public class JiraCardChecking {
 
     }
 
+
+
     @When("I check cards in future sprint")
     public void iCheckCardsInFutureSprint() {
         JiraObjects jiraObjects = new JiraObjects(driver);
@@ -202,6 +204,7 @@ public class JiraCardChecking {
         String perCardTester = jiraObjects.perCardTesterXpath;
         String perCardStatus = jiraObjects.perCardStatusXpath;
         String perCardXpath = jiraObjects.perCardXpath;
+        String perCardSP =  jiraObjects.perCarStoryPoints;
 
         String testCases_stats;
         String testRuns_stats;
@@ -235,6 +238,17 @@ public class JiraCardChecking {
                     WebElement cardTitle = driver.findElement(By.xpath(perCard + perCardTitleXpath));
                     wait.until(ExpectedConditions.visibilityOf(cardTitle));
                     String extractedCardTitle = cardTitle.getText();
+
+                    //locate card story points element and get text
+                    System.out.println("Checking card story points");
+                    WebElement cardSP = driver.findElement(By.xpath(perCard + perCardSP));
+                    wait.until(ExpectedConditions.visibilityOf(cardSP));
+                    String extractedCardSP;
+                    if (cardSP.getText().equals("-")){
+                        extractedCardSP = "0";
+                    } else {
+                        extractedCardSP = cardSP.getText();
+                    }
 
                     //check if card has tester
                     System.out.println("Checking card tester");
@@ -363,11 +377,11 @@ public class JiraCardChecking {
                     //⚠
                     result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                             "•Tester: @" + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
-                            "•Status: " + extractedCardStatus + "\n" +
+                            "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
                             "- Test Cases: " + testCases_stats + "\n" + "- Test Runs: " + testRuns_stats + "\n\n");
 
                     boolean isAppended;
-                    if (testCases > 0 || testRuns > 0) {
+                    if (testCases > 0 || testRuns > 0 || Integer.parseInt(extractedCardSP) == 0) {
                         isAppended = true;
                         resultContent.append(result);
                     } else {
@@ -377,7 +391,7 @@ public class JiraCardChecking {
                     System.out.println("isAppended: " + isAppended + "\n" +
                             i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                             "•Tester: @" + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
-                            "•Status: " + extractedCardStatus + "\n" +
+                            "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
                             "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
 
                 } else {

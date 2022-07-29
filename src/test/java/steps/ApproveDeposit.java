@@ -55,7 +55,7 @@ public class ApproveDeposit {
 
             System.out.println(query);
                                             //execB2CDBQuery stage/prod; execProdBrasilQuery prod brasil
-            ResultSet rs = DatabaseConnection.execProdBrasilQuery(query);
+            ResultSet rs = DatabaseConnection.execB2CDBQuery(query);
             referenceNo = rs.getString("reference_no");
             amount = rs.getString("amount");
             created_at = rs.getString("created_at");

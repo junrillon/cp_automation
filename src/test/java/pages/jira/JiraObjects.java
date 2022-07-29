@@ -110,6 +110,7 @@ public class JiraObjects{
     public String sprintNumberXpath = advanceSprintXpath +"//div[@class='ghx-name']";
     public String perCardIssueType = "//span[contains(concat(' ',@class,' '), ' ghx-type ')]";
     public String perCardTitleXpath = "//span[@class='ghx-inner']";
+    public String perCarStoryPoints = "//span[@title='Story Points']";
     public String perCardNumberXpath = "//span[@class='ghx-end ghx-items-container']/a";
     public String perCardAssigneeXpath = "//span[@class='ghx-end ghx-items-container']/img"; // <-- get Alt
     public String perCardTesterXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[3]/span";

@@ -118,7 +118,7 @@ public class Altenar {
     public WebElement emptyBetSlipSelectionDetails;
 
     //Bet slip selection details (Empty)
-    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,''), ' _asb_betslip-place-btns-bet ')]")
+    @FindBy(how = How.XPATH, using = ".//div[@class='asb-flex-col _asb_betslip-place-btns ']//div[contains(concat(' ',@class,''), ' _asb_betslip-place-btns-bet ')]")
     public WebElement placeBetBtn;
 
     //Bet slip selection details (Empty)

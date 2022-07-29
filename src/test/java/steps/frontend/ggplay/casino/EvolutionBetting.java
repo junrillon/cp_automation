@@ -225,7 +225,7 @@ public class EvolutionBetting {
 
 
                                 wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(liveGames.inGameBalance, inGame_BalAfterBet)));
-                                Thread.sleep(100);
+                                Thread.sleep(1000);
 
                                 inGame_BalAfterBet_formatted = inGame_BalAfterBet.replace(",","");
 
@@ -252,7 +252,8 @@ public class EvolutionBetting {
                                     String navBalance = dashboard.walletBalance.getText();
                                     String navBalance_formatted = navBalance
                                             .replace(",", "")
-                                            .replace(".00", "");
+                                            .replace(".00", "")
+                                            .replace("R$ ", "");
 
                                     System.out.println("Nav balance: "+navBalance);
 
@@ -266,6 +267,8 @@ public class EvolutionBetting {
                                         resultContent.append(result);
                                         notWinning = false;
 
+                                    } else {
+                                        System.out.println("expectedBalanceAfterWin not equal to navBalance_formatted");
                                     }
 
                                 } else {

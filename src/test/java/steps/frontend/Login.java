@@ -40,7 +40,7 @@ public class Login {
             pageLogin.ageVerificationButton.get(0).click();
         }
 
-        //Thread.sleep(1500);
+        Thread.sleep(1500);
         int bannerExitBtn = pageLogin.bannerExitBtn.size();
         if(bannerExitBtn > 0){
             System.out.println("Banner Modal Visible");

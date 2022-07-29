@@ -81,7 +81,9 @@ public class AltenarSingleBetting{
 
         //Get balance before bet
         origBalance = altenar.balance.getText();
-        String formatted_origBalance = origBalance.replace(",","");
+        String formatted_origBalance = origBalance
+                                        .replace(",","")
+                                        .replace("R$ ","");
 
         //wait for market container to be visible
         wait.until(ExpectedConditions.visibilityOf(altenar.marketContainer));
@@ -142,7 +144,10 @@ public class AltenarSingleBetting{
         wait.until(ExpectedConditions
                 .not(ExpectedConditions.textToBePresentInElement(altenar.balance, origBalance)));
         balanceAfter = altenar.balance.getText();
-        String formatted_balanceAfter = balanceAfter.replace(",","");
+        String formatted_balanceAfter = balanceAfter
+                                .replace(",","")
+                                .replace("R$ ","");
+
         BigDecimal ABA = new BigDecimal(formatted_balanceAfter); //Actual balance after bet
 
         if(ABA.equals(expectedBalanceAfterWin)){
@@ -193,7 +198,7 @@ public class AltenarSingleBetting{
 
         try {
             URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+
-                    "&text=Provider: Brasil%0AUsername: "+username+"%0A"+ resultContentString);
+                    "&text=Provider: Altenar%0AUsername: "+username+"%0A"+ resultContentString);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");

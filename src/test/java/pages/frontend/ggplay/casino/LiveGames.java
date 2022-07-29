@@ -15,12 +15,12 @@ public class LiveGames {
     }
 
     // gameCard
-    @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][3]//div[@class='game-card']")
+    @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][8]//div[@class='game-card']")
     @CacheLookup
     public WebElement gameCard;
 
     // gameCard image
-    @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][3]//div[@class='game-card']//img")
+    @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][8]//div[@class='game-card']//img")
     @CacheLookup
     public WebElement gameCardImage;
 
@@ -31,7 +31,7 @@ public class LiveGames {
 
 
     // gameCard play button
-    @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][3]//a[@class='btn btn-primary']")
+    @FindBy(how = How.XPATH, using =  ".//div[@class='col-xl-2 col-lg-3 col-sm-4 col-4 mb-3'][8]//a[@class='btn btn-primary']")
     @CacheLookup
     public WebElement gameCardPlayButton;
 
