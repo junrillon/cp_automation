@@ -45,6 +45,19 @@ public class DatabaseConnection {
 
     }
 
+    public static ResultSet execProdBrasilQuery(String queryString) throws SQLException {
+        String db = "b2c";
+        if (conn != null && !conn.isClosed()) {
+            conn.close();
+        }
+        conn = DriverManager.getConnection("jdbc:mysql://52.67.69.105:3306/"+db+"", "qa_autobot", "eb%AqG-qvumD96Qe");
+        Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet rs = stmt.executeQuery(queryString);
+        rs.next();
+        return rs;
+
+    }
+
     public void closeConn() throws SQLException {
         if(conn !=null && !conn.isClosed()) {
             conn.close();

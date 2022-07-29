@@ -5,16 +5,14 @@ Feature: Approve Deposit
 
   Scenario Outline: Approve Deposit
     When I get details in br_user_fund_transactions table
-      | transId |
-      | <transId> |
+      | transId | env |
+      | <transId> | b2c |
 
     And I input deposit details
     And I input signature eRsecey1lBjW
     Then I get the generated token
-    And I process the deposit
+    And I process the deposit https://pix-api.bpc555.com/api/payment/callback
 
     Examples:
       | transId |
-      | C864AFB2 |
-      | FC157278 |
-
+      | 12CD8C7A |

@@ -46,15 +46,16 @@ public class ApproveDeposit {
         //get br_user_id from steps/frontend/Login
         List<List<String>> details = brUserFund.asLists(String.class);
         String transId = details.get(1).get(0);
+        String env = details.get(1).get(1);
 
         try {
-            //check report_casino if null
-            String query = "SELECT trans_id, reference_no, amount, created_at FROM `stage_b2c`.`br_user_fund_transactions` " +
+            //check report_casino if null stage_b2c
+            String query = "SELECT trans_id, reference_no, amount, created_at FROM `"+env+"`.`br_user_fund_transactions` " +
                     "WHERE trans_id = '"+transId+"'";
 
             System.out.println(query);
-
-            ResultSet rs = DatabaseConnection.execB2CDBQuery(query);
+                                            //execB2CDBQuery stage/prod; execProdBrasilQuery prod brasil
+            ResultSet rs = DatabaseConnection.execProdBrasilQuery(query);
             referenceNo = rs.getString("reference_no");
             amount = rs.getString("amount");
             created_at = rs.getString("created_at");
@@ -143,11 +144,11 @@ public class ApproveDeposit {
 
     }
 
-    @And("I process the deposit")
-    public void iProcessTheDeposit() {
+    @And("I process the deposit ([^\"]*)$")
+    public void iProcessTheDeposit(String callBack) {
 
         try {
-            URL url = new URL("https://staging-pix-api.bpc555.com/api/payment/callback");
+            URL url = new URL(callBack);
 
             Map<String, Object> params = new LinkedHashMap<>();
             params.put("bodyEncrypted", generatedToken);
