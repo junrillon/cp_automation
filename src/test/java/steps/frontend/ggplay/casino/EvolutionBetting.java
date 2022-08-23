@@ -17,6 +17,7 @@ import steps.frontend.Login;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -281,14 +282,16 @@ public class EvolutionBetting {
                             BigDecimal BB = new BigDecimal(inGame_BalBeforeBet_formatted);
                             BigDecimal BA = new BigDecimal(betValue);
                             expectedBalanceAfterBet = BB.subtract(BA);
+                            BigDecimal formatted_expectedBalanceAfterBet = new BigDecimal(String.valueOf(expectedBalanceAfterBet))
+                                                                            .setScale(2, RoundingMode.HALF_UP);
 
                             inGame_BalAfterBet = liveGames.inGameBalance.getText();
                             inGame_BalAfterBet_formatted = inGame_BalAfterBet.replace(",", "");
-                            BigDecimal AB = new BigDecimal(inGame_BalAfterBet_formatted);
+                            BigDecimal AB = new BigDecimal(inGame_BalAfterBet_formatted)
+                                            .setScale(2, RoundingMode.HALF_UP);
 
                             //Assert if expected balance is equals to actual balance after bet
-                            Assert.assertEquals(expectedBalanceAfterBet, AB);
-
+                            Assert.assertEquals(formatted_expectedBalanceAfterBet, AB);
                         }
                     }
                 }
