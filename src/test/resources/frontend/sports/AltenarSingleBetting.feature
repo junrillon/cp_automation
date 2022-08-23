@@ -6,7 +6,6 @@ Feature: Frontend sports betting - Altenar (Single)
       | Username   | Password |
       | cmbpp1     | 123123   |
 
-
   Scenario:
     Given I navigate to altenar sports
     When I check upcoming matches

@@ -85,6 +85,7 @@ public class UploadGameImage {
             wait.until(ExpectedConditions.elementToBeClickable(GameList.applyFilterButton));
             GameList.applyFilterButton.click(); //<-- Click apply filter button
 
+            Thread.sleep(1500);
             //Check if modalCloseButton isPresents
             int gameDetails = GameList.gDetailsModal.size();
             if(gameDetails > 0){
@@ -92,6 +93,7 @@ public class UploadGameImage {
                 page.waitForVisibility(GameList.modalCloseButton,20);
                 wait.until(ExpectedConditions.elementToBeClickable(GameList.modalCloseButton));
                 GameList.modalCloseButton.click();
+
             } else {
                 System.out.println("Game Details Modal not closed.");
             }

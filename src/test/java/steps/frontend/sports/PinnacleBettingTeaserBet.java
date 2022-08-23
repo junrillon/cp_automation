@@ -170,14 +170,14 @@ public class PinnacleBettingTeaserBet {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //Click Confirm OK Button
-        wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleSuccessBetOK));
-        page.PinnacleSuccessBetOK.click();
-
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        //Click OK Success Message
-        wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleSuccessBetOK));
-        page.PinnacleSuccessBetOK.click();
-        Thread.sleep(5000);
+//        wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleSuccessBetOK));
+//        page.PinnacleSuccessBetOK.click();
+//
+//        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+//        //Click OK Success Message
+//        wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleSuccessBetOK));
+//        page.PinnacleSuccessBetOK.click();
+//        Thread.sleep(5000);
 
     }
 
@@ -229,35 +229,32 @@ public class PinnacleBettingTeaserBet {
         wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleMyBets));
         page.PinnacleMyBets.click();
 
+        //Switch to My bets window
         for(String winHandle : driver.getWindowHandles()){
             driver.switchTo().window(winHandle);
         }
 
-        //get My Bets wager ID
-        try{
-            wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
-            int wagerid = page.WagerIDLocation.size();
-            System.out.println(wagerid);
-            if(wagerid > 0){
-                System.out.println("Wager ID is Present!");
-            } else {
-                driver.navigate().refresh();
-            }
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+        //Check if my bets table is displayed
+        int myBetsTable = page.myBetsTable.size();
+        int wagerId = 0;
+        if(myBetsTable > 0){
 
-        //Click the Pinnacle My Bets Submit Filter Button
-        wait.until(ExpectedConditions.elementToBeClickable(page.MyBetsSubmit));
-        page.MyBetsSubmit.click();
+            wagerId = page.betDetail_WagerId.size();
+            if(wagerId > 0){
+                System.out.println("Wager ID is Present!");
+            }
+
+        } else {
+            driver.navigate().refresh();
+        }
 
         //Wager ID assertion
-        wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
-        MyBetswagerID= page.MyBetsWagerID.getText();
-        Assert.assertEquals(wagerID, MyBetswagerID);
+        Assert.assertEquals(wagerId, 1);
 
+        //Close the new tab (My Bets)
         driver.close();
+
+        //Switch to Old tab (main tab)
         driver.switchTo().window(winHandleBefore);
 
         reportResult.append("**** PINNACLE BETTING ****" + "%0A" +

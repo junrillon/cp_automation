@@ -13,28 +13,27 @@ public class WithdrawPix {
     }
 
     //User Balance
-    @FindBy(how = How.XPATH, using =  ".//a[@class='nav-link animate-pulse account-balance']")
-    @CacheLookup
+    @FindBy(how = How.XPATH, using =  ".//ul[@class='nav-link animate-pulse account-balance']")
     public WebElement walletBalance;
+
+    //Deposit Button
+    @FindBy(how = How.XPATH, using = ".//a[@href='/account/deposit']")
+    public WebElement depositButton;
 
     //Withdraw Button
     @FindBy(how = How.XPATH, using = ".//a[@href='/account/withdraw']")
-    @CacheLookup
     public WebElement withdrawButton;
 
     //CPF Bank
     @FindBy(how = How.XPATH, using = ".//span[@class='small']")
-    @CacheLookup
     public WebElement cpfBankButton;
 
     //Text input for withdraw amount
     @FindBy(how = How.XPATH, using = ".//input[@class='form-control form-group text-center']")
-    @CacheLookup
     public WebElement inputWithdrawAmount;
 
     //Confirm Button
     @FindBy(how = How.XPATH, using = ".//button[@class='btn btn-block btn-success mt-4']")
-    @CacheLookup
     public WebElement confirmButton;
 
 

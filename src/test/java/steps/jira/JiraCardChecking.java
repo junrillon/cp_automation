@@ -264,36 +264,36 @@ public class JiraCardChecking {
                         // Switch statement over above string
                         switch (splitStr[0]) {
                             case "Jun":
-                                extractedCardTester = "Juuuun";
+                                extractedCardTester = "@Juuuun";
                                 break;
                             case "Christian":
-                                extractedCardTester = "mxxx67";
+                                extractedCardTester = "@mxxx67";
                                 break;
                             case "Jean":
-                                extractedCardTester = "jeanpaola";
+                                extractedCardTester = "@jeanpaola";
                                 break;
                             case "jerald":
-                                extractedCardTester = "jeraldmm";
+                                extractedCardTester = "@jeraldmm";
                                 break;
                             case "Marjorie":
-                                extractedCardTester = "Marj0819";
+                                extractedCardTester = "@Marj0819";
                                 break;
                             case "Robert":
-                                extractedCardTester = "robertcaneta";
+                                extractedCardTester = "@robertcaneta";
                                 break;
                             case "Sherylle":
-                                extractedCardTester = "Sheeey";
+                                extractedCardTester = "@Sheeey";
                                 break;
                             case "Bianca":
-                                extractedCardTester = "yangcavelez ";
+                                extractedCardTester = "@yangcavelez ";
                                 break;
                             case "Arvin":
                                 switch (splitStr[1]) {
                                     case "Dacio":
-                                        extractedCardTester = "daysofdash";
+                                        extractedCardTester = "@daysofdash";
                                         break;
                                     case "Oliva":
-                                        extractedCardTester = "threem06";
+                                        extractedCardTester = "@threem06";
                                         break;
                                     default:
                                 }
@@ -340,7 +340,7 @@ public class JiraCardChecking {
 
                     //Switch to iframes (testcases iframe 1 and 2)
                     driver.switchTo().frame(jiraObjects.tcIframe1);
-                    longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.tcIframe2));
+                    longwait.until(ExpectedConditions.visibilityOf(jiraObjects.tcIframe2));
                     driver.switchTo().frame(jiraObjects.tcIframe2);
 
                     int testCases = jiraObjects.testCases_status.size();
@@ -360,7 +360,7 @@ public class JiraCardChecking {
 
                     //Switch to iframes
                     driver.switchTo().frame(jiraObjects.trIframe1);
-                    longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.trIframe2));
+                    longwait.until(ExpectedConditions.visibilityOf(jiraObjects.trIframe2));
                     driver.switchTo().frame(jiraObjects.trIframe2);
 
                     //wait.until(ExpectedConditions.elementToBeClickable((WebElement) locator.testRuns_status()));
@@ -376,7 +376,7 @@ public class JiraCardChecking {
                     jiraObjects.testRunsBack.click();
                     //⚠
                     result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
-                            "•Tester: @" + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
+                            "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                             "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
                             "- Test Cases: " + testCases_stats + "\n" + "- Test Runs: " + testRuns_stats + "\n\n");
 
@@ -390,7 +390,7 @@ public class JiraCardChecking {
 
                     System.out.println("isAppended: " + isAppended + "\n" +
                             i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
-                            "•Tester: @" + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
+                            "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                             "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
                             "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
 
