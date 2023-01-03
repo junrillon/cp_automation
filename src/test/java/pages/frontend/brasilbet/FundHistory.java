@@ -12,6 +12,19 @@ public class FundHistory {
         PageFactory.initElements(driver, this);
     }
 
+    //Navigation - Fund history button
+    @FindBy(how = How.XPATH, using = ".//a[@href='/account/fund-history']")
+    public WebElement FundHistory;
+
+    @FindBy(how = How.XPATH, using = ".//section[@class='container total-balance']//div[2]//div[1]//h4")
+    public WebElement balanceDisplay;
+
+    @FindBy(how = How.XPATH, using = ".//section[@class='container total-balance']//div[2]//div[2]//h4")
+    public WebElement bonusDisplay;
+
+    @FindBy(how = How.XPATH, using = ".//section[@class='container total-balance']//div[2]//div[3]//h4")
+    public WebElement rolloverDisplay;
+
     //Fund History Table
     @FindBy(how = How.XPATH, using =  ".//div[@class='table-responsive']")
     public WebElement fundHistoryTable;
@@ -19,6 +32,8 @@ public class FundHistory {
     //First row (Transaction ID)
     @FindBy(how = How.XPATH, using =  ".//div[@class='table-responsive']//tr[1]//td[@class='hidden-mobile']")
     public WebElement firstRowTransId;
+
+
 
 
 

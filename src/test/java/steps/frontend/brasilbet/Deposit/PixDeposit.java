@@ -10,19 +10,38 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.PageModelBase;
+import pages.frontend.GeneralDashboard;
+import pages.frontend.Navigation;
 import pages.frontend.brasilbet.Deposit;
 import pages.frontend.brasilbet.FundHistory;
 import pages.frontend.brasilbet.WithdrawPix;
+import steps.frontend.Actions;
 
 public class PixDeposit {
-    private WebDriver driver;
-    public pages.PageModelBase PageModelBase;
+    private final WebDriver driver;
+    public steps.frontend.Actions Actions;
 
-    public static String transId;
-
-    public PixDeposit(pages.PageModelBase PageModelBase, Driver driver) {
+    public PixDeposit(steps.frontend.Actions Actions, Driver driver) {
         this.driver = driver.get();
-        this.PageModelBase = PageModelBase;
+        this.Actions = Actions;
+
+    }
+
+     static String transId;
+     static String depositAmount;
+     static String balanceBefore;
+     static String rolloverBefore;
+     static String bonus;
+
+    @When("I get the current balance")
+    public void getCurrentBalance(){
+        //Go to fundHistory
+        Actions.goToFundHistory();
+
+        //Get the balance, bonus and rollover
+        balanceBefore = steps.frontend.Actions.getBalance();
+        bonus = steps.frontend.Actions.getBonus();
+        rolloverBefore = steps.frontend.Actions.getRollover();
 
     }
 
@@ -30,7 +49,7 @@ public class PixDeposit {
     public void clickDepositButton() throws InterruptedException {
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
-        Deposit page = new Deposit(driver);
+        Navigation page = new Navigation(driver);
 
         wait.until(ExpectedConditions.visibilityOf(page.depositButton));
         wait.until(ExpectedConditions.elementToBeClickable(page.depositButton))
@@ -59,6 +78,9 @@ public class PixDeposit {
 
         wait.until(ExpectedConditions.visibilityOf(page.amountField))
                 .sendKeys(amount);
+
+        depositAmount = amount;
+        System.out.println("Deposit amount: " + depositAmount);
     }
 
     @Then("I submit the deposit")
@@ -73,8 +95,8 @@ public class PixDeposit {
                 .click();
 
         //Wait for 'go to fund history button' to be visible then click
-        wait.until(ExpectedConditions.visibilityOf(page.fundHistory));
-        wait.until(ExpectedConditions.elementToBeClickable(page.fundHistory))
+        wait.until(ExpectedConditions.visibilityOf(page.depositPageFundHistory));
+        wait.until(ExpectedConditions.elementToBeClickable(page.depositPageFundHistory))
                 .click();
 
     }
@@ -90,7 +112,6 @@ public class PixDeposit {
 
         transId = page.firstRowTransId.getText();
         System.out.println(transId);
-
-        Thread.sleep(3000);
     }
+
 }

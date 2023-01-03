@@ -29,7 +29,6 @@ public class withdrawPixCpf {
             wait.until(ExpectedConditions.elementToBeClickable(page.walletBalance));
             page.clickWalletBalance();
 
-            Thread.sleep(3000);
     }
 
     @When("I click the withdraw button")

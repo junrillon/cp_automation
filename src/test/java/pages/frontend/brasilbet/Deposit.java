@@ -11,14 +11,6 @@ public class Deposit {
         PageFactory.initElements(driver, this);
     }
 
-    //User Balance
-    @FindBy(how = How.XPATH, using =  ".//ul[@class='nav-link animate-pulse account-balance']")
-    public WebElement walletBalance;
-
-    //Deposit Button
-    @FindBy(how = How.XPATH, using = ".//a[@href='/account/deposit']")
-    public WebElement depositButton;
-
     //Payment Gateway Dropdown
     @FindBy(how = How.XPATH, using = ".//div[@class='deposit-withdraw-page']//select")
     public WebElement paymentGatewayDropdown;
@@ -33,7 +25,7 @@ public class Deposit {
 
     //Success Deposit -> Go to fund history button
     @FindBy(how = How.XPATH, using = ".//div[@class='deposit-success']//a[@href='/account/fund-history']")
-    public WebElement fundHistory;
+    public WebElement depositPageFundHistory;
 
 
 }
