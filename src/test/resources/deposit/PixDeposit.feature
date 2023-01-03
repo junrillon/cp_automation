@@ -17,4 +17,3 @@ Feature: Pix Deposit
 #    Examples:
 #      | transId |
 #      | 2A5606B5 |
-#      | F2D027D0 |
