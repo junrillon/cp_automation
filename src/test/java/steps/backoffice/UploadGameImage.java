@@ -71,6 +71,9 @@ public class UploadGameImage {
             String game_name = csvCell[0];
             String fileName = csvCell[1];
 
+            //Wait for data table to load before game name search
+            wait.until(ExpectedConditions.visibilityOf(GameList.dataTableEmpty));
+
             //Clear Game Name filter before send keys
             wait.until(ExpectedConditions.visibilityOf(GameList.gameNameFilter));
             GameList.gameNameFilter.sendKeys(Keys.CONTROL + "a");
@@ -82,10 +85,12 @@ public class UploadGameImage {
             casinoRoomDrpDown.selectByVisibleText(provider); //<-- Select provider in casino room dropdown
 
             //wait for apply button to be clickable
-            wait.until(ExpectedConditions.elementToBeClickable(GameList.applyFilterButton));
-            GameList.applyFilterButton.click(); //<-- Click apply filter button
+            wait.until(ExpectedConditions.visibilityOf(GameList.applyFilterButton));
+            wait.until(ExpectedConditions.elementToBeClickable(GameList.applyFilterButton))
+                    .click(); //<-- Click apply filter button
+            System.out.println("Clicked apply button");
 
-            Thread.sleep(1500);
+            //Thread.sleep(1000);
             //Check if modalCloseButton isPresents
             int gameDetails = GameList.gDetailsModal.size();
             if(gameDetails > 0){
@@ -95,11 +100,10 @@ public class UploadGameImage {
                 GameList.modalCloseButton.click();
 
             } else {
-                System.out.println("Game Details Modal not closed.");
+                System.out.println("Game Details Modal Closed.");
             }
 
             //Check if gameImage isPresent
-
             wait.until(ExpectedConditions.visibilityOf(GameList.gameImage));
             boolean gameImage_isPresent = GameList.gameImage.isDisplayed();
             if (gameImage_isPresent) {
