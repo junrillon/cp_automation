@@ -23,7 +23,7 @@ public class GameList {
     @FindBy(how = How.ID, using = "casinoRoom") //<-- Casino room filter
     public WebElement casinoRoomFilter;
 
-    @FindBy(how = How.ID, using = "filterButton") //<-- Apply filter button
+    @FindBy(how = How.XPATH, using = ".//button[@id='filterButton']") //<-- Apply filter button
     public WebElement applyFilterButton;
     // ----- END of filters
 
@@ -69,5 +69,8 @@ public class GameList {
 
     @FindBy(how = How.XPATH, using = ".//div[@class='note note-success']") //<-- Success note (div) after uploading image
     public WebElement noteSuccess;
+
+    @FindBy(how = How.XPATH, using = ".//table[@id='gameListTable']//td[@class='dataTables_empty']")
+    public WebElement dataTableEmpty; //empty table
 
 }
