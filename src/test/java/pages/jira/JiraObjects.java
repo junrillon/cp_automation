@@ -55,16 +55,16 @@ public class JiraObjects{
     @FindBy(how = How.XPATH, using = ".//h2[contains(text(), 'Story Points')]") //<-- details
     public WebElement sprintDisplayInsideCard;
 
-    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' it5e3i-3 ') and contains(text(), 'TestRail: Cases')]")
+    @FindBy(how = How.XPATH, using = ".//div[contains(text(), 'Open ')]//div[contains(text(), 'TestRail: Cases')]")
     public WebElement testCases;
 
-    @FindBy(how = How.XPATH, using = ".//div[@class='sc-16yrozk-2 bgiWJJ' and contains(text(), 'TestRail: Cases')]")
+    @FindBy(how = How.XPATH, using = ".//button/following-sibling::div[contains(text(), 'TestRail: Cases')]")
     public WebElement testCasesBack;
 
-    @FindBy(how = How.XPATH, using = ".//div[contains(concat(' ',@class,' '), ' it5e3i-3 ') and contains(text(), 'TestRail: Runs')]")
+    @FindBy(how = How.XPATH, using = ".//div[contains(text(), 'Open ')]//div[contains(text(), 'TestRail: Runs')]")
     public WebElement testRuns;
 
-    @FindBy(how = How.XPATH, using = ".//div[@class='sc-16yrozk-2 bgiWJJ' and contains(text(), 'TestRail: Runs')]")
+    @FindBy(how = How.XPATH, using = ".//button/following-sibling::div[contains(text(), 'TestRail: Runs')]")
     public WebElement testRunsBack;
 
     @FindBy(how = How.XPATH, using = ".//p[@class='bottom']/a[@class='button']")

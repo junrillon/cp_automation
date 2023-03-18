@@ -14,7 +14,7 @@ public class Login {
 
     private WebDriver driver;
     public static String user;
-    public static String userId;
+    public static String www_url;
 
     public Login(Driver driver) {
         this.driver = driver.get();
@@ -25,6 +25,9 @@ public class Login {
     public void iLoggedInOnFrontend(String url, DataTable loginDetails) throws InterruptedException {
         //Open browser plus url
         driver.get(url);
+
+        www_url = url.replace("https://","")
+                     .replace("/login","");
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
         pages.frontend.ggplay.Login pageLogin = new pages.frontend.ggplay.Login(driver);

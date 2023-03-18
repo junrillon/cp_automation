@@ -147,3 +147,16 @@ task altenarParlayBetting(type: JavaExec) {
     ]
 
 }
+
+task pixDepositAndApprove(type: JavaExec) {
+    dependsOn assemble, testClasses
+    mainClass = "steps.CucumberLauncher"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--dir0', 'src/test/resources/deposit'
+    ]
+
+}

@@ -28,6 +28,7 @@ public class withdrawPixCpf {
             wait.until(ExpectedConditions.visibilityOf(page.walletBalance));
             wait.until(ExpectedConditions.elementToBeClickable(page.walletBalance));
             page.clickWalletBalance();
+
     }
 
     @When("I click the withdraw button")

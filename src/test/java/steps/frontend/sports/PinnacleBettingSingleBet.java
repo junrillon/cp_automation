@@ -7,28 +7,41 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.PageModelBase;
 import pages.frontend.ggplay.Dashboard;
 //import pages.frontend.ggplay.LoginGGplay;
+import pages.frontend.sports.Altenar;
 import pages.frontend.sports.Pinnacle;
 import steps.Hooks;
+import steps.frontend.Login;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class PinnacleBettingSingleBet {
     private WebDriver driver;
+    public PageModelBase PageModelBase;
 
-    public PinnacleBettingSingleBet(Driver driver) {this.driver = driver.get();}
+    public PinnacleBettingSingleBet(PageModelBase PageModelBase, Driver driver) {
+        this.driver = driver.get();
+        this.PageModelBase = PageModelBase;
+    }
+
 
     String scenarioTitle = Hooks.sce;
+    String result;
     StringBuffer reportResult = new StringBuffer();
 
     @Given("I click the sports pinnacle header button")
@@ -39,7 +52,92 @@ public class PinnacleBettingSingleBet {
         page.SportsHeaderBtn.click();
     }
 
-    String balanceBeforeBet; String balanceBeforeBet_formatted; String pUsername;
+    public int leagueSelection(){
+        Pinnacle page = new Pinnacle(driver);
+
+        //Get the count of the markets available in the match
+        int min = 1;
+        int leagueSelection = page.sportLeague.size();
+
+        //Select Random number between min and max; will generate until generated number is not equal to 1 and 0
+        Random r = new Random();
+        int selectedEvent;
+        do {
+            selectedEvent = r.nextInt((leagueSelection - min) + 1);
+
+        } while (selectedEvent == 0);
+
+        return selectedEvent;
+
+    }
+
+
+    int league;
+    String selectedMatch;
+
+    public int matchSelection(){
+        league = leagueSelection();
+
+        selectedMatch =  ".//div[@class=\"early-mk\"]//div[@class='league']["+league+"]/following-sibling::div[1]//table";
+        List<WebElement> matchSize = driver.findElements(By.xpath(selectedMatch));
+
+        //Get the count of the markets available in the match
+        int min = 1;
+        int matchSelection = matchSize.size();
+
+        //Select Random number between min and max; will generate until generated number is not equal to 1 and 0
+        Random r = new Random();
+        int selectedMatch = 0;
+
+        //check if there's only 1 match in the selected league;
+        if(matchSelection == 1 ){
+            selectedMatch = 1;
+
+        } else {
+            do {
+                selectedMatch = r.nextInt((matchSelection - min) + 1);
+
+            } while (selectedMatch == 0);
+        }
+
+        return selectedMatch;
+
+    }
+
+    public void oddsPicking(){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        String mLOdds = "//td[@class=\"col-1x2 col-1x2-0\"]//a[@data-team-type=\"0\"]";
+        int match = matchSelection();
+        WebElement odds = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(selectedMatch + "["+match+"]" + mLOdds))));
+
+        PageModelBase.scrollIntoView(odds);
+        wait.until(ExpectedConditions.elementToBeClickable(odds));
+        odds.click();
+
+    }
+
+    public void enterAmountAndPlaceBet(String amount){
+        Pinnacle page = new Pinnacle(driver);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        //input bet amount
+        wait.until(ExpectedConditions.visibilityOf(page.SinglePinnacleBetAmount));
+        page.SinglePinnacleBetAmount.sendKeys(amount);
+
+        //Click Accept Better Odds button
+        wait.until(ExpectedConditions.elementToBeClickable(page.AcceptBetterOdds));
+        page.AcceptBetterOdds.click();
+
+        //Click Place Bet Button
+        wait.until(ExpectedConditions.elementToBeClickable(page.SinglePlaceBetButton));
+        page.SinglePlaceBetButton.click();
+    }
+
+    String balanceBeforeBet;
+    String balanceBeforeBet_formatted;
+    String pUsername;
+
     @When("I click the early matches")
     public void iClickTheEarlyMatches() throws InterruptedException {
 
@@ -48,31 +146,24 @@ public class PinnacleBettingSingleBet {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //get wallet balance display before betting
-        wait.until(ExpectedConditions.visibilityOf(page2.walletBalance));
-        WebElement balanceBeforeBetOrigin = page2.walletBalance;
+        WebElement balanceBeforeBetOrigin = wait.until(ExpectedConditions.visibilityOf(page2.walletBalance));
 
         //get the text of the inGameBalance, then remove the comma and PHP
         balanceBeforeBet = balanceBeforeBetOrigin.getText();
         balanceBeforeBet_formatted = balanceBeforeBet.replace(",","");
-        pUsername = page2.tcxtUsername.getText();
+        System.out.println("Balance: " + balanceBeforeBet_formatted);
 
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePinnacle));
+        //wait.until(ExpectedConditions.visibilityOf(page.oddspage1));
 
-        try{
-            wait.until(ExpectedConditions.visibilityOf(page.SportsCollapseButton));
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+        //Check if sports tab is displayed
+        int sportsTab = 0;
+        do{
+            sportsTab = page.SportsTab.size();
+            System.out.println("i: "+sportsTab);
 
-        int sportsTab = page.SportsTab.size();
-        System.out.println(sportsTab);
-        if(sportsTab > 0){
-            System.out.println("Sports Tab is Present!");
-        } else {
-            driver.navigate().refresh();
-        }
+        } while(sportsTab != 1);
 
         //Click Basketball Button
         wait.until(ExpectedConditions.visibilityOf(page.BasketballButton));
@@ -85,98 +176,91 @@ public class PinnacleBettingSingleBet {
 
     }
 
-    String BetAmount; int BetSelection; String odds;
+
+    String BetAmount;
+    int BetSelection;
+    String odds;
+
     @When("I place a bet on single bet")
-    public void iSelectTeamAoddsAndInputBetAmount(DataTable pinnacle) throws InterruptedException{
+    public void iPlaceSingeBet(DataTable pinnacle) throws InterruptedException{
 
         Pinnacle page = new Pinnacle(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //get the value list from feature file
         List<List<String>> data = pinnacle.asLists(String.class);
-        BetSelection = Integer.parseInt(data.get(1).get(0));
-        BetAmount = data.get(1).get(1);
+        BetAmount = data.get(1).get(0);
 
-        //Wait for odds to be clickable
-        for(int i=0; i<=2;i++){
-            try{
-                wait.until(ExpectedConditions.elementToBeClickable(page.TeamAOddsML));
-                //Betting Selection
-                switch(BetSelection) {
-                    case 1:
-                        page.TeamAOddsML.click();
-                        odds = page.TeamAOddsML.getText();
-                        //input bet amount
-                        wait.until(ExpectedConditions.visibilityOf(page.SinglePinnacleBetAmount));
-                        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                        page.SinglePinnacleBetAmount.sendKeys(BetAmount);
+        //Check if sports tab is displayed
+        int oddspage = 0;
+        do{
+            oddspage = page.oddspage.size();
 
-                        //Click Accept Better Odds button
-                        wait.until(ExpectedConditions.elementToBeClickable(page.AcceptBetterOdds));
-                        page.AcceptBetterOdds.click();
+        } while(oddspage != 1);
 
-                        //Click Place Bet Button
-                        wait.until(ExpectedConditions.elementToBeClickable(page.SinglePlaceBetButton));
-                        page.SinglePlaceBetButton.click();
-                        break;
-                    case 2:
-                        page.TeamBOddsML.click();
-                        odds = page.TeamBOddsML.getText();
-                        //input bet amount
-                        wait.until(ExpectedConditions.visibilityOf(page.SinglePinnacleBetAmount));
-                        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                        page.SinglePinnacleBetAmount.sendKeys(BetAmount);
+        //Delay
+        Thread.sleep(1000);
+        System.out.println("league: " + leagueSelection());
+        System.out.println("match: " + matchSelection());
 
-                        //Click Accept Better Odds button
-                        wait.until(ExpectedConditions.elementToBeClickable(page.AcceptBetterOdds));
-                        page.AcceptBetterOdds.click();
+        //select odds
+        oddsPicking();
 
-                        //Click Place Bet Button
-                        wait.until(ExpectedConditions.elementToBeClickable(page.SinglePlaceBetButton));
-                        page.SinglePlaceBetButton.click();
-                        break;
-                    default:
-                        System.out.println("WRONG SELECTION FORMAT!");
-                        break;
-                }
-                break;
-            }
-            catch(Exception e){
-                System.out.println(e.getMessage());
-            }
-        }
+        //enter amount then place bet
+        enterAmountAndPlaceBet(BetAmount);
 
 
     }
 
-    @When("I confirm my place bet in pinnacle")
-    public void iClickPinnacleConfirmBet() throws InterruptedException {
+    @When("I confirm place bet")
+    public void iConfirmPlaceBet() {
         Pinnacle page = new Pinnacle(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
-        //Click Confirm OK Button
-        wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleSuccessBetOK));
-        page.PinnacleSuccessBetOK.click();
+        WebElement alert;
+        String alertMessage;
 
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        //Click OK Success Message
-        wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleSuccessBetOK));
-        page.PinnacleSuccessBetOK.click();
-        Thread.sleep(5000);
+        int alertIsPresent = page.alert.size();
+        if(alertIsPresent > 0){
+            //Get alert message
+            alert = wait.until(ExpectedConditions.visibilityOf(page.alert.get(0)));
+            alertMessage = alert.getText();
+            System.out.println(alertMessage);
+
+            if(alertMessage.contains("Are you sure you want to submit this wager?")){
+
+                //Click Confirm OK Button
+                wait.until(ExpectedConditions.elementToBeClickable(page.alertOkButton));
+                page.alertOkButton.click();
+
+                //Wait for alert to be visible again then get text
+                wait.until(ExpectedConditions.visibilityOf(alert));
+                alertMessage = alert.getText();
+                System.out.println(alertMessage);
+
+                //Click Confirm OK Button
+                wait.until(ExpectedConditions.elementToBeClickable(page.alertOkButton));
+                page.alertOkButton.click();
+            }
+
+        }
 
     }
 
-    BigDecimal actualBalanceAfterBetFinal; BigDecimal balanceAfterbet; String wagerID;
-    @When("pinnacle place bet success")
-    public void pinnaclePlaceBetSuccess() throws InterruptedException {
+    BigDecimal actualBalanceAfterBetFinal;
+    BigDecimal balanceAfterbet;
+    String wagerID;
+
+    @When("I check my balance")
+    public void iCheckMyBalance(){
 
         Pinnacle page = new Pinnacle(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
         Dashboard page2 = new Dashboard(driver);
 
         //get wager ID after successful bet
-        wait.until(ExpectedConditions.visibilityOfAllElements(page.BetSlipWagerId));
-        wagerID= page.BetSlipWagerId.getText();
+        WebElement wager = wait.until(ExpectedConditions.visibilityOf(page.BetSlipWagerId));
+        wagerID = wager.getText();
         System.out.println("WagerID: " + wagerID);
 
         //switch back to dashboard content
@@ -185,25 +269,27 @@ public class PinnacleBettingSingleBet {
         BigDecimal BB = new BigDecimal(balanceBeforeBet_formatted);
         BigDecimal BA = new BigDecimal(BetAmount);
         balanceAfterbet = BB.subtract(BA);
-        System.out.println("Expected New BB: " + BB );
-        System.out.println("Expected New BA: " + BA );
+
+        System.out.println("Balance before bet: " + BB );
+        System.out.println("Bet amount: " + BA );
         System.out.println("Expected balance after bet: " + balanceAfterbet);
         wait.until(ExpectedConditions.not(ExpectedConditions.textToBePresentInElement(page2.walletBalance, balanceBeforeBet)));
 
-
-        var actualBalanceAfterBetTrim = page2.walletBalance.getText().replace(",","");
+        String actualBalanceAfterBetTrim = page2.walletBalance.getText().replace(",","");
         actualBalanceAfterBetFinal =  new BigDecimal(actualBalanceAfterBetTrim);
         System.out.println("Actual balance After Bet: " + actualBalanceAfterBetFinal);
         Assert.assertEquals(balanceAfterbet, actualBalanceAfterBetFinal);
 
     }
 
-    String MyBetswagerID;
-    @Then("pinnacle bet ticket is displayed")
-    public void pinnacleBetTicketIsDisplayed() {
+    @Then("I check wager id in myBets")
+    public void iCheckWagerIdInMyBets() {
 
         Pinnacle page = new Pinnacle(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        //get the username for reporting
+        String username = Login.user;
 
         // verify if iframe is available and switch to that iframe
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(page.iFramePinnacle));
@@ -214,74 +300,79 @@ public class PinnacleBettingSingleBet {
         wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleMyBets));
         page.PinnacleMyBets.click();
 
+        //Switch to My bets window
         for(String winHandle : driver.getWindowHandles()){
             driver.switchTo().window(winHandle);
         }
 
-        //get My Bets wager ID
-        try{
-            wait.until(ExpectedConditions.visibilityOfAllElements(page.MyBetsWagerID));
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+        //Check if my bets table is displayed
+        int myBetsTable = page.myBetsTable.size();
+        int wagerId = 0;
 
-        int wagerid = page.WagerIDLocation.size();
-        System.out.println(wagerid);
-        if(wagerid > 0){
-            System.out.println("Wager ID is Present!");
+        if(myBetsTable > 0){
+
+            //Check if specific wager ID is present
+            wagerId = driver.findElements(By.xpath(".//span[@class=\"wager_id\" and contains(text(),'"+wagerID+"')]")).size();
+            if(wagerId > 0){
+                System.out.println("Wager ID is Present!");
+            }
+
         } else {
             driver.navigate().refresh();
         }
 
-        //Click the Pinnacle My Bets Submit Filter Button
-        wait.until(ExpectedConditions.elementToBeClickable(page.MyBetsSubmit));
-        page.MyBetsSubmit.click();
-
         //Wager ID assertion
-        wait.until(ExpectedConditions.visibilityOf(page.MyBetsWagerID));
-        MyBetswagerID= page.MyBetsWagerID.getText();
-        Assert.assertEquals(wagerID, MyBetswagerID);
+        Assert.assertEquals(1, wagerId);
 
+        //Close the new tab (My Bets)
         driver.close();
+
+        //Switch to Old tab (main tab)
         driver.switchTo().window(winHandleBefore);
 
-        reportResult.append("**** PINNACLE BETTING ****" + "%0A" +
-                "Scenario: " + scenarioTitle + "%0A" +
-                "Username: " + pUsername + "%0A" +
+
+        //Assign values to result variable
+        result = ("Scenario: " + scenarioTitle + "%0A" +
+                "Username: " + username + "%0A" +
+                "Wager ID: " + wagerID + "%0A" +
                 "Balance before bet: " + balanceBeforeBet + "%0A" +
                 "Bet amount: " + BetAmount + "%0A" +
-                "Balance after bet: "+balanceAfterbet + "%0A" +
-                "Selected Odds: " + odds + "\n");
+                "Balance after bet: "+balanceAfterbet + "%0A" + "\n");
 
+        //Append the result
+        reportResult.append(result);
 
+        //Display the results
+        String formattedResult = result.replace("%0A", "\n");
+        System.out.println(formattedResult);
 
-        String testResult = ("**** PINNACLE BETTING ****" + "\n" +
-                "Scenario: " + scenarioTitle + "\n" +
-                "Username: " + pUsername + "\n" +
-                "Balance before bet: " + balanceBeforeBet + "\n" +
-                "Bet amount: " + BetAmount + "\n" +
-                "Balance after bet: "+ balanceAfterbet + "\n" +
-                "Selected Odds: " + odds + "\n");
+    }
 
+    @Then("I send pinnacle betting result in telegram")
+    public void sendPinnacleBettingResult(DataTable telegramCreds){
+        List<List<String>> data = telegramCreds.asLists(String.class);
+        String token = data.get(1).get(0);
+        String chatId = data.get(1).get(1);
 
-        System.out.println("rrrrrrrrrrrrrrrrrr" + testResult);
+        String resultContentString = reportResult.toString();
 
         try {
-            // String result = "test result";
-            URL url = new URL("https://api.telegram.org/bot5325722800:AAESQyezs3QY_7JXY0ZFVn83eQExVfTgYgg/sendMessage?chat_id=-1001766036425&text=" +reportResult);
+            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+
+                    "&text=**** PINNACLE BETTING ****%0A" + resultContentString);
+
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
+
             int status = connection.getResponseCode();
             System.out.println(status + ": " + url);
+
         } catch (IOException e) {
             e.printStackTrace();
+
         }
 
     }
-
-
 
 }
