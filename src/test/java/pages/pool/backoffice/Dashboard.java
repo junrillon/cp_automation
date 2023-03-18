@@ -33,6 +33,13 @@ public class Dashboard {
 
 
 
+    //games>sports
+    @FindBy(how = How.XPATH, using =  "//ul[@class='dropdown-menu show']/li/a[contains(text(), 'Sports')]")
+    @CacheLookup
+    public WebElement sports;
+
+
+
     /**
      * Object action
      */
@@ -50,6 +57,10 @@ public class Dashboard {
 
     //matches is display
     public void MatchesDisplay() {matches.isDisplayed();}
+
+
+    //click sports
+    public void clickSports() {sports.isDisplayed(); sports.click();}
 
 
 }
