@@ -62,10 +62,11 @@ task poolSmokeTesting(type: JavaExec) {
             '--plugin', 'html:build/cucumber-report.html',
             '--glue', 'steps',
  //           '--tags', '@poolSmokeTesting',
-            '--dir0', 'src/test/resources/pool/backoffice',
-            '--dir1', 'src/test/resources/pool/frontend/SingleBetTeamA.feature',
-            '--dir2', 'src/test/resources/pool/frontend/SingleBetTeamB.feature',
-            '--dir3', 'src/test/resources/pool/frontend/SingleBetDraw.feature'
+            '--dir0', 'src/test/resources/pool/backoffice/CreateAndOpenMatch.feature',
+            '--dir1', 'src/test/resources/pool/backoffice/SettleMatch.feature',
+            '--dir2', 'src/test/resources/pool/frontend/SingleBetTeamA.feature',
+            '--dir3', 'src/test/resources/pool/frontend/SingleBetTeamB.feature',
+            '--dir4', 'src/test/resources/pool/frontend/SingleBetDraw.feature'
     ]
 }
 

@@ -12,8 +12,8 @@ Feature: A description
       | andre    | @Clickplay1 |
 
   Scenario: Create and open match
-    Given I click the games header dropdown
-    When I click matches
+    When I click the games header dropdown
+    And I click matches navigator
     And I click the create match button
     And I input match details
 

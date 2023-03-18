@@ -15,7 +15,7 @@ Feature: Pool smoke testing
 
   Scenario: Create sport
     When I click the games header dropdown
-    And I click matches navigator
+    And I click sports
     And I click the create match button
     And I input match details
 
