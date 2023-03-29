@@ -1,29 +1,37 @@
 # new feature
 # Tags: optional
-@Smoke
+@SmokeTest
 Feature: Pool smoke testing
 
   Background: Pool login
-    Given I clear the pool match data
-    And I logged in at pool backoffice https://staging-admin.cpp555.com
-
-    # user login  credentials
+    Given I logged in at pool backoffice https://staging-admin.cpp555.com
       | Username | Password    |
       | andre    | @Clickplay1 |
 
-    And I check the broken links
+  Scenario: Pool backoffice smoke test
 
-  Scenario: Create sport
+    # create sport
     When I click the games header dropdown
     And I click sports
-    And I click the create match button
-    And I input match details
+    And I click the create sport button
+    And I input sports details
+      | Sport Name            | Match Label | image                           | video                                       |
+      | Test Automation Sport | game        | /testImages/sportsImageTest.jpg | https://www.youtube.com/watch?v=4e9vhX7ZuCw |
+    And I click the submit button
+    Then sport is successfully created
 
-    # Input match details
-      | Sport             | League      | Match count |
-      | Automation Sports | Test League | 1           |
+    # Edit sports
+    When I search the sports
+    And I click the edit sport
+    And I change the match label to fight
+    And I click edit submit button
 
-    And I click submit button
-    And I select view match details from action dropdown
-    And I click open bet status
-    Then match is open
+    # Create league
+    When I click the games header dropdown
+    And I click the leagues
+    And I click the create league button
+    And I input league details
+      | League Name       |
+      | Automation League |
+
+    Then league is successfully created

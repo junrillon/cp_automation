@@ -40,7 +40,7 @@ public class Betting {
 
 
 
-    String scenarioTitle = Hooks.sce;
+    String scenarioTitle = Hooks.scenarioName;
     StringBuffer reportRsult = new StringBuffer();
     @Given("I click the pool header button")
     public void iClickThePoolHeaderButton() {

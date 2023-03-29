@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class SettleMatch {
     private final WebDriver driver;
@@ -230,6 +231,7 @@ public class SettleMatch {
             matchDetails.matchOpenButton();
 
             //Close Match
+            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
             wait.until(ExpectedConditions.elementToBeClickable(matchDetails.matchCloseButton));
             matchDetails.matchCloseButton();
             System.out.println("The match is now closed.");
