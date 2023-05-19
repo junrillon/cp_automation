@@ -1,7 +1,6 @@
 package steps.frontend.brasilbet;
 
 import engine.Driver;
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -25,13 +24,14 @@ public class withdrawPixCpf {
 
             WebDriverWait wait = new WebDriverWait(driver, 20);
             WithdrawPix page = new WithdrawPix(driver);
+
             wait.until(ExpectedConditions.visibilityOf(page.walletBalance));
             wait.until(ExpectedConditions.elementToBeClickable(page.walletBalance));
             page.clickWalletBalance();
 
     }
 
-    @When("I click the withdraw button")
+    //@When("I click the withdraw button")
        public void clickWithdrawButton() throws InterruptedException {
 
             WebDriverWait wait = new WebDriverWait(driver, 20);

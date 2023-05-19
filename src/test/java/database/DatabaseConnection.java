@@ -5,8 +5,6 @@ import java.sql.*;
 public class DatabaseConnection {
     private static Connection conn=null;
 
-
-
     public static ResultSet execDBQuery(String queryString) throws SQLException {
         String db = "stage_pool_betting";
         if (conn != null && !conn.isClosed()) {

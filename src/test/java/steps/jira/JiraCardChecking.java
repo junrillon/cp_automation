@@ -5,33 +5,41 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.PageModelBase;
 import pages.jira.JiraObjects;
-import pages.testrail.TestRailObjects;
+import pages.testrail.TestRailPage;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JiraCardChecking {
 
     private final WebDriver driver;
-    public PageModelBase page;
+    private final PageModelBase pageModelBase;
 
-    public JiraCardChecking (PageModelBase page, Driver driver){
+    public JiraCardChecking (Driver driver){
         this.driver = driver.get();
-        this.page = page;
+        this.pageModelBase = new PageModelBase(this.driver);
     }
 
-    StringBuffer resultContent = new StringBuffer();
+    ArrayList<ArrayList<StringBuilder>> resultContainer = new ArrayList<ArrayList<StringBuilder>>(); // Initialize the outer array
+    int maxInnerArraySize = 5;
     String advanceSprint = null;
+
+    private static final int MAX_RETRIES = 3;
+    private static final int RETRY_DELAY_MS = 5000;
+
 
     @Given("I access jira website {string}")
     public void iAccessJiraWebsiteHttpsIdAtlassianComLogin(String jiraUrl) {
@@ -86,8 +94,6 @@ public class JiraCardChecking {
         jiraObjects.backlog.click();
 
         System.out.println("I clicked backlog.");
-
-
     }
 
     @When("I scroll to future sprint")
@@ -109,7 +115,7 @@ public class JiraCardChecking {
     @When("I check if already logged in on testrail")
     public void iCheckIfAlreadyLoggedInOnTestrail(DataTable testrailCreds) {
         JiraObjects jiraObjects = new JiraObjects(driver);
-        TestRailObjects testRailObjects = new TestRailObjects(driver);
+        TestRailPage testRailPage = new TestRailPage(driver);
         JavascriptExecutor js = (JavascriptExecutor)driver;
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -156,16 +162,16 @@ public class JiraCardChecking {
                 driver.switchTo().window(winHandle);
             }
 
-            wait.until(ExpectedConditions.visibilityOf(testRailObjects.username));
-            testRailObjects.username.sendKeys(username);
+            wait.until(ExpectedConditions.visibilityOf(testRailPage.username));
+            testRailPage.username.sendKeys(username);
 
-            wait.until(ExpectedConditions.visibilityOf(testRailObjects.password));
-            testRailObjects.password.sendKeys(password);
+            wait.until(ExpectedConditions.visibilityOf(testRailPage.password));
+            testRailPage.password.sendKeys(password);
 
-            wait.until(ExpectedConditions.elementToBeClickable(testRailObjects.loginButton));
-            testRailObjects.loginButton.click();
+            wait.until(ExpectedConditions.elementToBeClickable(testRailPage.loginButton));
+            testRailPage.loginButton.click();
 
-            boolean testrailHeader_isPresent = testRailObjects.testrailHeader.isDisplayed();
+            boolean testrailHeader_isPresent = testRailPage.testrailHeader.isDisplayed();
             if(testrailHeader_isPresent){
                 System.out.println("Successfully logged in on testrail");
                 driver.close();
@@ -374,16 +380,27 @@ public class JiraCardChecking {
                     driver.switchTo().defaultContent();
                     wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRunsBack));
                     jiraObjects.testRunsBack.click();
-                    //⚠
-                    result = ("(" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
+                    //⚠ \u2139\ufe0f
+                    StringBuilder resultContent = new StringBuilder("\u2139\ufe0f (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                             "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                             "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
                             "- Test Cases: " + testCases_stats + "\n" + "- Test Runs: " + testRuns_stats + "\n\n");
 
+
                     boolean isAppended;
                     if (testCases > 0 || testRuns > 0 || Integer.parseInt(extractedCardSP) == 0) {
                         isAppended = true;
-                        resultContent.append(result);
+
+                        if (resultContainer.isEmpty() || resultContainer.get(resultContainer.size() - 1).size() == maxInnerArraySize) {
+                            // If the outer array is empty or the last inner array is full, create a new inner array
+                            ArrayList<StringBuilder> innerArray = new ArrayList<StringBuilder>();
+                            innerArray.add(resultContent);
+                            resultContainer.add(innerArray);
+                        } else {
+                            // Otherwise, add the element to the last inner array
+                            resultContainer.get(resultContainer.size() - 1).add(resultContent);
+                        }
+
                     } else {
                         isAppended = false;
                     }
@@ -399,8 +416,17 @@ public class JiraCardChecking {
                 }
             }
         } else {
+            StringBuilder resultContent = new StringBuilder("No card/s available in this sprint.");
+            if (resultContainer.isEmpty() || resultContainer.get(resultContainer.size() - 1).size() == maxInnerArraySize) {
+                // If the outer array is empty or the last inner array is full, create a new inner array
+                ArrayList<StringBuilder> innerArray = new ArrayList<StringBuilder>();
+                innerArray.add(resultContent);
+                resultContainer.add(innerArray);
+            } else {
+                // Otherwise, add the element to the last inner array
+                resultContainer.get(resultContainer.size() - 1).add(resultContent);
+            }
             System.out.println("No card/s available in this sprint.");
-            resultContent.append("No card/s available in this sprint.");
         }
     }
 
@@ -410,29 +436,47 @@ public class JiraCardChecking {
         String token = data.get(1).get(0);
         String chatId = data.get(1).get(1);
 
-        String resultContentString = resultContent.toString();
-        int resultContentSize = resultContentString.length();
-        if (resultContentSize == 0){
-            resultContent.append("All cards have tc/tr. Thank you for your cooperation! \uD83D\uDE4F\uD83C\uDFFC");
-            resultContentString = resultContent.toString();
+        StringBuilder resultContent = new StringBuilder("All cards have tc/tr. Thank you for your cooperation! \uD83D\uDE4F\uD83C\uDFFC ");
+        if (resultContainer.isEmpty()) {
+            // If the outer array is empty or the last inner array is full, create a new inner array
+            ArrayList<StringBuilder> innerArray = new ArrayList<StringBuilder>();
+            innerArray.add(resultContent);
+            resultContainer.add(innerArray);
         }
 
-        try {
-            URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+"&text="+advanceSprint+"%0A"+ URLEncoder.encode(resultContentString, StandardCharsets.UTF_8));
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setConnectTimeout(5000);
-            connection.setReadTimeout(5000);
+        for (ArrayList<StringBuilder> innerArray : resultContainer) {
+            String formattedResult = String.join(" ", innerArray);
 
-            int status = connection.getResponseCode();
-            String errorMessage = connection.getResponseMessage();
-            System.out.println(status + ": " + errorMessage + "\n" + url);
+            int retries = 0;
+            boolean sentSuccessfully = false;
+            while (retries < MAX_RETRIES && !sentSuccessfully) {
+                try {
+                    URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + "&text=" + advanceSprint + "%0A" + URLEncoder.encode(formattedResult, StandardCharsets.UTF_8));
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("POST");
+                    connection.setConnectTimeout(5000);
+                    connection.setReadTimeout(5000);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                    int status = connection.getResponseCode();
+                    String errorMessage = connection.getResponseMessage();
+                    System.out.println(status + ": " + errorMessage + "\n" + url);
 
+                    sentSuccessfully = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    retries++;
+                    try {
+                        Thread.sleep(RETRY_DELAY_MS);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+            if (!sentSuccessfully) {
+                System.err.println("Failed to send message after " + MAX_RETRIES + " retries.");
+            }
         }
-
     }
 }
 

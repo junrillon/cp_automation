@@ -1,11 +1,7 @@
 package pages;
 
-import engine.Driver;
 import org.junit.Assert;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import utilities.Tools;
@@ -16,9 +12,10 @@ import java.util.List;
 import static utilities.Tools.logger;
 
 public class PageModelBase {
-    public WebDriver driver;
-    public PageModelBase(Driver driver) {
-        this.driver = driver.get();
+    private final WebDriver driver;
+
+    public PageModelBase(WebDriver driver) {
+        this.driver = driver;
 
     }
 
@@ -26,7 +23,6 @@ public class PageModelBase {
      * @param element to scroll into view
      * @param  */
     public void scrollIntoView(WebElement element) {
-        logger().traceEntry();
         JavascriptExecutor js = (JavascriptExecutor) driver;
 //        js.executeScript("arguments[0].scrollIntoView(true);", element);
         String scrollElementIntoMiddle = "var viewPortHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);"
@@ -34,8 +30,6 @@ public class PageModelBase {
                 + "window.scrollBy(0, elementTop-(viewPortHeight/2));";
 
         js.executeScript(scrollElementIntoMiddle, element);
-
-        logger().traceExit();
     }
 
     /** seconds to sleep thread -> ONLY USE THIS WHEN ABSOLUTELY NECESSARY. KEEP AS PRIVATE!!! */
@@ -170,6 +164,50 @@ public class PageModelBase {
         if (!timeToWaitIsLessThan3min) {
             Assert.fail("Time waited needs to be greater than 0 and less than 3 minutes");
         }
+    }
+
+    public void waitForModalToClose(WebElement modal, int timeoutInSeconds) {
+        boolean isOpen;
+        long endTime = System.currentTimeMillis() + timeoutInSeconds * 1000L;
+        do {
+            isOpen = true;
+            try {
+                modal.isDisplayed();
+                isOpen = false;
+            } catch (NoSuchElementException e) {
+                // The modal is no longer present in the DOM, so it is closed
+            }
+        } while (!isOpen && System.currentTimeMillis() < endTime);
+
+        if (!isOpen) {
+            throw new TimeoutException("Modal did not close within the specified timeout period.");
+        }
+    }
+
+    public boolean waitForModalToOpen(WebElement modal, int timeoutInSeconds) {
+        boolean isOpen;
+        long endTime = System.currentTimeMillis() + timeoutInSeconds * 1000L;
+
+        do {
+            isOpen = false;
+            try {
+                modal.isDisplayed();
+                isOpen = true;
+            } catch (NoSuchElementException e) {
+                // The modal is no longer present in the DOM, so it is closed
+            }
+        } while (!isOpen && System.currentTimeMillis() < endTime);
+
+        if (!isOpen) {
+            throw new TimeoutException("Modal did not close within the specified timeout period.");
+        }
+
+        return true;
+    }
+
+    public void clearInputField(WebElement inputField){
+        inputField.clear();
+
     }
 
 }

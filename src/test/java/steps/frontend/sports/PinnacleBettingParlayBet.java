@@ -2,18 +2,15 @@ package steps.frontend.sports;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
-import pages.frontend.sports.Pinnacle;
+import pages.frontend.sports.PinnaclePage;
 import steps.Hooks;
 
 import java.io.IOException;
@@ -35,7 +32,7 @@ public class PinnacleBettingParlayBet {
     @When("I click parlay tab button")
     public void iClickParlayTabButton() throws InterruptedException{
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         Dashboard page2 = new Dashboard(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
@@ -92,7 +89,7 @@ public class PinnacleBettingParlayBet {
     @When("I place a bet on parlay bet")
     public void iSelectTeamAoddsAndInputBetAmount(DataTable pinnacle) throws InterruptedException{
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //get the value list from feature file
@@ -174,7 +171,7 @@ public class PinnacleBettingParlayBet {
 
     @When("I confirm my parlay place bet in pinnacle")
     public void iClickPinnacleConfirmBet() throws InterruptedException {
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //Click Confirm OK Button
@@ -193,7 +190,7 @@ public class PinnacleBettingParlayBet {
     @When("pinnacle parlay place bet success")
     public void pinnaclePlaceBetSuccess() throws InterruptedException {
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
         Dashboard page2 = new Dashboard(driver);
 
@@ -225,7 +222,7 @@ public class PinnacleBettingParlayBet {
     @Then("pinnacle parlay bet ticket is displayed")
     public void pinnacleBetTicketIsDisplayed() {
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         // verify if iframe is available and switch to that iframe
@@ -233,7 +230,7 @@ public class PinnacleBettingParlayBet {
 
         String winHandleBefore = driver.getWindowHandle();
 
-        //Click the Pinnacle My Bets Button
+        //Click the PinnaclePage My Bets Button
         wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleMyBets));
         page.PinnacleMyBets.click();
 

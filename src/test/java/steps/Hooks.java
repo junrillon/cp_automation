@@ -1,19 +1,15 @@
 package steps;
 
 import engine.Driver;
-import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import io.cucumber.plugin.event.Node;
 
 import java.util.Collection;
-
-import static java.lang.Thread.*;
 
 
 public class Hooks {
 
-    private Driver driver;
+    private final Driver driver;
     public static String sce;
 
     public Hooks(Driver driver) {
@@ -29,8 +25,8 @@ public class Hooks {
         driver.start();
     }
 
-   @After()
-   public void after() {
-       driver.close();
-   }
+//   @After()
+//   public void after() {
+//       driver.close();
+//   }
 }

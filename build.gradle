@@ -15,24 +15,33 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.testng:testng:7.5'
+    implementation 'org.testng:testng:7.7.0'
     implementation group: 'commons-io', name: 'commons-io', version: '2.0.1'
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.141.59'
-    implementation group: 'org.json', name: 'json', version: '20160810'
+    implementation group: 'org.json', name: 'json', version: '20230227'
     implementation group: 'io.cucumber', name: 'cucumber-picocontainer', version: '6.7.0'
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    implementation 'org.jetbrains:annotations:20.1.0'
 
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.8.2'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
 
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.9.2'
 
-    testImplementation 'io.cucumber:cucumber-java:7.3.2'
-    testImplementation 'io.cucumber:cucumber-junit:7.3.2'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.4'
+
+    testImplementation 'io.cucumber:cucumber-java:7.11.1'
+    testImplementation 'io.cucumber:cucumber-junit:7.11.1'
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
-    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
-    testImplementation 'io.github.bonigarcia:selenium-jupiter:4.1.0'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
+    testImplementation 'io.github.bonigarcia:selenium-jupiter:4.3.3'
+    implementation 'org.telegram:telegrambots:6.5.0'
+
+    // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+    // https://mvnrepository.com/artifact/javax.activation/activation
+    implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
 
 }
 
@@ -62,10 +71,11 @@ task poolSmokeTesting(type: JavaExec) {
             '--plugin', 'html:build/cucumber-report.html',
             '--glue', 'steps',
  //           '--tags', '@poolSmokeTesting',
-            '--dir0', 'src/test/resources/pool/backoffice',
-            '--dir1', 'src/test/resources/pool/frontend/SingleBetTeamA.feature',
-            '--dir2', 'src/test/resources/pool/frontend/SingleBetTeamB.feature',
-            '--dir3', 'src/test/resources/pool/frontend/SingleBetDraw.feature'
+            '--dir0', 'src/test/resources/pool/CreateAndOpenMatch.feature',
+            '--dir1', 'src/test/resources/pool/SettleMatch.feature',
+            '--dir2', 'src/test/resources/pool/frontend/SingleBetTeamA.feature',
+            '--dir3', 'src/test/resources/pool/frontend/SingleBetTeamB.feature',
+            '--dir4', 'src/test/resources/pool/frontend/SingleBetDraw.feature'
     ]
 }
 

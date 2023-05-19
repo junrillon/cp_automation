@@ -2,7 +2,6 @@ package steps.frontend.sports;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,20 +14,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.PageModelBase;
 import pages.frontend.ggplay.Dashboard;
 //import pages.frontend.ggplay.LoginGGplay;
-import pages.frontend.sports.Altenar;
-import pages.frontend.sports.Pinnacle;
+import pages.frontend.sports.PinnaclePage;
 import steps.Hooks;
-import steps.frontend.Login;
+import steps.Login;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class PinnacleBettingSingleBet {
     private WebDriver driver;
@@ -48,12 +43,12 @@ public class PinnacleBettingSingleBet {
     public void iClickTheSportsHeaderButton() {
 
         //Click sports header button
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         page.SportsHeaderBtn.click();
     }
 
     public int leagueSelection(){
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
 
         //Get the count of the markets available in the match
         int min = 1;
@@ -118,7 +113,7 @@ public class PinnacleBettingSingleBet {
     }
 
     public void enterAmountAndPlaceBet(String amount){
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //input bet amount
@@ -141,7 +136,7 @@ public class PinnacleBettingSingleBet {
     @When("I click the early matches")
     public void iClickTheEarlyMatches() throws InterruptedException {
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         Dashboard page2 = new Dashboard(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
@@ -184,7 +179,7 @@ public class PinnacleBettingSingleBet {
     @When("I place a bet on single bet")
     public void iPlaceSingeBet(DataTable pinnacle) throws InterruptedException{
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //get the value list from feature file
@@ -214,7 +209,7 @@ public class PinnacleBettingSingleBet {
 
     @When("I confirm place bet")
     public void iConfirmPlaceBet() {
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         WebElement alert;
@@ -254,7 +249,7 @@ public class PinnacleBettingSingleBet {
     @When("I check my balance")
     public void iCheckMyBalance(){
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
         Dashboard page2 = new Dashboard(driver);
 
@@ -285,7 +280,7 @@ public class PinnacleBettingSingleBet {
     @Then("I check wager id in myBets")
     public void iCheckWagerIdInMyBets() {
 
-        Pinnacle page = new Pinnacle(driver);
+        PinnaclePage page = new PinnaclePage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //get the username for reporting
@@ -296,7 +291,7 @@ public class PinnacleBettingSingleBet {
 
         String winHandleBefore = driver.getWindowHandle();
 
-        //Click the Pinnacle My Bets Button
+        //Click the PinnaclePage My Bets Button
         wait.until(ExpectedConditions.elementToBeClickable(page.PinnacleMyBets));
         page.PinnacleMyBets.click();
 

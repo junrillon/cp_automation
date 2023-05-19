@@ -1,13 +1,11 @@
 package pages.jira;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
-import pages.PageModelBase;
 
 import java.util.List;
 
@@ -113,7 +111,7 @@ public class JiraObjects{
     public String perCarStoryPoints = "//span[@title='Story Points']";
     public String perCardNumberXpath = "//span[@class='ghx-end ghx-items-container']/a";
     public String perCardAssigneeXpath = "//span[@class='ghx-end ghx-items-container']/img"; // <-- get Alt
-    public String perCardTesterXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[3]/span";
-    public String perCardStatusXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[1]/span";
+    public String perCardTesterXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[contains(concat(' ',@data-tooltip,' '), 'Tester')]";
+    public String perCardStatusXpath = "//div[contains(concat(' ',@class,' '), ' ghx-plan-extra-fields ')]//span[contains(concat(' ',@data-tooltip,' '), 'Status')]";
 
 }

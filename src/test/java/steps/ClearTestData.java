@@ -6,7 +6,6 @@ import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
-import steps.frontend.Login;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

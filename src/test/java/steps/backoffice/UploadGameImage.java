@@ -90,7 +90,7 @@ public class UploadGameImage {
                     .click(); //<-- Click apply filter button
             System.out.println("Clicked apply button");
 
-            //Thread.sleep(1000);
+            Thread.sleep(1000);
             //Check if modalCloseButton isPresents
             int gameDetails = GameList.gDetailsModal.size();
             if(gameDetails > 0){

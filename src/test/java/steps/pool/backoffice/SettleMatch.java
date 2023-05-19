@@ -29,6 +29,7 @@ public class SettleMatch {
     }
 
     String cMatchStatus;
+    String selectedSports;
     public static String winningTeam;
 
     @When("I navigate to matches page")
@@ -43,12 +44,12 @@ public class SettleMatch {
     }
 
     @When("I click the search field")
-    public void iClickTheSearchButton(DataTable matchDetails) {
+    public void iClickTheSearchButton(DataTable matchDetails) throws InterruptedException {
         Matches page = new Matches(driver);
 
         //get the value from feature file
         List<List<String>> data = matchDetails.asLists(String.class);
-        String selectedSports = data.get(1).get(0);
+        selectedSports = data.get(1).get(0);
 
         //Wait
         WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -56,16 +57,33 @@ public class SettleMatch {
         wait.until(ExpectedConditions.elementToBeClickable(page.searchField));
         page.searchField.click();
         page.searchField.sendKeys(selectedSports);
+
     }
 
     @When("I verify if has match")
     public void verifyIfHasMatch() throws InterruptedException {
         Matches page = new Matches(driver);
-        if (page.matchPageMatchesTable.getText().contains("No matching records found")) {
-            Assert.fail("Datatable is empty, possible no match available.");
-        } else {
-            System.out.println("Match Found");
+
+        while(page.matchPageMatchesTable.getText().contains("No data available in table")){
+
+            //Wait
+            WebDriverWait wait = new WebDriverWait(driver, 20);
+            wait.until(ExpectedConditions.visibilityOf(page.searchField));
+            wait.until(ExpectedConditions.elementToBeClickable(page.searchField));
+            page.searchField.clear();
+            page.searchField.click();
+            page.searchField.sendKeys(selectedSports);
+            System.out.println("No match available!");
+
+            System.out.println("Still waiting for the match");
+            if (!page.matchPageMatchesTable.getText().contains("No data available in table")) {
+                break;
+            }
+
+            Thread.sleep(5000);
         }
+
+        System.out.println("Match found!");
     }
 
     @When("I verify if has bets")

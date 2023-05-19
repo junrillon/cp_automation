@@ -2,13 +2,15 @@ package pages.frontend.brasilbet;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 
 public class WithdrawPix {
+    private WebDriver driver;
+
     public WithdrawPix(WebDriver driver) {
+        this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
@@ -16,7 +18,7 @@ public class WithdrawPix {
     @FindBy(how = How.XPATH, using =  ".//ul[@class='nav-link animate-pulse account-balance']")
     public WebElement walletBalance;
 
-    //Deposit Button
+    //DepositPage Button
     @FindBy(how = How.XPATH, using = ".//a[@href='/account/deposit']")
     public WebElement depositButton;
 

@@ -9,8 +9,8 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.PageModelBase;
-import pages.frontend.sports.Altenar;
-import steps.frontend.Login;
+import pages.frontend.sports.AltenarPage;
+import steps.Login;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -34,12 +34,12 @@ public class AltenarParlayBetting {
     String oddsList = "//div[contains(concat(' ',@class,''), ' _asb_prices-markets--price-block ')]";
 
     public int eventSelection(){
-        Altenar altenar = new Altenar(driver);
+        AltenarPage altenarPage = new AltenarPage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //Get the count of the markets available in the match
         int min = 1;
-        int eventSelection = altenar.upcoming_EventList.size();
+        int eventSelection = altenarPage.upcoming_EventList.size();
 
         //Select Random number between min and max; will generate until generated number is not equal to 1 and 0
         Random r = new Random();
@@ -117,7 +117,7 @@ public class AltenarParlayBetting {
 
     @When("I select odds on upcoming matches")
     public void iSelectOdds() throws InterruptedException {
-        Altenar altenar = new Altenar(driver);
+        AltenarPage altenarPage = new AltenarPage(driver);
         JavascriptExecutor js = (JavascriptExecutor)driver;
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
@@ -140,11 +140,11 @@ public class AltenarParlayBetting {
 
     @When("I place parlay bet")
     public void iPlaceBet(){
-        Altenar altenar = new Altenar(driver);
+        AltenarPage altenarPage = new AltenarPage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //Get balance before bet
-        origBalance = altenar.balance.getText();
+        origBalance = altenarPage.balance.getText();
         String formatted_origBalance = origBalance
                                     .replace(",","")
                                     .replace("R$ ","");
@@ -152,27 +152,27 @@ public class AltenarParlayBetting {
         System.out.println(formatted_origBalance);
 
         //Get bet amount value
-        betAmount = wait.until(ExpectedConditions.visibilityOf(altenar.totalStake)).getText()
+        betAmount = wait.until(ExpectedConditions.visibilityOf(altenarPage.totalStake)).getText()
                 .replace(" R$","");
 
         //Accept any change odds
         AltenarSingleBetting.acceptAnyOddsChange(driver);
 
         //Place bet
-        WebElement placeBet = wait.until(ExpectedConditions.visibilityOf(altenar.placeBetBtn));
+        WebElement placeBet = wait.until(ExpectedConditions.visibilityOf(altenarPage.placeBetBtn));
         wait.until(ExpectedConditions.elementToBeClickable(placeBet));
         placeBet.click();
 
         //Check and wait for loading to be done
         int loading_isPresent = 1;
         do {
-            loading_isPresent = altenar.loading.size();
+            loading_isPresent = altenarPage.loading.size();
 
         } while (loading_isPresent != 0);
 
         //Get betslip ID
-        wait.until(ExpectedConditions.visibilityOf(altenar.betSlipId));
-        betSlipId = altenar.betSlipId.getText().replace("Bet ID ","");
+        wait.until(ExpectedConditions.visibilityOf(altenarPage.betSlipId));
+        betSlipId = altenarPage.betSlipId.getText().replace("Bet ID ","");
 
         //================= Compute balance after bet
         BigDecimal OB = new BigDecimal(formatted_origBalance);
@@ -181,8 +181,8 @@ public class AltenarParlayBetting {
 
         //Get balance after bet
         wait.until(ExpectedConditions
-                .not(ExpectedConditions.textToBePresentInElement(altenar.balance, origBalance)));
-        balanceAfter = altenar.balance.getText();
+                .not(ExpectedConditions.textToBePresentInElement(altenarPage.balance, origBalance)));
+        balanceAfter = altenarPage.balance.getText();
         String formatted_balanceAfter = balanceAfter
                                         .replace(",","")
                                         .replace("R$ ","");
@@ -210,11 +210,11 @@ public class AltenarParlayBetting {
 
     @Then("I check my parlay bet")
     public void iCheckMyParlayBet() {
-        Altenar altenar = new Altenar(driver);
+        AltenarPage altenarPage = new AltenarPage(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //Wait and click my bets button
-        WebElement myBets = wait.until(ExpectedConditions.visibilityOf(altenar.myBetsBtn));
+        WebElement myBets = wait.until(ExpectedConditions.visibilityOf(altenarPage.myBetsBtn));
         wait.until(ExpectedConditions.elementToBeClickable(myBets));
         myBets.click();
 
@@ -237,7 +237,7 @@ public class AltenarParlayBetting {
 
         try {
             URL url = new URL("https://api.telegram.org/bot"+token+"/sendMessage?chat_id="+chatId+
-                    "&text=Provider: Altenar%0AUsername: "+username+"%0A"+ resultContentString);
+                    "&text=Provider: AltenarPage%0AUsername: "+username+"%0A"+ resultContentString);
 
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
