@@ -1,20 +1,15 @@
 package steps.pool.backoffice;
 
 import engine.Driver;
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
+import io.cucumber.java.en.When;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.pool.backoffice.Dashboard;
-import io.cucumber.java.en.When;
-import steps.Hooks;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static steps.Screenshot.screenshots;
 
@@ -52,9 +47,9 @@ public class Navigation {
             Assert.assertEquals(driver.getTitle(), "Sports");
         } catch (Exception e) {
 
-            String scenarioTitle = Hooks.scenarioName;
-
-            System.out.println("scenario fail " + scenarioTitle);
+//            String scenarioTitle = Hooks.scenarioName;
+//
+//            System.out.println("scenario fail " + scenarioTitle);
 
             //take a screenshot here
             screenshots(driver);
@@ -78,10 +73,10 @@ public class Navigation {
             wait.until(ExpectedConditions.titleIs("Leagues"));
             Assert.assertEquals(driver.getTitle(), "Leagues");
         } catch (Exception e) {
-
-            String scenarioTitle = Hooks.scenarioName;
-
-            System.out.println("scenario fail " + scenarioTitle);
+//
+//            String scenarioTitle = Hooks.scenarioName;
+//
+//            System.out.println("scenario fail " + scenarioTitle);
 
             //take a screenshot here
             screenshots(driver);

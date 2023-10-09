@@ -1,5 +1,7 @@
 package pages.aams;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -10,6 +12,9 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pages {
@@ -96,5 +101,20 @@ public class Pages {
         }
 
         return cellCount;
+    }
+
+    public static List<String[]> readDataFromCSV(String filePath) {
+        List<String[]> data = new ArrayList<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                data.add(line);
+            }
+        } catch (IOException | CsvValidationException e) {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 }

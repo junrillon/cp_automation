@@ -8,13 +8,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import steps.BrokenLinks;
-import steps.Hooks;
 
 import java.io.IOException;
 import java.util.List;
 
 import static steps.Screenshot.screenshots;
-import static steps.BrokenLinks.ICheckTheBrokenLinks;
 
 
 public class Login {
@@ -48,9 +46,9 @@ public class Login {
             Assert.assertEquals(driver.getTitle(), "Dashboard");
         } catch (Exception e) {
 
-            String scenarioTitle = Hooks.scenarioName;
+//            String scenarioTitle = Hooks.scenarioName;
 
-            System.out.println("scenario fail " + scenarioTitle);
+//            System.out.println("scenario fail " + scenarioTitle);
 
             //take a screenshot here
             screenshots(driver);

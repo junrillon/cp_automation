@@ -7,28 +7,21 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.plugin.event.Node;
 import org.junit.Assert;
-import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
 import pages.pool.frontend.MatchDetails;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import io.cucumber.java.Scenario;
-import steps.CucumberLauncher;
-import steps.Hooks;
-import steps.pool.backoffice.CreateOpenTestMatch;
 
 public class Betting {
 
@@ -40,7 +33,7 @@ public class Betting {
 
 
 
-    String scenarioTitle = Hooks.scenarioName;
+    String scenarioTitle;
     StringBuffer reportRsult = new StringBuffer();
     @Given("I click the pool header button")
     public void iClickThePoolHeaderButton() {

@@ -9,10 +9,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import steps.Hooks;
 
 import java.io.IOException;
 import java.util.List;
+
 import static steps.Screenshot.screenshots;
 
 
@@ -42,9 +42,9 @@ public class Leagues {
             Assert.assertEquals(true, modalDropdownSportName.isDisplayed());
         } catch (Exception e) {
 
-            String scenarioTitle = Hooks.scenarioName;
+            String scenarioTitle;
 
-            System.out.println("scenario fail " + scenarioTitle);
+            System.out.println("scenario fail ");
 
             //take a screenshot here
             screenshots(driver);
@@ -84,9 +84,9 @@ public class Leagues {
             Assert.assertEquals("Success", sucessModal.getText());
         } catch (Exception e) {
 
-            String scenarioTitle = Hooks.scenarioName;
-
-            System.out.println("scenario fail " + scenarioTitle);
+//            String scenarioTitle = Hooks.scenarioName;
+//
+//            System.out.println("scenario fail " + scenarioTitle);
 
             //take a screenshot here
             screenshots(driver);

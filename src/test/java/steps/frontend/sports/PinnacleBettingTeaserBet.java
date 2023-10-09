@@ -11,7 +11,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.frontend.ggplay.Dashboard;
 import pages.frontend.sports.PinnaclePage;
-import steps.Hooks;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,7 +24,7 @@ public class PinnacleBettingTeaserBet {
 
     public PinnacleBettingTeaserBet(Driver driver) {this.driver = driver.get();}
 
-    String scenarioTitle = Hooks.scenarioName;
+    String scenarioTitle;
     StringBuffer reportResult = new StringBuffer();
 
     String balanceBeforeBet; String balanceBeforeBet_formatted; String pUsername;

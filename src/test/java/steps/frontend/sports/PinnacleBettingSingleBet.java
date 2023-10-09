@@ -13,9 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.PageModelBase;
 import pages.frontend.ggplay.Dashboard;
-//import pages.frontend.ggplay.LoginGGplay;
 import pages.frontend.sports.PinnaclePage;
-import steps.Hooks;
 import steps.Login;
 
 import java.io.IOException;
@@ -35,7 +33,7 @@ public class PinnacleBettingSingleBet {
     }
 
 
-    String scenarioTitle = Hooks.scenarioName;
+    String scenarioTitle;
     String result;
     StringBuffer reportResult = new StringBuffer();
 

@@ -6,18 +6,14 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import steps.Hooks;
-import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static steps.Screenshot.screenshots;
 
@@ -47,9 +43,9 @@ public class Sports {
             Assert.assertEquals(true, modalInputSportName.isDisplayed());
         } catch (Exception e) {
 
-            String scenarioTitle = Hooks.scenarioName;
-
-            System.out.println("scenario fail " + scenarioTitle);
+//            String scenarioTitle = Hooks.scenarioName;
+//
+//            System.out.println("scenario fail " + scenarioTitle);
 
             //take a screenshot here
             screenshots(driver);
@@ -103,10 +99,10 @@ public class Sports {
 
             Assert.assertEquals("Success", sucessModal.getText());
         } catch (Exception e) {
-
-            String scenarioTitle = Hooks.scenarioName;
-
-            System.out.println("scenario fail " + scenarioTitle);
+//
+//            String scenarioTitle = Hooks.scenarioName;
+//
+//            System.out.println("scenario fail " + scenarioTitle);
 
             //take a screenshot here
             screenshots(driver);
