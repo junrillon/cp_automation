@@ -1,19 +1,18 @@
 # new feature
 # Tags: optional
-@Smoke
+@poolSmokeTesting
 Feature: A description
 
   Background: Pool login
-    Given I clear the pool match data
-    And I logged in at pool backoffice https://staging-admin.cpp555.com
+    Given I logged in at pool backoffice https://staging-admin.cpp555.com
 
     # user login  credentials
       | Username | Password    |
       | andre    | @Clickplay1 |
 
   Scenario: Create and open match
-    Given I click the games header dropdown
-    When I click matches
+    When I click the games header dropdown
+    And I click matches navigator
     And I click the create match button
     And I input match details
 

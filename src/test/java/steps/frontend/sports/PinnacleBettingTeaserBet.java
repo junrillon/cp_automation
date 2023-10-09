@@ -25,7 +25,7 @@ public class PinnacleBettingTeaserBet {
 
     public PinnacleBettingTeaserBet(Driver driver) {this.driver = driver.get();}
 
-    String scenarioTitle = Hooks.sce;
+    String scenarioTitle = Hooks.scenarioName;
     StringBuffer reportResult = new StringBuffer();
 
     String balanceBeforeBet; String balanceBeforeBet_formatted; String pUsername;

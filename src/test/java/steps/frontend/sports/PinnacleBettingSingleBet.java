@@ -35,7 +35,7 @@ public class PinnacleBettingSingleBet {
     }
 
 
-    String scenarioTitle = Hooks.sce;
+    String scenarioTitle = Hooks.scenarioName;
     String result;
     StringBuffer reportResult = new StringBuffer();
 

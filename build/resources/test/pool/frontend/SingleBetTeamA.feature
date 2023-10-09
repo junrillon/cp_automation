@@ -8,6 +8,7 @@ Feature: Frontend betting player 1
     | Username     | Password |
     | qamasubpljun | 123123   |
 
+
   Scenario: Single bet on team A
     Given I click the pool header button
     When I click the test sports

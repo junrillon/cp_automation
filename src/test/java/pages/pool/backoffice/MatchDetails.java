@@ -7,9 +7,12 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.concurrent.TimeUnit;
+
 import static steps.pool.backoffice.SettleMatch.winningTeam;
 
 public class MatchDetails {
+    private WebDriver driver;
     public MatchDetails(WebDriver driver) {
         PageFactory.initElements(driver, this);
     }
@@ -180,8 +183,9 @@ public class MatchDetails {
 
     public String selectWinningTeam = ".//select[@id='winner']//option[contains(text(),'"+winningTeam+"')]";
 
-    //Match Open Button
+    //Match Open Button .//div[@class='swal2-confirm swal2-styled']/button[contains(text(), 'Ok')]
     public void matchOpenButton(){
+
         matchOpenButton.isDisplayed();
         matchOpenButton.isEnabled();
         matchOpenButton.click();
