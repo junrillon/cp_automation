@@ -41,6 +41,8 @@ public class CreatePage {
     public void createPage(){
         // Click create page button
         pages.clickCreatePageButton();
+
+
     }
 
     @When("I set page details")
