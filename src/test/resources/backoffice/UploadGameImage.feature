@@ -16,4 +16,3 @@ Feature: Upload Game Image
 #    Then all active games should have an image.
 
         #adminjun, P@ssw0rd shey.admin, Sheyadmin123 #testing upload the image per game
-
