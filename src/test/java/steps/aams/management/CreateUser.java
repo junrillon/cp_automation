@@ -1,4 +1,4 @@
-package steps.aams;
+package steps.aams.management;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;

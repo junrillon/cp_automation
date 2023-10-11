@@ -1,4 +1,4 @@
-package pages.aams;
+package pages.aams.settings.page;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;

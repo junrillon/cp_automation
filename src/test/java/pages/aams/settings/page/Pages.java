@@ -1,4 +1,4 @@
-package pages.aams;
+package pages.aams.settings.page;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;

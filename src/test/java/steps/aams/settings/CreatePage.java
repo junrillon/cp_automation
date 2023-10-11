@@ -1,4 +1,4 @@
-package steps.aams;
+package steps.aams.settings;
 
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import pages.aams.Navigation;
-import pages.aams.Pages;
+import pages.aams.settings.page.Pages;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class CreatePage {
     private final WebDriver driver;
     private final Navigation navigation;
     private final Pages pages;
-    private final pages.aams.CreatePage createPage;
+    private final pages.aams.settings.page.CreatePage createPage;
 
     public static String pageName;
     public static String pagePath;
@@ -28,7 +28,7 @@ public class CreatePage {
         this.driver = driver.get();
         this.navigation = new Navigation(this.driver);
         this.pages = new Pages(this.driver);
-        this.createPage = new pages.aams.CreatePage(this.driver);
+        this.createPage = new pages.aams.settings.page.CreatePage(this.driver);
     }
 
     @When("I navigate to pages")
