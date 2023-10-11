@@ -11,7 +11,7 @@ Feature: Upload Game Image
   Scenario: Upload Game Image
     Given I go to gamelist page
     When I upload the image per game
-      | provider | fileType | location                           | csvLocation        |
+      | provider     | fileType | location                                                        | csvLocation        |
       | EVOLUTION    | .png     | D:\CP Files\Casino Provider\Evolution\evolution\evolution\live\ | D:\CP Files\Casino Provider\Evolution\Evolution.csv |
 #    Then all active games should have an image.
 

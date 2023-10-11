@@ -40,6 +40,8 @@ public class AuditLogin {
     @FindBy(how = How.XPATH, using = ".//div[@id='modalFooter']//button[contains(text(), 'Proceed')]")
     public WebElement modalProceedButton;
 
+    @FindBy(how = How.XPATH, using = ".//div[contains(@class, 'phpdebugbar ')]")
+    public WebElement debugger;
 
     public AuditLogin(WebDriver driver) {
         this.driver = driver;
@@ -48,6 +50,9 @@ public class AuditLogin {
 
     public void inputCredentials(String email, String password){
         WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        // Wait for the debugger to be visible before entering credentials
+        wait.until(ExpectedConditions.visibilityOf(debugger));
 
         // Wait for the email and password input field and then send keys.
         wait.until(ExpectedConditions.visibilityOf(emailInput)).sendKeys(email);
@@ -69,7 +74,7 @@ public class AuditLogin {
     public void checkSuccessMessage(){
         int retry = 0;
         int maxRetry = 3;
-        String successMessage = "";
+        String successMessage;
 
         while (retry <= maxRetry) {
             // Refresh the errorMessage count to get the updated size
@@ -99,7 +104,7 @@ public class AuditLogin {
     public void checkErrorMessage() {
         int retry = 0;
         int maxRetry = 3;
-        String errorMessage = "";
+        String errorMessage;
 
         while (retry <= maxRetry) {
             // Refresh the errorMessage count to get the updated size
