@@ -1,19 +1,19 @@
-package pages.aams.settings.page;
+package pages.aams.settings.pages;
 
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import pages.PageModelBase;
 
 import java.util.List;
 
-public class CreatePage {
+public class CreatePagesPage {
     private final WebDriver driver;
+    private final PageModelBase baseAction;
 
     @FindBy(how = How.ID, using = "create_form")
     public WebElement createForm;
@@ -48,80 +48,12 @@ public class CreatePage {
     @FindBy(how = How.XPATH, using = ".//div[@id='modalFooter']//button[contains(text(), 'Close')]")
     public WebElement modalCloseButton;
 
-    public CreatePage(WebDriver driver) {
+    public CreatePagesPage(WebDriver driver) {
         this.driver = driver;
+        this.baseAction = new PageModelBase(this.driver);
         PageFactory.initElements(driver, this);
     }
 
-    public void enterValue(WebElement element, String value){
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        try {
-            // Wait for the element to be visible and clickable
-            wait.until(ExpectedConditions.visibilityOf(element)).sendKeys(value);
-
-        } catch (NoSuchElementException e) {
-            // Handle the NoSuchElementException
-            System.out.println("The element was not found: " + e.getMessage());
-
-            //Recall the method
-            enterValue(element, value);
-        }
-
-    }
-
-    public void clickButton(WebElement element){
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        try {
-            // Wait for the element to be visible and clickable
-            wait.until(ExpectedConditions.visibilityOf(element));
-            wait.until(ExpectedConditions.visibilityOf(element)).click();
-
-        } catch (NoSuchElementException e) {
-            // Handle the NoSuchElementException
-            System.out.println("The element was not found: " + e.getMessage());
-
-            //Recall the method
-            clickButton(element);
-        }
-    }
-
-    public void selectStatus(String status){
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        try {
-            // Wait for the element to be visible and clickable
-            wait.until(ExpectedConditions.visibilityOf(statusDropdown));
-            wait.until(ExpectedConditions.visibilityOf(statusDropdown)).click();
-
-            Select select = new Select(statusDropdown);
-
-            // Iterate over the options and select the matching option (case-insensitive)
-            List<WebElement> options = select.getOptions();
-            for (WebElement option : options) {
-                if (option.getText().toLowerCase().contains(status.toLowerCase())) {
-                    option.click();
-                    break;
-                }
-            }
-
-        } catch (NoSuchElementException e) {
-            // Handle the NoSuchElementException
-            System.out.println("The element was not found: " + e.getMessage());
-
-            //Recall the method
-            selectStatus(status);
-        }
-    }
-
-    public void closeModal(){
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        // Wait for the button to be visible and clickable then click.
-        wait.until(ExpectedConditions.visibilityOf(modalCloseButton));
-        wait.until(ExpectedConditions.elementToBeClickable(modalCloseButton)).click();
-    }
     public void checkModalMessage(){
         int retry = 0;
         int maxRetry = 3;
@@ -144,11 +76,11 @@ public class CreatePage {
                 if (message.contains("already been taken") || message.contains("is required")) {
 
                     // Click the proceed button
-                    closeModal();
+                    baseAction.clickButton(modalCloseButton);
 
                 } else {
                     // Close the modal
-                    closeModal();
+                    baseAction.clickButton(modalCloseButton);
                 }
 
                 break;

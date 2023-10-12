@@ -1,12 +1,19 @@
 package pages;
 
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.Tools;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import static utilities.Tools.logger;
@@ -29,7 +36,11 @@ public class PageModelBase {
                 + "var elementTop = arguments[0].getBoundingClientRect().top;"
                 + "window.scrollBy(0, elementTop-(viewPortHeight/2));";
 
-        js.executeScript(scrollElementIntoMiddle, element);
+        int elementPositionY = element.getLocation().getY();
+        int windowHeight = driver.manage().window().getSize().getHeight();
+        int scrollOffset = windowHeight / 2;
+
+        js.executeScript("window.scrollBy(0, arguments[0] - arguments[1]);", elementPositionY, scrollOffset);
     }
 
     /** seconds to sleep thread -> ONLY USE THIS WHEN ABSOLUTELY NECESSARY. KEEP AS PRIVATE!!! */
@@ -208,6 +219,83 @@ public class PageModelBase {
     public void clearInputField(WebElement inputField){
         inputField.clear();
 
+    }
+
+    public void enterValue(WebElement element, String value){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        try {
+            // Wait for the element to be visible and clickable
+            wait.until(ExpectedConditions.visibilityOf(element)).sendKeys(value);
+
+        } catch (NoSuchElementException e) {
+            // Handle the NoSuchElementException
+            System.out.println("The element was not found: " + e.getMessage());
+
+            //Recall the method
+            enterValue(element, value);
+        }
+
+    }
+
+    public void selectDropdownOption(WebElement element, String status){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        try {
+            // Wait for the element to be visible and clickable
+            wait.until(ExpectedConditions.visibilityOf(element));
+            wait.until(ExpectedConditions.visibilityOf(element)).click();
+
+            Select select = new Select(element);
+
+            // Iterate over the options and select the matching option (case-insensitive)
+            List<WebElement> options = select.getOptions();
+            for (WebElement option : options) {
+                if (option.getText().toLowerCase().contains(status.toLowerCase())) {
+                    option.click();
+                    break;
+                }
+            }
+
+        } catch (NoSuchElementException e) {
+            // Handle the NoSuchElementException
+            System.out.println("The element was not found: " + e.getMessage());
+
+            //Recall the method
+            selectDropdownOption(element, status);
+        }
+    }
+
+    public void clickButton(WebElement element){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        try {
+            // Wait for the element to be visible and clickable
+            wait.until(ExpectedConditions.visibilityOf(element));
+            wait.until(ExpectedConditions.visibilityOf(element)).click();
+
+        } catch (NoSuchElementException e) {
+            // Handle the NoSuchElementException
+            System.out.println("The element was not found: " + e.getMessage());
+
+            //Recall the method
+            clickButton(element);
+        }
+    }
+
+    public List<String[]> readDataFromCSV(String filePath) {
+        List<String[]> data = new ArrayList<>();
+
+        try (CSVReader reader = new CSVReader(new FileReader(filePath))) {
+            String[] line;
+            while ((line = reader.readNext()) != null) {
+                data.add(line);
+            }
+        } catch (IOException | CsvValidationException e) {
+            e.printStackTrace();
+        }
+
+        return data;
     }
 
 }

@@ -1,4 +1,4 @@
-package pages.aams.settings.role;
+package pages.aams.settings.pages;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -17,14 +17,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Roles {
+public class Pages {
     private final WebDriver driver;
 
     @FindBy(how = How.ID, using = "content")
     public WebElement content;
 
-    @FindBy(how = How.XPATH, using = ".//a[contains(@href, 'roles/create')]")
-    public WebElement createRoleButton;
+    @FindBy(how = How.XPATH, using = ".//a[contains(@href, 'pages/create')]")
+    public WebElement createPageButton;
 
     @FindBy(how = How.ID, using = "keyword")
     public WebElement searchInput;
@@ -41,25 +41,25 @@ public class Roles {
     @FindBy(how = How.XPATH, using = ".//table[@class='table']")
     public WebElement table;
 
-    public Roles(WebDriver driver) {
+    public Pages(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
     }
 
-    public void clickCreateRoleButton(){
+    public void clickCreatePageButton(){
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         try {
             // Wait for the element to be visible and clickable
-            wait.until(ExpectedConditions.visibilityOf(createRoleButton));
-            wait.until(ExpectedConditions.elementToBeClickable(createRoleButton)).click();
+            wait.until(ExpectedConditions.visibilityOf(createPageButton));
+            wait.until(ExpectedConditions.elementToBeClickable(createPageButton)).click();
 
         } catch (NoSuchElementException e) {
             // Handle the NoSuchElementException
             System.out.println("The element was not found: " + e.getMessage());
 
             //Recall the method
-            clickCreateRoleButton();
+            clickCreatePageButton();
         }
     }
 

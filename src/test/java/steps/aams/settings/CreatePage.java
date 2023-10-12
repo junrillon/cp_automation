@@ -9,8 +9,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import pages.PageModelBase;
 import pages.aams.Navigation;
-import pages.aams.settings.page.Pages;
+import pages.aams.settings.pages.CreatePagesPage;
+import pages.aams.settings.pages.Pages;
 
 import java.util.List;
 
@@ -18,7 +20,9 @@ public class CreatePage {
     private final WebDriver driver;
     private final Navigation navigation;
     private final Pages pages;
-    private final pages.aams.settings.page.CreatePage createPage;
+    private final CreatePagesPage createPagesPage;
+
+    private final PageModelBase baseAction;
 
     public static String pageName;
     public static String pagePath;
@@ -28,7 +32,8 @@ public class CreatePage {
         this.driver = driver.get();
         this.navigation = new Navigation(this.driver);
         this.pages = new Pages(this.driver);
-        this.createPage = new pages.aams.settings.page.CreatePage(this.driver);
+        this.baseAction = new PageModelBase(this.driver);
+        this.createPagesPage = new CreatePagesPage(this.driver);
     }
 
     @When("I navigate to pages")
@@ -40,9 +45,7 @@ public class CreatePage {
     @When("I create a page")
     public void createPage(){
         // Click create page button
-        pages.clickCreatePageButton();
-
-
+        baseAction.clickButton(pages.createPageButton);
     }
 
     @When("I set page details")
@@ -54,37 +57,37 @@ public class CreatePage {
         status = data.get(1).get(2);
 
         // Input value in page name input field
-        createPage.enterValue(createPage.pageNameInput, pageName);
+        baseAction.enterValue(createPagesPage.pageNameInput, pageName);
 
         // Input value in page path input field
-        createPage.enterValue(createPage.pagePathInput, pagePath);
+        baseAction.enterValue(createPagesPage.pagePathInput, pagePath);
 
         // Select a status
-        createPage.selectStatus(status);
+        baseAction.selectDropdownOption(createPagesPage.statusDropdown, status);
     }
 
     @Then("I click submit")
     public void clickSubmit(){
         // Click the submit button
-        createPage.clickButton(createPage.submitButton);
+        baseAction.clickButton(createPagesPage.submitButton);
 
         // Check message
-        createPage.checkModalMessage();
+        createPagesPage.checkModalMessage();
 
         // Click the View Pages button (To go back to the Pages)
-        createPage.clickButton(createPage.viewPagesButton);
+        baseAction.clickButton(createPagesPage.viewPagesButton);
 
     }
 
     @Then("I check if page is created")
     public void checkCreatedPage(){
-
         WebDriverWait wait = new WebDriverWait(driver, 20);
+
         // Input value in page name input field
-        createPage.enterValue(pages.searchInput, pageName);
+        baseAction.enterValue(pages.searchInput, pageName);
 
         // Click the filter button
-        createPage.clickButton(pages.filterButton);
+        baseAction.clickButton(pages.filterButton);
 
         // Declare table element and wait for it to be visible.
         WebElement table = wait.until(ExpectedConditions.visibilityOf(pages.table));

@@ -1,30 +1,27 @@
-package pages.aams.settings.page;
+package pages.aams.settings.roles;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pages {
+public class Roles {
     private final WebDriver driver;
 
     @FindBy(how = How.ID, using = "content")
     public WebElement content;
 
-    @FindBy(how = How.XPATH, using = ".//a[contains(@href, 'pages/create')]")
-    public WebElement createPageButton;
+    @FindBy(how = How.XPATH, using = ".//a[contains(@href, 'roles/create')]")
+    public WebElement createRoleButton;
 
     @FindBy(how = How.ID, using = "keyword")
     public WebElement searchInput;
@@ -41,26 +38,9 @@ public class Pages {
     @FindBy(how = How.XPATH, using = ".//table[@class='table']")
     public WebElement table;
 
-    public Pages(WebDriver driver) {
+    public Roles(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
-    }
-
-    public void clickCreatePageButton(){
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
-        try {
-            // Wait for the element to be visible and clickable
-            wait.until(ExpectedConditions.visibilityOf(createPageButton));
-            wait.until(ExpectedConditions.elementToBeClickable(createPageButton)).click();
-
-        } catch (NoSuchElementException e) {
-            // Handle the NoSuchElementException
-            System.out.println("The element was not found: " + e.getMessage());
-
-            //Recall the method
-            clickCreatePageButton();
-        }
     }
 
     public String getCellValue(WebElement tableElement, int index) {

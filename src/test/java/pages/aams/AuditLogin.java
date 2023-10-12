@@ -43,6 +43,10 @@ public class AuditLogin {
     @FindBy(how = How.XPATH, using = ".//div[contains(@class, 'phpdebugbar ')]")
     public WebElement debugger;
 
+    @FindBy(how = How.XPATH, using = ".//a[@class='phpdebugbar-close-btn']")
+    public WebElement debuggerCloseButton;
+
+
     public AuditLogin(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -51,13 +55,24 @@ public class AuditLogin {
     public void inputCredentials(String email, String password){
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
-        // Wait for the debugger to be visible before entering credentials
-        wait.until(ExpectedConditions.visibilityOf(debugger));
+        // Close the debugger
+        closeDebugger();
 
         // Wait for the email and password input field and then send keys.
         wait.until(ExpectedConditions.visibilityOf(emailInput)).sendKeys(email);
         wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(password);
 
+    }
+
+    public void closeDebugger(){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        // Wait for the debugger to be visible
+        wait.until(ExpectedConditions.visibilityOf(debugger));
+
+        // Wait for the debugger button to be visible and clickable then click
+        wait.until(ExpectedConditions.visibilityOf(debuggerCloseButton));
+        wait.until(ExpectedConditions.elementToBeClickable(debuggerCloseButton)).click();
     }
 
     public void requestOtp(){
