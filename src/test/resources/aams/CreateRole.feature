@@ -9,13 +9,12 @@ Feature: Audit - Create a Role
     When I navigate to roles
     And click create role button
     Then fill up the necessary fields
-#      | Page Name | Page Path   | Status |
-#      | Test Page | /test-page  | active |
-#
+      | roleName    | description   | status |
+      | Test Page 2 | Test Page 2   | active |
+
     And adjust permission per page
-      | location                                    |
-      | C:\Users\QA02\Downloads\page permission.csv |
+      | location                                   |
+      | src/main/resources/csv/page permission.csv |
 
-
-#    Then I click submit
-#    And I check if page is created
+    Then I click the submit button for role creation
+    And I check if role is created

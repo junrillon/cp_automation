@@ -66,8 +66,8 @@ public class CreatePage {
         baseAction.selectDropdownOption(createPagesPage.statusDropdown, status);
     }
 
-    @Then("I click submit")
-    public void clickSubmit(){
+    @Then("I click submit button for role creation")
+    public void clickSubmitForRoleCreation(){
         // Click the submit button
         baseAction.clickButton(createPagesPage.submitButton);
 
@@ -91,14 +91,14 @@ public class CreatePage {
 
         // Declare table element and wait for it to be visible.
         WebElement table = wait.until(ExpectedConditions.visibilityOf(pages.table));
-        int cellCount = pages.getCellCount(table);
+        int cellCount = baseAction.getCellCount(table);
         String pageNameCell;
 
         if (cellCount > 1) {
-            String pagePathCell = pages.getCellValue(table, 1);
-            String pageStatusCell = pages.getCellValue(table, 2);
+            String pagePathCell = baseAction.getCellValue(table, 1);
+            String pageStatusCell = baseAction.getCellValue(table, 2);
 
-            Assert.assertEquals(pageNameCell = pages.getCellValue(table, 0), pageName,
+            Assert.assertEquals(pageNameCell = baseAction.getCellValue(table, 0), pageName,
                     "Expected Page Name: " + pageName + ", Actual Page Name: " + pageNameCell);
 
             Assert.assertEquals(pagePathCell, pagePath,
@@ -108,7 +108,7 @@ public class CreatePage {
                     "Expected Page Status: " + status + ", Actual Page Status: " + pageStatusCell);
         } else {
             //Get the value of the cell and assert
-            Assert.assertEquals(pages.getCellValue(table, 0), pageName,
+            Assert.assertEquals(baseAction.getCellValue(table, 0), pageName,
                     "The " + pageName + " is not found.");
         }
     }

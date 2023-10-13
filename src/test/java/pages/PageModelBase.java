@@ -43,6 +43,12 @@ public class PageModelBase {
         js.executeScript("window.scrollBy(0, arguments[0] - arguments[1]);", elementPositionY, scrollOffset);
     }
 
+    /** Scroll to the top of webpage */
+    public void scrollToTop() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0, 0);");
+    }
+
     /** seconds to sleep thread -> ONLY USE THIS WHEN ABSOLUTELY NECESSARY. KEEP AS PRIVATE!!! */
     private void sleep(int seconds) {
         logger().traceEntry();
@@ -238,7 +244,7 @@ public class PageModelBase {
 
     }
 
-    public void selectDropdownOption(WebElement element, String status){
+    public void selectDropdownOption(WebElement element, String optionValue){
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         try {
@@ -251,7 +257,7 @@ public class PageModelBase {
             // Iterate over the options and select the matching option (case-insensitive)
             List<WebElement> options = select.getOptions();
             for (WebElement option : options) {
-                if (option.getText().toLowerCase().contains(status.toLowerCase())) {
+                if (option.getText().toLowerCase().contains(optionValue.toLowerCase())) {
                     option.click();
                     break;
                 }
@@ -262,7 +268,7 @@ public class PageModelBase {
             System.out.println("The element was not found: " + e.getMessage());
 
             //Recall the method
-            selectDropdownOption(element, status);
+            selectDropdownOption(element, optionValue);
         }
     }
 
@@ -297,5 +303,46 @@ public class PageModelBase {
 
         return data;
     }
+
+    public String getCellValue(WebElement tableElement, int index) {
+        String cellValue = null;
+
+        // Get all rows from the table
+        List<WebElement> rows = tableElement.findElements(By.tagName("tr"));
+
+        // Iterate through the rows (excluding the header row)
+        for (int i = 1; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+
+            // Get all cells in the row
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+
+            // Get the value of the first cell and assign it to variable cellValue
+            cellValue = cells.get(index).getText();
+        }
+
+        return cellValue;
+    }
+
+    public int getCellCount(WebElement tableElement) {
+        int cellCount = 0;
+
+        // Get all rows from the table
+        List<WebElement> rows = tableElement.findElements(By.tagName("tr"));
+
+        // Iterate through the rows (excluding the header row)
+        for (int i = 1; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+
+            // Get all cells in the row
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+
+            // Get the value of the first cell and assign it to variable cellValue
+            cellCount = cells.size();
+        }
+
+        return cellCount;
+    }
+
 
 }

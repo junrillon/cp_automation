@@ -12,5 +12,5 @@ Feature: Audit
       | Test Page | /test-page  | active |
 
     And I set page details
-    Then I click submit
+    Then I click submit button for role creation
     And I check if page is created

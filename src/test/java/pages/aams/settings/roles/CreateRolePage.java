@@ -36,7 +36,7 @@ public class CreateRolePage {
     public WebElement cancelButton;
 
     @FindBy(how = How.XPATH, using = ".//a[normalize-space()='View Roles']")
-    public WebElement viewPagesButton;
+    public WebElement viewRolesButton;
 
     @FindBy(how = How.ID, using = "modal_body")
     public List<WebElement> modalBody;
@@ -56,29 +56,22 @@ public class CreateRolePage {
     public void checkModalMessage(){
         int retry = 0;
         int maxRetry = 3;
-        String message = "";
 
         while (retry <= maxRetry) {
             // Refresh the errorMessage count to get the updated size
             int modalCount = modalBody.size();
 
             if (modalCount == 1) {
-                // Verify the visibility of the modal message element
-                WebDriverWait wait = new WebDriverWait(driver, 20);
-                WebElement visibleModalMessage = wait.until(ExpectedConditions.visibilityOf(modalMessage.get(0)));
+                WebElement visibleModalMessage = new WebDriverWait(driver, 20)
+                        .until(ExpectedConditions.visibilityOf(modalMessage.get(0)));
 
-                // Get the text of the modal message
-                message = visibleModalMessage.getText();
+                String message = visibleModalMessage.getText();
                 System.out.println(message);
 
-                //Check the error message
                 if (message.contains("already been taken") || message.contains("is required")) {
-
-                    // Click the proceed button
                     baseAction.clickButton(modalCloseButton);
 
                 } else {
-                    // Close the modal
                     baseAction.clickButton(modalCloseButton);
                 }
 
