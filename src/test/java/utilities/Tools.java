@@ -4,6 +4,7 @@ package utilities;
 import org.apache.commons.text.CaseUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.text.SimpleDateFormat;
@@ -13,9 +14,11 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 
 public class Tools {
+    private final WebDriver driver;
 
-    private Tools() {
-        throw new IllegalStateException("Utility Class");
+    public Tools(WebDriver driver) {
+        this.driver = driver;
+
     }
 
     /**

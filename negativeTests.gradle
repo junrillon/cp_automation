@@ -1,0 +1,45 @@
+task createRoleNegativeTests(type: JavaExec) {
+    main = "io.cucumber.core.cli.Main"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--tags', '@createRole and @negativeTest'
+    ]
+
+}
+
+task editRoleNegativeTests(type: JavaExec) {
+    main = "io.cucumber.core.cli.Main"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--tags', '@editRole and @negativeTest'
+    ]
+}
+
+task createPageNegativeTests(type: JavaExec) {
+    main = "io.cucumber.core.cli.Main"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--tags', '@createPage and @negativeTest'
+    ]
+
+}
+
+task editPageNegativeTests(type: JavaExec) {
+    main = "io.cucumber.core.cli.Main"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    args = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/cucumber-report.html',
+            '--glue', 'steps',
+            '--tags', '@editPage and @negativeTest'
+    ]
+}

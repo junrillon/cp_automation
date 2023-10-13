@@ -170,3 +170,5 @@ task pixDepositAndApprove(type: JavaExec) {
     ]
 
 }
+
+apply from: 'negativeTests.gradle'
