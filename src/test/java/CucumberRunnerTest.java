@@ -5,10 +5,10 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(monochrome = true,
         plugin = {"pretty"},
-        features = "src/test/resources/pool/backoffice",
+        features = "src/test/resources",
         glue = "steps",
-        tags = "@regression"
-)
+        tags = "@regressionTest and @negativeTest"
+    )
 
 public class CucumberRunnerTest {
 }

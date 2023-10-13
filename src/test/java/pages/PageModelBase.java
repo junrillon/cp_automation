@@ -222,6 +222,7 @@ public class PageModelBase {
         return true;
     }
 
+    // Clear the input field
     public void clearInputField(WebElement inputField){
         inputField.clear();
 
@@ -231,6 +232,9 @@ public class PageModelBase {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         try {
+            // Clear the input field
+            clearInputField(element);
+
             // Wait for the element to be visible and clickable
             wait.until(ExpectedConditions.visibilityOf(element)).sendKeys(value);
 
@@ -272,13 +276,39 @@ public class PageModelBase {
         }
     }
 
+    public void deselectDropdownOption(WebElement element){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        try {
+            // Wait for the element to be visible
+            wait.until(ExpectedConditions.visibilityOf(element));
+
+            // Create a Select object
+            Select select = new Select(element);
+
+            // Check if the dropdown is a multi-select
+            boolean isMultiSelect = select.isMultiple();
+
+            // Clear the selection based on the dropdown type
+            if (isMultiSelect) {
+                select.deselectAll();
+            } else {
+                select.selectByIndex(0);
+            }
+
+        } catch (NoSuchElementException e) {
+            // Handle the NoSuchElementException
+            System.out.println("The element was not found: " + e.getMessage());
+        }
+    }
+
     public void clickButton(WebElement element){
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         try {
             // Wait for the element to be visible and clickable
             wait.until(ExpectedConditions.visibilityOf(element));
-            wait.until(ExpectedConditions.visibilityOf(element)).click();
+            wait.until(ExpectedConditions.elementToBeClickable(element)).click();
 
         } catch (NoSuchElementException e) {
             // Handle the NoSuchElementException
@@ -344,5 +374,30 @@ public class PageModelBase {
         return cellCount;
     }
 
+    public void assertModalMessage(List<WebElement> modalElements, WebElement modalMessage, WebElement modalCloseButton, String expectedMessage) {
+        int maxRetry = 3;
 
+        for (int retry = 0; retry <= maxRetry; retry++) {
+            if (modalElements.size() == 1) {
+                WebElement visibleModalMessage = new WebDriverWait(driver, 20)
+                        .until(ExpectedConditions.visibilityOf(modalMessage));
+
+                String actualStatusMessage = visibleModalMessage.getText();
+                System.out.println(actualStatusMessage);
+
+                clickButton(modalCloseButton);
+
+                org.testng.Assert.assertEquals(actualStatusMessage.trim(), expectedMessage,
+                        "actual Message: " + actualStatusMessage);
+
+                break;
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

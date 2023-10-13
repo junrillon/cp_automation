@@ -1,0 +1,28 @@
+Activity Logs,with_view,with_edit
+Change Password,with_view,with_edit
+Courier22,with_view,with_edit
+Couriers,with_view,with_edit
+Create Courier,with_view,with_edit
+Create Courier Submit,with_view,no_edit
+Create Page,with_view,no_edit
+Create Roles,with_view,no_edit
+Create User Submit,with_view,no_edit
+Create Users,with_view,no_edit
+Dashboard,no_view,no_edit
+Edit Courier,no_view,no_edit
+Edit Courier Submit,no_view,no_edit
+Edit Role,no_view,no_edit
+Edit Users,no_view,no_edit
+Login,no_view,no_edit
+Pages,no_view,no_edit
+Reset Password,no_view,no_edit
+Roles,no_view,no_edit
+Sample,no_view,no_edit
+Sample 2,no_view,no_edit
+Sample Page,no_view,no_edit
+Summary Report,no_view,no_edit
+Test Page,no_view,no_edit
+Tracking,no_view,no_edit
+Transaction Report,with_view,with_edit
+Update Users Submit,with_view,with_edit
+Users,with_view,with_edit
