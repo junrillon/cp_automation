@@ -10,8 +10,10 @@ Feature: Audit
     And I create a user
     And I set user details
       | Email | Role   |
-      | testemail@email.com | All Access  |
-    Then I click cancel
-#    And I set page details
-#    Then I click submit
-    #And I check if page is created
+      | sampleuseratmn@clickplay.org | All Access  |
+     # | location |
+     # | C:\Users\daydream\Desktop\userdata.csv         |
+    #Then I click cancel
+    Then I click submit user
+    Then I close success modal
+    #And I check if user is created

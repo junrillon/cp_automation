@@ -1,5 +1,6 @@
-package pages.aams;
+package pages.aams.management.users;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -24,24 +25,44 @@ public class Users {
      */
 
     @FindBy(how = How.XPATH, using = "//a[@href='/admin/cms/users/create']")
-    @CacheLookup
     public WebElement createUserButton;
 
-    @FindBy(how = How.XPATH, using = "//a[@href='/admin/cms/users']")
-    @CacheLookup
+    @FindBy(how = How.XPATH, using = ".//a[contains(@href, '/admin/cms/users/edit')]")
+    public WebElement editUserButton;
+
+    @FindBy(how = How.XPATH, using = ".//a[contains(text(), 'Cancel')]")
     public WebElement cancelCreateUserButton;
 
     @FindBy(how = How.ID, using = "email")
-    @CacheLookup
     public WebElement emailField;
 
     @FindBy(how = How.ID, using = "role")
-    @CacheLookup
     public WebElement roleOption;
 
+    @FindBy(how = How.ID, using = "status")
+    public WebElement statusOption;
+
+    @FindBy(how = How.ID, using = "modal_close_btn")
+    public WebElement modalCloseButtonSubmit;
+
     @FindBy(how = How.ID, using = "submit_button")
-    @CacheLookup
-    public WebElement submitButton;
+    public WebElement submitCreateUserButton;
+
+    @FindBy(how = How.ID, using = "submit_edit_button")
+    public WebElement submitEditUserButton;
+
+    @FindBy(how = How.XPATH, using = "//input[@placeholder='Enter Email']")
+    public WebElement emailFilter;
+
+    @FindBy(how = How.ID, using = ".//form[@id='filter_form']//select[@name='filter_role']")
+    public WebElement roleFilter;
+
+    @FindBy(how = How.ID, using = "filter_button")
+    public WebElement filterButton;
+
+    @FindBy(how = How.XPATH, using = ".//table[@class='table']")
+    public WebElement table;
+
 
 
 
@@ -64,6 +85,23 @@ public class Users {
 
             //Recall the method
             clickCreateUserButton();
+        }
+    }
+
+    public void clickSubmitCreateUserButton(){
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        try {
+            // Wait for the element to be visible and clickable
+            wait.until(ExpectedConditions.visibilityOf(submitCreateUserButton));
+            wait.until(ExpectedConditions.elementToBeClickable(submitCreateUserButton)).click();
+
+        } catch (NoSuchElementException e) {
+            // Handle the NoSuchElementException
+            System.out.println("The element was not found: " + e.getMessage());
+
+            //Recall the method
+            clickSubmitCreateUserButton();
         }
     }
 
@@ -130,4 +168,43 @@ public class Users {
         }
     }
 
+    public int getCellCount(WebElement tableElement) {
+        int cellCount = 0;
+
+        // Get all rows from the table
+        List<WebElement> rows = tableElement.findElements(By.tagName("tr"));
+
+        // Iterate through the rows (excluding the header row)
+        for (int i = 1; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+
+            // Get all cells in the row
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+
+            // Get the value of the first cell and assign it to variable cellValue
+            cellCount = cells.size();
+        }
+
+        return cellCount;
+    }
+
+    public String getCellValue(WebElement tableElement, int index) {
+        String cellValue = null;
+
+        // Get all rows from the table
+        List<WebElement> rows = tableElement.findElements(By.tagName("tr"));
+
+        // Iterate through the rows (excluding the header row)
+        for (int i = 1; i < rows.size(); i++) {
+            WebElement row = rows.get(i);
+
+            // Get all cells in the row
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+
+            // Get the value of the first cell and assign it to variable cellValue
+            cellValue = cells.get(index).getText();
+        }
+
+        return cellValue;
+    }
 }
