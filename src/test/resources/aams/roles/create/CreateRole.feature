@@ -6,13 +6,6 @@ Feature: Audit - Create a Role
       | Username                    | Password      |
       | r.junarson@gmail.com        | Clickplay@1   |
 
-  Scenario: Edit a role with complete valid data
-    When I navigate to roles
-    And click create role button
-    Then fill up the necessary fields
-      | Role Name   | Description   | status |
-      | Test Page 2 | Test Page 2   | active |
-
   Scenario: Create role with complete valid data
     When I navigate to roles
     And click create role button
