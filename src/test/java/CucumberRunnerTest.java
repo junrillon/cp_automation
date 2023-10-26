@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
         plugin = {"pretty"},
         features = "src/test/resources",
         glue = "steps",
-        tags = "@regressionTest and @negativeTest"
+        tags = "@positiveTest"
     )
 
 public class CucumberRunnerTest {

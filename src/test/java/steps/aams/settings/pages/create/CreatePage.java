@@ -68,8 +68,6 @@ public class CreatePage {
 
     @Then("I click submit button for page creation")
     public void clickSubmitForPageCreation(){
-        String expectedMessage = "Create page successful";
-
         // Click the submit button
         baseAction.clickButton(createEditPagesPage.submitButtonCreate);
 

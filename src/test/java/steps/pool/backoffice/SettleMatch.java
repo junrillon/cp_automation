@@ -3,7 +3,6 @@ package steps.pool.backoffice;
 import database.DatabaseConnection;
 import engine.Driver;
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.Assert;
@@ -25,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SettleMatch {
     private final WebDriver driver;
+
     public SettleMatch(Driver driver){
         this.driver = driver.get();
     }

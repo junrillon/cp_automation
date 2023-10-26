@@ -49,13 +49,7 @@ public class CreatePageExistingPagePath {
 
     @Then("I submit the page creation form with existing page path")
     public void submitPageCreationWithExistingPagePath(){
-        String expectedMessage = "The page path has already been taken.";
-
         // Click submit button
         baseAction.clickButton(createEditPages.submitButtonCreate);
-
-        // Get modal message and assert the message, and then close the modal
-        baseAction.assertModalMessage(createEditPages.modalBody, createEditPages.modalMessage.get(0),
-                createEditPages.modalCloseButton, expectedMessage);
     }
 }

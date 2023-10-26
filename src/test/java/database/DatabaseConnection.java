@@ -56,6 +56,17 @@ public class DatabaseConnection {
 
     }
 
+    public static ResultSet executeQuery(String query, String url, String database) throws SQLException {
+        Connection conn = null;
+
+        conn = DriverManager.getConnection("jdbc:mysql://" + url + "/" + database, "qa_autobot", "eb%AqG-qvumD96Qe");
+        Statement statement = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        ResultSet resultSet = statement.executeQuery(query);
+        resultSet.next();
+
+        return resultSet;
+    }
+
     public void closeConn() throws SQLException {
         if(conn !=null && !conn.isClosed()) {
             conn.close();

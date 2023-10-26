@@ -28,7 +28,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter:5.9.2'
 
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.12.4'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.21.0'
 
     testImplementation 'io.cucumber:cucumber-java:7.11.1'
     testImplementation 'io.cucumber:cucumber-junit:7.11.1'
@@ -43,6 +43,11 @@ dependencies {
     // https://mvnrepository.com/artifact/javax.activation/activation
     implementation group: 'javax.activation', name: 'activation', version: '1.1.1'
 
+    implementation group: 'org.apache.poi', name: 'poi', version: '5.2.3'
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.3'
+
+    implementation files('src/main/resources/executable/ATUTestRecorder_2.1.jar')
+    implementation files('src/main/resources/executable/ATUReporter_Selenium_testNG_5.1.1.jar')
 }
 
 test {

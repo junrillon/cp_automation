@@ -2,6 +2,7 @@ package pages;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import org.apache.poi.ss.usermodel.*;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,8 +11,10 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.Tools;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -372,6 +375,84 @@ public class PageModelBase {
         }
 
         return cellCount;
+    }
+
+    public List<String> retrieveDataFromWebsiteTable(WebElement tableElement) {
+
+        // Find all the rows in the table
+        List<WebElement> rows = tableElement.findElements(By.tagName("tr"));
+
+        // Create an ArrayList to store the table data
+        List<String> tableData = new ArrayList<>();
+
+        // Iterate over the rows and extract the cell values
+        for (WebElement row : rows) {
+            List<WebElement> cells = row.findElements(By.tagName("td"));
+            if (!cells.isEmpty()) {
+                StringBuilder rowData = new StringBuilder();
+                for (WebElement cell : cells) {
+                    String cellText = cell.getText();
+                    rowData.append(cellText).append(", ");
+                }
+                // Remove the trailing ", " from the last cell
+                if (rowData.length() > 0) {
+                    rowData.setLength(rowData.length() - 2);
+                }
+                tableData.add(rowData.toString());
+            }
+        }
+
+        return tableData;
+    }
+
+    public List<String> getDataFromExcelFile(String filePath) {
+        List<String> excelData = new ArrayList<>();
+        DecimalFormat decimalFormat = new DecimalFormat("#");
+
+        try (Workbook workbook = WorkbookFactory.create(new File(filePath))) {
+            // Assuming the data is in the first sheet
+            Sheet sheet = workbook.getSheetAt(0);
+
+            // Iterate over rows starting from the second row (index 1)
+            for (int rowIndex = 1; rowIndex < sheet.getLastRowNum() + 1; rowIndex++) {
+                Row row = sheet.getRow(rowIndex);
+                StringBuilder rowData = new StringBuilder();
+
+                // Iterate over cells
+                for (Cell cell : row) {
+                    // Get the cell value based on its data type
+                    CellType cellType = cell.getCellType();
+
+                    if (cellType == CellType.STRING) {
+                        String cellValue = cell.getStringCellValue();
+                        rowData.append(cellValue).append(", ");
+
+                    } else if (cellType == CellType.NUMERIC) {
+                        double cellValue = cell.getNumericCellValue();
+                        String formattedValue = decimalFormat.format(cellValue);
+                        rowData.append(formattedValue).append(", ");
+
+                    } else if (cellType == CellType.BOOLEAN) {
+                        boolean cellValue = cell.getBooleanCellValue();
+                        rowData.append(cellValue).append(", ");
+
+                    } else if (cellType == CellType.BLANK) {
+                        rowData.append(", ");
+                    }
+                }
+
+                // Remove the trailing ", " from the last cell
+                if (rowData.length() > 0) {
+                    rowData.setLength(rowData.length() - 2);
+                }
+
+                excelData.add(rowData.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return excelData;
     }
 
     public void assertModalMessage(List<WebElement> modalElements, WebElement modalMessage, WebElement modalCloseButton, String expectedMessage) {

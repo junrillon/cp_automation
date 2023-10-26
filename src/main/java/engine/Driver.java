@@ -2,12 +2,9 @@ package engine;
 
 import org.openqa.selenium.WebDriver;
 
-import java.util.concurrent.TimeUnit;
-
 
 public class Driver {
     private WebDriver driver;
-
 
     public void start() {
         driver = new GoogleChromeDriver();
