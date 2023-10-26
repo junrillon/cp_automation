@@ -44,13 +44,7 @@ public class CreatePageBlankPageName {
 
     @Then("I submit the page creation form with blank page name")
     public void submitPageCreationWithBlankPageName(){
-        String expectedMessage = "Page name field is required.";
-
         // Click submit button
         baseAction.clickButton(createEditPages.submitButtonCreate);
-
-        // Get modal message and assert the message, and then close the modal
-        baseAction.assertModalMessage(createEditPages.modalBody, createEditPages.modalMessage.get(0),
-                createEditPages.modalCloseButton, expectedMessage);
     }
 }

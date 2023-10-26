@@ -1,10 +1,7 @@
 package engine;
 
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -39,7 +36,7 @@ public class GoogleChromeDriver extends ChromeDriver {
     }
 
     private static String getExecutable() {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("chromedriver.exe");
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("executable/chromedriver.exe");
         File exe = null;
         try {
             exe = File.createTempFile("chromedriver", ".exe");
