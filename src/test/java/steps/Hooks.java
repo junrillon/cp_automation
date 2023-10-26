@@ -55,7 +55,7 @@ public class Hooks {
         driver.start();
     }
 
-   @After("@Record")
+   @After()
     public void after(Scenario scenario){
        Collection<String> tags = scenario.getSourceTagNames();
         if(tags.contains("@Record")) {

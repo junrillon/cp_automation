@@ -31,10 +31,10 @@ public class AuditLogin {
     @FindBy(how = How.XPATH, using = ".//div[@id='sucessModal']//p")
     public List<WebElement> successMessageModal;
 
-    @FindBy(how = How.XPATH, using = ".//div[contains(@class, ' bg-danger ')]//p")
+    @FindBy(how = How.XPATH, using = ".//div[@class='container']//div[contains(@class, ' bg-danger ')]//p")
     public List<WebElement> failedMessageModal;
 
-    @FindBy(how = How.XPATH, using = ".//div[@id='modalFooter']//button[contains(text(), 'Close')]")
+    @FindBy(how = How.XPATH, using = ".//div[@class='container']//div[@id='modalFooter']//button[contains(text(), 'Close')]")
     public WebElement modalCloseButton;
 
     @FindBy(how = How.XPATH, using = ".//div[@id='modalFooter']//button[contains(text(), 'Proceed')]")
