@@ -110,7 +110,11 @@ public class SummaryReport {
     @Then("I compare the website and database data")
     public void compareWebsiteAndDatabaseData(){
         // Perform assertions to compare the data
-        Assert.assertEquals(websiteData, sqlDatabaseData);
+        if (websiteData.equals(sqlDatabaseData)) {
+            System.out.println("Data is equal. The website data matches the SQL database data.");
+        } else {
+            Assert.assertEquals(websiteData, sqlDatabaseData);
+        }
     }
 
     /** STEPS FOR EXPORT TO EXCEL STARTS HERE **/
