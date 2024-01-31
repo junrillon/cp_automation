@@ -34,7 +34,7 @@ public class PageModelBase {
      * @param  */
     public void scrollIntoView(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-//        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
         String scrollElementIntoMiddle = "var viewPortHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);"
                 + "var elementTop = arguments[0].getBoundingClientRect().top;"
                 + "window.scrollBy(0, elementTop-(viewPortHeight/2));";
@@ -45,6 +45,13 @@ public class PageModelBase {
 
         js.executeScript("window.scrollBy(0, arguments[0] - arguments[1]);", elementPositionY, scrollOffset);
     }
+
+    public void scrollIntoView1(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
+
 
     /** Scroll to the top of webpage */
     public void scrollToTop() {
@@ -480,5 +487,12 @@ public class PageModelBase {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void switchToFrame(WebElement element){
+        WebElement frame = new WebDriverWait(driver, 60)
+                .until(ExpectedConditions.visibilityOf(element));
+
+        driver.switchTo().frame(frame);
     }
 }

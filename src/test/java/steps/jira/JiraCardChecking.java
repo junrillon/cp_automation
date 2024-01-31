@@ -26,16 +26,16 @@ import java.util.List;
 public class JiraCardChecking {
 
     private final WebDriver driver;
-    private final PageModelBase pageModelBase;
+    private final PageModelBase baseAction;
 
     public JiraCardChecking (Driver driver){
         this.driver = driver.get();
-        this.pageModelBase = new PageModelBase(this.driver);
+        this.baseAction = new PageModelBase(this.driver);
     }
 
     ArrayList<ArrayList<StringBuilder>> resultContainer = new ArrayList<ArrayList<StringBuilder>>(); // Initialize the outer array
     int maxInnerArraySize = 5;
-    String advanceSprint = null;
+    String futureSprint;
 
     private static final int MAX_RETRIES = 3;
     private static final int RETRY_DELAY_MS = 5000;
@@ -78,8 +78,10 @@ public class JiraCardChecking {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         //locate for p element that contains {projectName}
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//p[@class='name' and contains(text(),'"+ projectName +"')]")));
-        driver.findElement(By.xpath(".//p[@class='name' and contains(text(),'"+ projectName +"')]")).click();
+        //p[@class='name' and contains(text(),'"+ projectName +"')]
+        WebElement project = wait.until(ExpectedConditions.elementToBeClickable
+                (By.xpath(".//a[@href='https://clickplaycorp.atlassian.net/browse/"+projectName+"']")));
+        baseAction.clickButton(project);
         System.out.println("I select project: "+projectName);
 
     }
@@ -87,12 +89,8 @@ public class JiraCardChecking {
     @When("I access backlog")
     public void iAccessBacklog() {
         JiraObjects jiraObjects = new JiraObjects(driver);
-        WebDriverWait wait = new WebDriverWait(driver, 20);
 
-        wait.until(ExpectedConditions.visibilityOf(jiraObjects.backlog));
-        wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.backlog));
-        jiraObjects.backlog.click();
-
+        baseAction.clickButton(jiraObjects.backlog);
         System.out.println("I clicked backlog.");
     }
 
@@ -100,23 +98,20 @@ public class JiraCardChecking {
     public void iScrollToFutureSprint() {
         JiraObjects jiraObjects = new JiraObjects(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
-        JavascriptExecutor js = (JavascriptExecutor)driver;
 
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath(jiraObjects.advanceSprintXpath)));
         WebElement sprintHeader = driver.findElement(By.xpath(jiraObjects.advanceSprintXpath));
-        js.executeScript("arguments[0].scrollIntoView(true);", sprintHeader);
+        baseAction.scrollIntoView(sprintHeader);
 
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath(jiraObjects.sprintNumberXpath))));
-        advanceSprint = driver.findElement(By.xpath(jiraObjects.sprintNumberXpath)).getText();
-        System.out.println("I searched " + advanceSprint + " in backlog. \n");
-
+        //Get the sprint number
+        futureSprint = jiraObjects.getSprintNumber();
+        System.out.println("I scroll to Sprint " + futureSprint);
     }
 
     @When("I check if already logged in on testrail")
     public void iCheckIfAlreadyLoggedInOnTestrail(DataTable testrailCreds) {
         JiraObjects jiraObjects = new JiraObjects(driver);
         TestRailPage testRailPage = new TestRailPage(driver);
-        JavascriptExecutor js = (JavascriptExecutor)driver;
 
         WebDriverWait wait = new WebDriverWait(driver, 20);
         WebDriverWait longwait = new WebDriverWait(driver, 60);
@@ -127,32 +122,31 @@ public class JiraCardChecking {
 
         String oldTab = driver.getWindowHandle();
 
-        //check cards inside sprint and then click
-        wait.until(ExpectedConditions.visibilityOf(jiraObjects.advanceSprintXpathWE));
-        js.executeScript("arguments[0].scrollIntoView(true);", jiraObjects.advanceSprintXpathWE);
-        System.out.println("Scrolled into per card");
+        //Wait for the future sprint to be visible
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(jiraObjects.advanceSprintXpath)));
 
-        WebElement cardNumber = driver.findElement(By.xpath(jiraObjects.perCardNumberXpath + "[1]"));
-        longwait.until(ExpectedConditions.elementToBeClickable(cardNumber));
-        cardNumber.click();
+        //Initialization of the WebElement + wait for the element
+        WebElement firstCard = wait.until(ExpectedConditions.visibilityOfElementLocated
+                (By.xpath(jiraObjects.firstCard())));
 
-        //check sprint element inside detailed view then scroll to it
+        //Scroll into the element then click
+        baseAction.scrollIntoView(firstCard);
+        baseAction.clickButton(firstCard);
+
+        //Wait for the card detailed view to be visible
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
-        wait.until(ExpectedConditions.visibilityOf(jiraObjects.sprintDisplayInsideCard));
-        js.executeScript("arguments[0].scrollIntoView(true);", jiraObjects.sprintDisplayInsideCard);
 
         //check testcases element inside detailed view then click
         wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
-        jiraObjects.testCases.click();
+        baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+        baseAction.clickButton(jiraObjects.testCases);
 
         //Switch to iframes (testcases iframe 1 and 2)
-        driver.switchTo().frame(jiraObjects.tcIframe1);
-        longwait.until(ExpectedConditions.elementToBeClickable(jiraObjects.tcIframe2));
-        driver.switchTo().frame(jiraObjects.tcIframe2);
+        baseAction.switchToFrame(jiraObjects.tcIframe1);
+        baseAction.switchToFrame(jiraObjects.tcIframe2);
 
         //check if already logged in to testrail
         int loginToTestrail = jiraObjects.loginToTestRail.size();
-        System.out.println(loginToTestrail);
         if(loginToTestrail > 0){
             System.out.println("Not yet logged in on testrail.");
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.loginToTestRailButton));
@@ -188,8 +182,7 @@ public class JiraCardChecking {
 
             //Switch back to default frame
             driver.switchTo().defaultContent();
-            wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCasesBack));
-            jiraObjects.testCasesBack.click();
+            baseAction.clickButton(jiraObjects.testCasesBack);
         }
 
     }
@@ -197,236 +190,126 @@ public class JiraCardChecking {
 
 
     @When("I check cards in future sprint")
-    public void iCheckCardsInFutureSprint() {
+    public void iCheckCardsInFutureSprint() throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(driver);
-
         WebDriverWait wait = new WebDriverWait(driver, 20);
-        WebDriverWait longwait = new WebDriverWait(driver, 30);
-        JavascriptExecutor js = (JavascriptExecutor)driver;
 
-        String perCardTitleXpath = jiraObjects.perCardTitleXpath;
-        String perCardNumberXpath = jiraObjects.perCardNumberXpath;
-        String perCardAssignee = jiraObjects.perCardAssigneeXpath;
-        String perCardTester = jiraObjects.perCardTesterXpath;
-        String perCardStatus = jiraObjects.perCardStatusXpath;
-        String perCardXpath = jiraObjects.perCardXpath;
-        String perCardSP =  jiraObjects.perCarStoryPoints;
+        String testCasesStatus;
+        String testRunsStatus;
 
-        String testCases_stats;
-        String testRuns_stats;
+        // Create an array to store the extracted text and iteration count
+        List<String> extractedCardNumbers = new ArrayList<>();
 
-        String result;
-        String issueCount = driver.findElement(By.xpath(jiraObjects.issueCountXpath)).getText();
-        String count = issueCount.replace(" issues","");
-        int converted_issueCount = Integer.parseInt(count);
+        // Find the elements and get their count
+        List<WebElement> elements = jiraObjects.cardElements();
+        int converted_issueCount = elements.size();
 
-        System.out.println("Checking every card now.");
+        // Find the card tester elements and get their count
+        List<WebElement> cardTester = jiraObjects.getCardTester();
+
+        System.out.println("Checking each card...");
         if(converted_issueCount != 0){
-            for (int i = 1; i <= converted_issueCount; i++) {
-                String perCard = perCardXpath + "[" + i + "]";
-                String perCardIssueType = perCard + jiraObjects.perCardIssueType;
+            for (int i = 0; i <= converted_issueCount - 1; i++) {
+                //WebElement init for Card, scrollIntoView, then click
+                WebElement card = wait.until(ExpectedConditions.visibilityOf(elements.get(i)));
 
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCardIssueType)));
-                String issueType = driver.findElement(By.xpath(perCardIssueType)).getAttribute("title");
-                if (!issueType.equalsIgnoreCase("bug")) {
+                System.out.println(card);
+                baseAction.scrollIntoView1(card);
+                baseAction.clickButton(card);
 
-                    WebElement issueContent = driver.findElement(By.xpath(perCard));
-                    js.executeScript("arguments[0].scrollIntoView(true);", issueContent);
+                //Wait for the card detailed view to be visible
+                wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
 
-                    //locate card status element and get text
-                    System.out.println("Checking card status");
-                    WebElement cardStatus = driver.findElement(By.xpath(perCard + perCardStatus));
-                    wait.until(ExpectedConditions.visibilityOf(cardStatus));
-                    String extractedCardStatus = cardStatus.getText();
+                //Get the card number
+                String extractedCardNumber = jiraObjects.getCardNumber();
 
-                    //locate card title element and get text
-                    System.out.println("Checking card title");
-                    WebElement cardTitle = driver.findElement(By.xpath(perCard + perCardTitleXpath));
-                    wait.until(ExpectedConditions.visibilityOf(cardTitle));
-                    String extractedCardTitle = cardTitle.getText();
+                // Check if the text already exists in the array
+                boolean cardNumberExists = extractedCardNumbers.contains(extractedCardNumber);
 
-                    //locate card story points element and get text
-                    System.out.println("Checking card story points");
-                    WebElement cardSP = driver.findElement(By.xpath(perCard + perCardSP));
-                    wait.until(ExpectedConditions.visibilityOf(cardSP));
-                    String extractedCardSP;
-                    if (cardSP.getText().equals("-")){
-                        extractedCardSP = "0";
-                    } else {
-                        extractedCardSP = cardSP.getText();
-                    }
+                //Get card issue type
+                String issueType = jiraObjects.getCardIssueType();
 
-                    //check if card has tester
-                    System.out.println("Checking card tester");
-                    int cardTester_isNull = driver.findElements(By.xpath(perCard + perCardTester)).size();
-                    String extractedCardTester;
+                if (!issueType.equalsIgnoreCase("bug") && !cardNumberExists) {
 
-                    if (cardTester_isNull > 0) {
-                        //locate card title element and get text
-                        extractedCardTester = driver.findElement(By.xpath(perCard + perCardTester)).getText();
-                        //String testerName = extractedCardTester;
-                        String[] splitStr = extractedCardTester.split("\\s+");
+                    //Get card status
+                    String extractedCardStatus = jiraObjects.getCardStatus(i);
 
-                        // Switch statement over above string
-                        switch (splitStr[0]) {
-                            case "Jun":
-                                extractedCardTester = "@Juuuun";
-                                break;
-                            case "Christian":
-                                extractedCardTester = "@mxxx67";
-                                break;
-                            case "Jean":
-                                extractedCardTester = "@jeanpaola";
-                                break;
-                            case "jerald":
-                                extractedCardTester = "@jeraldmm";
-                                break;
-                            case "Marjorie":
-                                extractedCardTester = "@Marj0819";
-                                break;
-                            case "Robert":
-                                extractedCardTester = "@robertcaneta";
-                                break;
-                            case "Sherylle":
-                                extractedCardTester = "@Sheeey";
-                                break;
-                            case "Bianca":
-                                extractedCardTester = "@yangcavelez ";
-                                break;
-                            case "Arvin":
-                                switch (splitStr[1]) {
-                                    case "Dacio":
-                                        extractedCardTester = "@daysofdash";
-                                        break;
-                                    case "Oliva":
-                                        extractedCardTester = "@threem06";
-                                        break;
-                                    default:
-                                }
-                                break;
-                            case "sysadmin":
-                                extractedCardTester = "sysadmin";
-                                break;
-                            default:
-                                extractedCardTester = "None";
-                        }
-                    } else {
-                        extractedCardTester = "None";
-                    }
-                    System.out.println(extractedCardTester);
+                    //Get card title
+                    String extractedCardTitle = jiraObjects.getCardTitle();
 
-                    //check if card has assignee/dev
-                    int cardAssignee_isNull = driver.findElements(By.xpath(perCard + perCardAssignee)).size();
-                    String extractedCardAssignee;
-                    if (cardAssignee_isNull > 0) {
-                        //locate card assignee element and get text
-                        extractedCardAssignee = driver.findElement(By.xpath(perCard + perCardAssignee)).getAttribute("alt");
-                    } else {
-                        extractedCardAssignee = "Assignee: None";
-                    }
+                    //Get the story points
+                    String extractedCardSP = jiraObjects.getCardStoryPoints(i);
 
-                    //check cards inside sprint and then click
-                    WebElement cardNumber = driver.findElement(By.xpath(perCard + perCardNumberXpath));
-                    wait.until(ExpectedConditions.visibilityOf(cardNumber));
-                    String extractedCardNumber = cardNumber.getAttribute("title");
+                    //Get the card tester
+                    String extractedCardTester = cardTester.get(i).getText();
 
-                    //Click card
-                    wait.until(ExpectedConditions.elementToBeClickable(issueContent));
-                    js.executeScript("arguments[0].click()", issueContent);
+                    //format the extracted tester for preparation for telegram message
+                    extractedCardTester = jiraObjects.getFormattedTester(extractedCardTester);
 
-                    //check sprint element inside detailed view then scroll to it
-                    WebElement sprint = jiraObjects.sprintDisplayInsideCard;
-                    wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
-                    wait.until(ExpectedConditions.visibilityOf(sprint));
-                    js.executeScript("arguments[0].scrollIntoView(true);", sprint);
+                    //Get the card assignee
+                    String extractedCardAssignee = jiraObjects.getCardAssignee(i);
 
-                    //check testcases element inside detailed view then click
-                    wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
-                    jiraObjects.testCases.click();
+                    //Scroll into TestRail: Cases in detailed card view
+                    baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+                    baseAction.clickButton(jiraObjects.testCases);
 
                     //Switch to iframes (testcases iframe 1 and 2)
-                    driver.switchTo().frame(jiraObjects.tcIframe1);
-                    longwait.until(ExpectedConditions.visibilityOf(jiraObjects.tcIframe2));
-                    driver.switchTo().frame(jiraObjects.tcIframe2);
+                    baseAction.switchToFrame(jiraObjects.tcIframe1);
+                    baseAction.switchToFrame(jiraObjects.tcIframe2);
 
-                    int testCases = jiraObjects.testCases_status.size();
-                    if (testCases > 0) {
-                        testCases_stats = "None";
-                    } else {
-                        testCases_stats = "Already have test cases.";
-                    }
+                    //Check if the card has test cases
+                    testCasesStatus = jiraObjects.getTestCasesStatus();
 
                     //Switch back to default frame
                     driver.switchTo().defaultContent();
-                    wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCasesBack));
-                    jiraObjects.testCasesBack.click();
-
-                    wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRuns));
-                    jiraObjects.testRuns.click();
+                    baseAction.clickButton(jiraObjects.testCasesBack);
+                    baseAction.clickButton(jiraObjects.testRuns);
 
                     //Switch to iframes
-                    driver.switchTo().frame(jiraObjects.trIframe1);
-                    longwait.until(ExpectedConditions.visibilityOf(jiraObjects.trIframe2));
-                    driver.switchTo().frame(jiraObjects.trIframe2);
+                    baseAction.switchToFrame(jiraObjects.trIframe1);
+                    baseAction.switchToFrame(jiraObjects.trIframe2);
 
-                    //wait.until(ExpectedConditions.elementToBeClickable((WebElement) locator.testRuns_status()));
-                    int testRuns = jiraObjects.testRuns_status.size();
-                    if (testRuns > 0) {
-                        testRuns_stats = "None";
-                    } else {
-                        testRuns_stats = "Already have test runs.";
-                    }
+                    //Check if the card has test cases
+                    testRunsStatus = jiraObjects.getTestRunsStatus();
 
                     driver.switchTo().defaultContent();
-                    wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testRunsBack));
-                    jiraObjects.testRunsBack.click();
-                    //⚠ \u2139\ufe0f
-                    StringBuilder resultContent = new StringBuilder("\u2139\ufe0f (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
-                            "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
-                            "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
-                            "- Test Cases: " + testCases_stats + "\n" + "- Test Runs: " + testRuns_stats + "\n\n");
+                    baseAction.clickButton(jiraObjects.testRunsBack);
 
+                    boolean hasSubTask = jiraObjects.hasSubTasks(i);
+                    if(hasSubTask){
+                        //jiraObjects.showSubtasks(i);
 
-                    boolean isAppended;
-                    if (testCases > 0 || testRuns > 0 || Integer.parseInt(extractedCardSP) == 0) {
-                        isAppended = true;
+                       int count = jiraObjects.subTaskCards(i).size();
+                        System.out.println("SubTasks: " + hasSubTask);
 
-                        if (resultContainer.isEmpty() || resultContainer.get(resultContainer.size() - 1).size() == maxInnerArraySize) {
-                            // If the outer array is empty or the last inner array is full, create a new inner array
-                            ArrayList<StringBuilder> innerArray = new ArrayList<StringBuilder>();
-                            innerArray.add(resultContent);
-                            resultContainer.add(innerArray);
-                        } else {
-                            // Otherwise, add the element to the last inner array
-                            resultContainer.get(resultContainer.size() - 1).add(resultContent);
-                        }
-
-                    } else {
-                        isAppended = false;
+                        //jiraObjects.hideSubtasks(i);
                     }
 
-                    System.out.println("isAppended: " + isAppended + "\n" +
-                            i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
+                    //Extracted card details are assigned to resultContent variable
+                    StringBuilder resultContent = new StringBuilder((jiraObjects.buildResultContent(extractedCardNumber, extractedCardTitle,
+                            extractedCardTester, extractedCardAssignee, extractedCardStatus, extractedCardSP, testCasesStatus, testRunsStatus)));
+
+                    //Call the processResultContainer() method, to check if the result is need to add in the telegram message
+                    processResultContainer(testCasesStatus, testRunsStatus, extractedCardSP, resultContent);
+
+                    //Display the result in the log
+                    System.out.println(i + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                             "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                             "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
-                            "─ Test Cases: " + testCases_stats + "\n" + "─ Test Runs: " + testRuns_stats + "\n");
+                            "─ Test Cases: " + testCasesStatus + "\n" + "─ Test Runs: " + testRunsStatus + "\n");
+
+                    //Format the extracted card numbers and add it to the extractedCardNumbers array
+                    String flag = String.format("Card Number: %s, Count: %d", extractedCardNumber, i + 1);
+                    extractedCardNumbers.add(flag);
 
                 } else {
-                    System.out.println("Bug Card");
+                    // Scroll to the next element if it exists
+                    if (i < converted_issueCount - 1) {
+                        WebElement nextElement = elements.get(i + 1);
+                        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", nextElement);
+                    }
                 }
             }
-        } else {
-            StringBuilder resultContent = new StringBuilder("No card/s available in this sprint.");
-            if (resultContainer.isEmpty() || resultContainer.get(resultContainer.size() - 1).size() == maxInnerArraySize) {
-                // If the outer array is empty or the last inner array is full, create a new inner array
-                ArrayList<StringBuilder> innerArray = new ArrayList<StringBuilder>();
-                innerArray.add(resultContent);
-                resultContainer.add(innerArray);
-            } else {
-                // Otherwise, add the element to the last inner array
-                resultContainer.get(resultContainer.size() - 1).add(resultContent);
-            }
-            System.out.println("No card/s available in this sprint.");
         }
     }
 
@@ -451,7 +334,7 @@ public class JiraCardChecking {
             boolean sentSuccessfully = false;
             while (retries < MAX_RETRIES && !sentSuccessfully) {
                 try {
-                    URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + "&text=" + advanceSprint + "%0A" + URLEncoder.encode(formattedResult, StandardCharsets.UTF_8));
+                    URL url = new URL("https://api.telegram.org/bot" + token + "/sendMessage?chat_id=" + chatId + "&text=" + futureSprint + "%0A" + URLEncoder.encode(formattedResult, StandardCharsets.UTF_8));
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setRequestMethod("POST");
                     connection.setConnectTimeout(5000);
@@ -475,6 +358,23 @@ public class JiraCardChecking {
 
             if (!sentSuccessfully) {
                 System.err.println("Failed to send message after " + MAX_RETRIES + " retries.");
+            }
+        }
+    }
+
+    public void processResultContainer(String isTestCasesNull, String isTestRunNull, String isStoryPointsNull, StringBuilder resultContent) {
+        boolean isAppended = isTestCasesNull.equals("None") || isTestRunNull.equals("None") || isStoryPointsNull.equals("-");
+
+        if (isAppended) {
+            if (resultContainer.isEmpty() || resultContainer.get(resultContainer.size() - 1).size() == maxInnerArraySize) {
+                // If the outer array is empty or the last inner array is full, create a new inner array
+                ArrayList<StringBuilder> innerArray = new ArrayList<StringBuilder>();
+                innerArray.add(resultContent);
+                resultContainer.add(innerArray);
+
+            } else {
+                // Otherwise, add the element to the last inner array
+                resultContainer.get(resultContainer.size() - 1).add(resultContent);
             }
         }
     }
