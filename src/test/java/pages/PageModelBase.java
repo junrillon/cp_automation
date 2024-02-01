@@ -48,10 +48,17 @@ public class PageModelBase {
 
     public void scrollIntoView1(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        boolean isElementDisplayed = (boolean) js.executeScript(
+                "var elem = arguments[0];" +
+                        "var rect = elem.getBoundingClientRect();" +
+                        "var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);" +
+                        "var isElementDisplayed = !(rect.bottom < 0 || rect.top - viewHeight >= 0);" +
+                        "return isElementDisplayed;", element);
+
+        if (!isElementDisplayed) {
+            js.executeScript("arguments[0].scrollIntoView({behavior: 'auto', block: 'center', inline: 'center'});", element);
+        }
     }
-
-
 
     /** Scroll to the top of webpage */
     public void scrollToTop() {
@@ -149,6 +156,24 @@ public class PageModelBase {
         fluentWait(seconds, 1).until(ExpectedConditions.not(ExpectedConditions.stalenessOf(element)));
         sleep((long) 500);
         logger().traceExit();
+    }
+
+    public void retryFindElements(List<WebElement> elements, int retryCount, int seconds, int index) throws InterruptedException {
+        retryCount = 0;
+        while (retryCount < 3) {
+            System.out.println("retryCount: " + retryCount);
+            try {
+                // Re-find the cards element to refresh the reference
+                fluentWait(seconds, 1).until(ExpectedConditions.visibilityOf(elements.get(index)));
+
+                break; // Break the loop if element is found without a stale exception
+            } catch (StaleElementReferenceException e) {
+                // Wait for a short duration before retrying
+                Thread.sleep(1000);
+
+                retryCount++;
+            }
+        }
     }
 
     public void waitForVisibility(WebElement element, int seconds) {

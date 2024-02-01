@@ -169,7 +169,7 @@ public class JiraObjects{
         String sprintId = getSprintId();
 
         //Return the xpath
-        return advanceSprintXpath + "//div[contains(@data-testid, 'software-backlog.card-list.id-"+sprintId+"')]/div/div";
+        return advanceSprintXpath + "//div[contains(@data-testid, 'software-backlog.card-list.id-"+sprintId+"')]/div/div["+position+"]";
     }
 
     public List<WebElement> cardElements(){
@@ -216,15 +216,23 @@ public class JiraObjects{
         return extractedCardStoryPoints;
     }
 
-    public List<WebElement> getCardTester(){
-        //Get the sprint id by calling the getSprint() method
-        String sprintId = getSprintId();
-        String perCard =  advanceSprintXpath + "//div[contains(@data-testid, 'software-backlog.card-list.id-"+sprintId+"')]/div/div";
+//    public List<WebElement> getCardTester(){
+//        //Get the sprint id by calling the getSprint() method
+//        String sprintId = getSprintId();
+//        String perCard =  advanceSprintXpath + "//div[contains(@data-testid, 'software-backlog.card-list.id-"+sprintId+"')]/div/div";
+//
+//        List<WebElement> cardTester = driver.findElements
+//                (By.xpath(perCard + perCardTester));
+//
+//        return cardTester;
+//    }
 
-        List<WebElement> cardTester = driver.findElements
-                (By.xpath(perCard + perCardTester));
+    public String getCardTester(int position){
+        String perCard = perCard(position);
+        WebElement cardTester = new WebDriverWait(driver, 20)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + perCardTester)));
 
-        return cardTester;
+        return cardTester.getText();
     }
 
     public Boolean isTesterNull(int position){
@@ -345,11 +353,12 @@ public class JiraObjects{
     public String buildResultContent(String extractedCardNumber, String extractedCardTitle,
                                      String extractedCardTester, String extractedCardAssignee,
                                      String extractedCardStatus, String extractedCardSP,
-                                     String testCasesStatus, String testRunsStatus) {
+                                     int subTasksCount, String testCasesStatus, String testRunsStatus) {
         //⚠ \u2139\ufe0f
         return "\u2139\ufe0f (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                 "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                 "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
+                "•Subtask: "  + subTasksCount + "\n" +
                 "- Test Cases: " + testCasesStatus + "\n" + "- Test Runs: " + testRunsStatus + "\n\n";
     }
 
