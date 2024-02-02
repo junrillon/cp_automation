@@ -136,6 +136,8 @@ public class JiraObjects{
     public String subTaskShowIcon = "//button[contains(@aria-label, 'Show subtasks')]";
     public String subTaskHideIcon = "//button[contains(@aria-label, 'Hide subtasks')]";
 
+    public String subTasks = "/following-sibling::div[position() >= 1 and position() <= 1]/div/div[%d]" +
+            "//div[@data-testid='software-backlog.card-list.card.card-contents.card-container']";
 
     public String getSprintId() {
         WebElement sprintHeader = new WebDriverWait(driver, 20)
@@ -353,7 +355,7 @@ public class JiraObjects{
     public String buildResultContent(String extractedCardNumber, String extractedCardTitle,
                                      String extractedCardTester, String extractedCardAssignee,
                                      String extractedCardStatus, String extractedCardSP,
-                                     int subTasksCount, String testCasesStatus, String testRunsStatus) {
+                                     String subTasksCount, String testCasesStatus, String testRunsStatus) {
         //⚠ \u2139\ufe0f
         return "\u2139\ufe0f (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                 "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
@@ -397,6 +399,51 @@ public class JiraObjects{
         return subtaskCards;
     }
 
+
+    public String perSubTask(int position, int subTaskIndex){
+        String perCard = perCard(position);
+        String subTaskCardPosition = String.format(subTasks, subTaskIndex);
+
+
+        return perCard + subTaskCardPosition;
+    }
+
+    public String getSubTaskTester(int position, int subTaskIndex){
+        String perCard = perCard(position);
+        String subTaskCardPosition = String.format(subTasks, subTaskIndex);
+
+        WebElement cardTester = new WebDriverWait(driver, 20)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + subTaskCardPosition + perCardTester)));
+
+        return cardTester.getText();
+    }
+
+    public String getSubTaskStoryPoints(int position, int subTaskIndex){
+        String perCard = perCard(position);
+        String subTaskCardPosition = String.format(subTasks, subTaskIndex);
+
+        WebElement cardStoryPoints = new WebDriverWait(driver, 20)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + subTaskCardPosition + perCardStoryPoints)));
+
+        return cardStoryPoints.getText();
+    }
+
+    public String getSubTaskAssignee(int position, int subTaskIndex){
+        String perCard = perCard(position);
+        String subTaskCardPosition = String.format(subTasks, subTaskIndex);
+
+        WebElement cardAssignee = new WebDriverWait(driver, 20)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + subTaskCardPosition + perCardAssignee)));
+
+        String extractedCardAssignee = cardAssignee.getAttribute("alt");
+
+        if (extractedCardAssignee != null && !extractedCardAssignee.isEmpty()) {
+            return extractedCardAssignee;
+        } else {
+            return "Assignee: None";
+        }
+    }
+
     public void getSubTasksCount(int position){
         boolean hasSubTasks = hasSubTasks(position);
 
@@ -408,9 +455,5 @@ public class JiraObjects{
 
             hideSubtasks(position);
         }
-
-
     }
-
-
 }
