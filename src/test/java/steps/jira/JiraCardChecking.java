@@ -286,23 +286,69 @@ public class JiraCardChecking {
 
                         for(int subTaskIndex = 0; subTaskIndex < subTasksCount; subTaskIndex++){
                             //WebElement init for Card, scrollIntoView, then click
-                            WebElement subTasksCards = wait.until(ExpectedConditions.visibilityOf(subTaskCardElements.get(subTaskIndex)));
-                            baseAction.scrollIntoView1(subTasksCards);
+                            //WebElement subTasksCards = wait.until(ExpectedConditions.visibilityOf(subTaskCardElements.get(subTaskIndex)));
+                            //baseAction.scrollIntoView1(subTasksCards);
 
                             int x = subTaskIndex + 1;
 
                             WebElement subCard = wait.until(ExpectedConditions.visibilityOfElementLocated
                                     (By.xpath(jiraObjects.perSubTask(cardIndex, x))));
+
+                            baseAction.scrollIntoView1(subCard);
                             baseAction.clickButton(subCard);
 
-                            String subTaskTester = jiraObjects.getSubTaskTester(cardIndex, x);
-                            System.out.println("subTaskTester: " + subTaskTester);
+                            //Wait for the card detailed view to be visible
+                            wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
 
-                            String subTaskStoryPoints = jiraObjects.getSubTaskStoryPoints(cardIndex, x);
-                            System.out.println("subTaskStoryPoints: " + subTaskStoryPoints);
+                            //Get the card number
+                            extractedCardNumber = jiraObjects.getCardNumber();
 
-                            String subTaskAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
-                            System.out.println("subTaskAssignee: " + subTaskAssignee);
+                            //Get card title
+                            extractedCardTitle = jiraObjects.getCardTitle();
+
+                            extractedCardStatus = jiraObjects.getSubTaskStatus(cardIndex, x);
+                            System.out.println("subTaskStatus: " + extractedCardStatus);
+
+                            extractedCardTester = jiraObjects.getSubTaskTester(cardIndex, x);
+
+                            //format the extracted tester for preparation for telegram message
+                            extractedCardTester = jiraObjects.getFormattedTester(extractedCardTester);
+                            System.out.println("subTaskTester: " + extractedCardTester);
+
+                            extractedCardSP = jiraObjects.getSubTaskStoryPoints(cardIndex, x);
+                            System.out.println("subTaskStoryPoints: " + extractedCardSP);
+
+                            extractedCardAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
+                            System.out.println("subTaskAssignee: " + extractedCardAssignee + "\n");
+
+                            //Scroll into TestRail: Cases in detailed card view
+                            baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+                            baseAction.clickButton(jiraObjects.testCases);
+
+                            //Switch to iframes (testcases iframe 1 and 2)
+                            baseAction.switchToFrame(jiraObjects.tcIframe1);
+                            baseAction.switchToFrame(jiraObjects.tcIframe2);
+
+                            //Check if the card has test cases
+                            testCasesStatus = jiraObjects.getTestCasesStatus();
+
+                            //Switch back to default frame
+                            driver.switchTo().defaultContent();
+                            baseAction.clickButton(jiraObjects.testCasesBack);
+                            baseAction.clickButton(jiraObjects.testRuns);
+
+                            //Switch to iframes
+                            baseAction.switchToFrame(jiraObjects.trIframe1);
+                            baseAction.switchToFrame(jiraObjects.trIframe2);
+
+                            //Check if the card has test cases
+                            testRunsStatus = jiraObjects.getTestRunsStatus();
+
+                            driver.switchTo().defaultContent();
+                            baseAction.clickButton(jiraObjects.testRunsBack);
+
+                            System.out.println("testCasesStatus: " + testCasesStatus + "\n" +
+                                    "testRunsStatus: " + testRunsStatus + "\n");
 
                         }
 

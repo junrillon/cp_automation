@@ -408,6 +408,17 @@ public class JiraObjects{
         return perCard + subTaskCardPosition;
     }
 
+    public String getSubTaskStatus(int position, int subTaskIndex){
+        String perCard = perCard(position);
+        String subTaskCardPosition = String.format(subTasks, subTaskIndex);
+
+        WebElement cardStatus = new WebDriverWait(driver, 20)
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + subTaskCardPosition + perCardStatus)));
+
+        return cardStatus.getText();
+    }
+
+
     public String getSubTaskTester(int position, int subTaskIndex){
         String perCard = perCard(position);
         String subTaskCardPosition = String.format(subTasks, subTaskIndex);
