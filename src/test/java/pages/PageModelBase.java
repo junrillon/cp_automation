@@ -5,6 +5,7 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.apache.poi.ss.usermodel.*;
 import org.junit.Assert;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
@@ -343,6 +344,10 @@ public class PageModelBase {
         try {
             // Wait for the element to be visible and clickable
             wait.until(ExpectedConditions.visibilityOf(element));
+
+            //JavascriptExecutor executor = (JavascriptExecutor) driver;
+            //executor.executeScript("arguments[0].click();", element);
+
             wait.until(ExpectedConditions.elementToBeClickable(element)).click();
 
         } catch (NoSuchElementException e) {
@@ -354,6 +359,13 @@ public class PageModelBase {
         }
     }
 
+    public  void performClick(WebElement element) {
+        Actions action = new Actions(driver);
+        action.moveToElement(element)
+                .moveByOffset(0, 0)
+                .click()
+                .perform();
+    }
     public List<String[]> readDataFromCSV(String filePath) {
         List<String[]> data = new ArrayList<>();
 

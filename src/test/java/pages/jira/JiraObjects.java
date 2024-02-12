@@ -1,6 +1,7 @@
 package pages.jira;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.CacheLookup;
@@ -127,10 +128,9 @@ public class JiraObjects{
     public String issueCountXpath = "//div[contains(text(), '(') and contains(normalize-space(.), ' issues')]";
     public String sprintNumberXpath = "//div[contains(text(),'Sprint')]";
     public String perCardStoryPoints = "//span[contains(@data-testid, 'issue-field-number.ui.badge')]/span";
-    public String perCardAssignee = "//img[contains(@alt, 'Assignee')]"; // <-- get Alt
+    public String perCardAssignee = "//span[@id[contains(., 'avatar-label')]]"; // <-- get Alt
     public String perCardTester = "//div[contains(@aria-label, 'Tester')]";
     public String perCardStatus = "//div[contains(@aria-label, 'Status')]";
-
 
     public String subTaskIcon = "//span[@role='img' and @aria-label='subatskIcon']";
     public String subTaskShowIcon = "//button[contains(@aria-label, 'Show subtasks')]";
@@ -249,17 +249,23 @@ public class JiraObjects{
     public String getCardAssignee(int position){
         String perCard = perCard(position);
 
-        WebElement cardAssignee = new WebDriverWait(driver, 20)
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + perCardAssignee)));
+        try {
+            List<WebElement> assignee = driver.findElements(By.xpath(perCard + perCardAssignee));
+            String extractedCardAssignee = assignee.get(0).getAttribute("innerHTML");
+            System.out.println("Card Assignee: " + extractedCardAssignee);
 
-        String extractedCardAssignee = cardAssignee.getAttribute("alt");
-        System.out.println("Card Assignee: " + extractedCardAssignee);
+            if (!extractedCardAssignee.equals("Unassigned")) {
+                extractedCardAssignee = extractedCardAssignee.replace("Assignee: ", "");
 
-        if (extractedCardAssignee != null && !extractedCardAssignee.isEmpty()) {
-            return extractedCardAssignee;
-        } else {
-            return "Assignee: None";
+                return extractedCardAssignee;
+            } else {
+                return "Assignee: Unassigned";
+            }
+        } catch (TimeoutException e){
+            System.out.println("Card Assignee: Unassigned");
+            return "Assignee: Unassigned";
         }
+
     }
 
     public Boolean isAssigneeNull(int position){
@@ -297,20 +303,14 @@ public class JiraObjects{
         WebElement cardNumber = new WebDriverWait(driver, 20)
                 .until(ExpectedConditions.visibilityOf(detailedViewCardNumber));
 
-        String extractedCardNumber = cardNumber.getText();
-        System.out.println("Card Number: " + extractedCardNumber);
-
-        return extractedCardNumber;
+        return cardNumber.getText();
     }
 
     public String getCardTitle(){
         WebElement cardTitle = new WebDriverWait(driver, 20)
                 .until(ExpectedConditions.visibilityOf(detailedViewCardTitle));
 
-        String extractedCardTitle = cardTitle.getText();
-        System.out.println("Card Title: " + extractedCardTitle);
-
-        return extractedCardTitle;
+        return cardTitle.getText();
     }
 
     public String getCardIssueType(){
@@ -404,7 +404,6 @@ public class JiraObjects{
         String perCard = perCard(position);
         String subTaskCardPosition = String.format(subTasks, subTaskIndex);
 
-
         return perCard + subTaskCardPosition;
     }
 
@@ -443,15 +442,21 @@ public class JiraObjects{
         String perCard = perCard(position);
         String subTaskCardPosition = String.format(subTasks, subTaskIndex);
 
-        WebElement cardAssignee = new WebDriverWait(driver, 20)
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + subTaskCardPosition + perCardAssignee)));
+        try {
+            List<WebElement> assignee = driver.findElements(By.xpath(perCard + subTaskCardPosition + perCardAssignee));
+            String extractedCardAssignee = assignee.get(0).getAttribute("innerHTML");
+            System.out.println("Card Assignee: " + extractedCardAssignee);
 
-        String extractedCardAssignee = cardAssignee.getAttribute("alt");
+            if (!extractedCardAssignee.equals("Unassigned")) {
+                extractedCardAssignee = extractedCardAssignee.replace("Assignee: ", "");
 
-        if (extractedCardAssignee != null && !extractedCardAssignee.isEmpty()) {
-            return extractedCardAssignee;
-        } else {
-            return "Assignee: None";
+                return extractedCardAssignee;
+            } else {
+                return "Assignee: Unassigned";
+            }
+        } catch (TimeoutException e){
+            System.out.println("Card Assignee: Unassigned");
+            return "Assignee: Unassigned";
         }
     }
 

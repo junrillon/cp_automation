@@ -24,13 +24,16 @@ public class JiraCardChecking {
 
     private final WebDriver driver;
     private final PageModelBase baseAction;
+    private final JiraObjects jiraObjects;
 
     public JiraCardChecking (Driver driver){
         this.driver = driver.get();
+        this.jiraObjects = new JiraObjects(this.driver);
         this.baseAction = new PageModelBase(this.driver);
     }
 
     ArrayList<ArrayList<StringBuilder>> resultContainer = new ArrayList<ArrayList<StringBuilder>>(); // Initialize the outer array
+    StringBuilder resultContent;
     int maxInnerArraySize = 5;
     String futureSprint;
 
@@ -188,31 +191,30 @@ public class JiraCardChecking {
 
     @When("I check cards in future sprint")
     public void iCheckCardsInFutureSprint() throws InterruptedException {
-        JiraObjects jiraObjects = new JiraObjects(driver);
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
         String testCasesStatus;
         String testRunsStatus;
-
 
         // Create an array to store the extracted text and iteration count
         List<String> extractedCardNumbers = new ArrayList<>();
 
         // Find the elements and get their count
         List<WebElement> mainCardElements = jiraObjects.cardElements();
-        int converted_issueCount = mainCardElements.size();
-        System.out.println("converted_issueCount: " + converted_issueCount);
+        int convertedIssueCount = mainCardElements.size();
+        System.out.println("converted_issueCount: " + convertedIssueCount);
 
         System.out.println("Checking each card...");
-        if(converted_issueCount > 0){
-            for (int i = 10; i < converted_issueCount; i++) {
-                //WebElement init for Card, scrollIntoView, then click
+        if(convertedIssueCount > 0){
+            for (int i = 0; i < convertedIssueCount; i++) {
+                //WebElement init for Cards, scrollIntoView, then click
                 WebElement cards = wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(i)));
                 baseAction.scrollIntoView1(cards);
 
                 int subTasksCount = 0;
                 int cardIndex = i + 1;
 
+                //WebElement init for Card, then click
                 WebElement card = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(jiraObjects.perCard(cardIndex))));
                 baseAction.clickButton(card);
 
@@ -246,6 +248,7 @@ public class JiraCardChecking {
                     extractedCardTester = jiraObjects.getFormattedTester(extractedCardTester);
 
                     //Get the card assignee
+                    card.click();
                     String extractedCardAssignee = jiraObjects.getCardAssignee(cardIndex);
 
                     //Scroll into TestRail: Cases in detailed card view
@@ -274,112 +277,8 @@ public class JiraCardChecking {
                     driver.switchTo().defaultContent();
                     baseAction.clickButton(jiraObjects.testRunsBack);
 
-                    boolean hasSubTask = jiraObjects.hasSubTasks(cardIndex);
-                    if(hasSubTask){
-                        //Show subTasks
-                        jiraObjects.showSubtasks(cardIndex);
-
-                        // Find the elements and get their count
-                        List<WebElement> subTaskCardElements = jiraObjects.subTaskCards(cardIndex);
-                        subTasksCount = jiraObjects.subTaskCards(cardIndex).size();
-                        System.out.println("Count: " + subTasksCount);
-
-                        for(int subTaskIndex = 0; subTaskIndex < subTasksCount; subTaskIndex++){
-                            //WebElement init for Card, scrollIntoView, then click
-                            //WebElement subTasksCards = wait.until(ExpectedConditions.visibilityOf(subTaskCardElements.get(subTaskIndex)));
-                            //baseAction.scrollIntoView1(subTasksCards);
-
-                            int x = subTaskIndex + 1;
-
-                            WebElement subCard = wait.until(ExpectedConditions.visibilityOfElementLocated
-                                    (By.xpath(jiraObjects.perSubTask(cardIndex, x))));
-
-                            baseAction.scrollIntoView1(subCard);
-                            baseAction.clickButton(subCard);
-
-                            //Wait for the card detailed view to be visible
-                            wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
-
-                            //Get the card number
-                            extractedCardNumber = jiraObjects.getCardNumber();
-
-                            //Get card title
-                            extractedCardTitle = jiraObjects.getCardTitle();
-
-                            extractedCardStatus = jiraObjects.getSubTaskStatus(cardIndex, x);
-                            System.out.println("subTaskStatus: " + extractedCardStatus);
-
-                            extractedCardTester = jiraObjects.getSubTaskTester(cardIndex, x);
-
-                            //format the extracted tester for preparation for telegram message
-                            extractedCardTester = jiraObjects.getFormattedTester(extractedCardTester);
-                            System.out.println("subTaskTester: " + extractedCardTester);
-
-                            extractedCardSP = jiraObjects.getSubTaskStoryPoints(cardIndex, x);
-                            System.out.println("subTaskStoryPoints: " + extractedCardSP);
-
-                            extractedCardAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
-                            System.out.println("subTaskAssignee: " + extractedCardAssignee + "\n");
-
-                            //Scroll into TestRail: Cases in detailed card view
-                            baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
-                            baseAction.clickButton(jiraObjects.testCases);
-
-                            //Switch to iframes (testcases iframe 1 and 2)
-                            baseAction.switchToFrame(jiraObjects.tcIframe1);
-                            baseAction.switchToFrame(jiraObjects.tcIframe2);
-
-                            //Check if the card has test cases
-                            testCasesStatus = jiraObjects.getTestCasesStatus();
-
-                            //Switch back to default frame
-                            driver.switchTo().defaultContent();
-                            baseAction.clickButton(jiraObjects.testCasesBack);
-                            baseAction.clickButton(jiraObjects.testRuns);
-
-                            //Switch to iframes
-                            baseAction.switchToFrame(jiraObjects.trIframe1);
-                            baseAction.switchToFrame(jiraObjects.trIframe2);
-
-                            //Check if the card has test cases
-                            testRunsStatus = jiraObjects.getTestRunsStatus();
-
-                            driver.switchTo().defaultContent();
-                            baseAction.clickButton(jiraObjects.testRunsBack);
-
-                            System.out.println("testCasesStatus: " + testCasesStatus + "\n" +
-                                    "testRunsStatus: " + testRunsStatus + "\n");
-
-                        }
-
-                        //Hide subTasks
-                        jiraObjects.hideSubtasks(cardIndex);
-
-                        // Retry finding the cards element in case of stale element exception
-                        int retryCount = 0;
-                        while (retryCount < 3) {
-                            try {
-                                // Re-find the cards element to refresh the reference
-                                mainCardElements = jiraObjects.cardElements();
-                                wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(i)));
-
-                                // Break the loop if element is found without stale exception
-                                break;
-                            } catch (StaleElementReferenceException e) {
-                                // Wait for a short duration before retrying
-                                Thread.sleep(1000);
-
-                                // Re-find the cards element to refresh the reference
-                                mainCardElements = jiraObjects.cardElements();
-                                wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(i)));
-
-                                retryCount++;
-                            }
-                        }
-                    }
-
                     //Extracted card details are assigned to resultContent variable
-                    StringBuilder resultContent = new StringBuilder((jiraObjects.buildResultContent(extractedCardNumber, extractedCardTitle,
+                    resultContent = new StringBuilder((jiraObjects.buildResultContent(extractedCardNumber, extractedCardTitle,
                             extractedCardTester, extractedCardAssignee, extractedCardStatus, extractedCardSP, String.valueOf(subTasksCount), testCasesStatus, testRunsStatus)));
 
                     //Call the processResultContainer() method, to check if the result is need to add in the telegram message
@@ -389,16 +288,40 @@ public class JiraCardChecking {
                     System.out.println(cardIndex + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                             "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                             "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
-                            "•Subtask: "  + subTasksCount + "\n" +
                             "─ Test Cases: " + testCasesStatus + "\n" + "─ Test Runs: " + testRunsStatus + "\n");
 
                     //Format the extracted card numbers and add it to the extractedCardNumbers array
                     String flag = String.format("Card Number: %s, Count: %d", extractedCardNumber, i + 1);
                     extractedCardNumbers.add(flag);
 
+                    //Call processSubTasks() method
+                    processSubTasks(cardIndex);
+
+                    int retryCount = 0;
+                    while (retryCount < 3) {
+                        try {
+                            // Re-find the cards element to refresh the reference
+                            mainCardElements = jiraObjects.cardElements();
+                            wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(i)));
+
+                            // Break the loop if element is found without stale exception
+                            break;
+                        } catch (StaleElementReferenceException e) {
+                            // Wait for a short duration before retrying
+                            Thread.sleep(1000);
+
+                            // Re-find the cards element to refresh the reference
+                            mainCardElements = jiraObjects.cardElements();
+                            wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(i)));
+
+                            retryCount++;
+                        }
+                    }
+
+
                 } else {
                     // Scroll to the next element if it exists
-                    if (i < converted_issueCount - 1) {
+                    if (i < convertedIssueCount - 1) {
                         WebElement nextElement = mainCardElements.get(i + 1);
                         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", nextElement);
                     }
@@ -470,6 +393,124 @@ public class JiraCardChecking {
                 // Otherwise, add the element to the last inner array
                 resultContainer.get(resultContainer.size() - 1).add(resultContent);
             }
+        }
+    }
+
+    public void processSubTasks(int cardIndex) {
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        boolean hasSubTask = jiraObjects.hasSubTasks(cardIndex);
+        if (hasSubTask) {
+            // Show subTasks
+            jiraObjects.showSubtasks(cardIndex);
+
+            // Find the elements and get their count
+            List<WebElement> subTaskCardElements = jiraObjects.subTaskCards(cardIndex);
+            int subTasksCount = subTaskCardElements.size();
+            System.out.println("Count: " + subTasksCount);
+
+            for (int subTaskIndex = 0; subTaskIndex < subTasksCount; subTaskIndex++) {
+                int x = subTaskIndex + 1;
+
+                WebElement subCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(jiraObjects.perSubTask(cardIndex, x))));
+                baseAction.scrollIntoView1(subCard);
+                baseAction.clickButton(subCard);
+
+                // Wait for the card detailed view to be visible
+                wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
+
+                // Get subTask card number
+                String extractedCardNumber = jiraObjects.getCardNumber();
+
+                // Get subTask card title
+                String extractedCardTitle = jiraObjects.getCardTitle();
+
+                // Get subTask card status
+                String extractedCardStatus = jiraObjects.getSubTaskStatus(cardIndex, x);
+
+                // Get subTask card tester
+                String extractedCardTester = jiraObjects.getSubTaskTester(cardIndex, x);
+                extractedCardTester = jiraObjects.getFormattedTester(extractedCardTester);
+
+                // Get subTask card story points
+                String extractedCardSP = jiraObjects.getSubTaskStoryPoints(cardIndex, x);
+
+                // Get subTask card assignee
+                baseAction.clickButton(subCard);
+                String extractedCardAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
+
+                // Scroll into TestRail: Cases in detailed card view
+                baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+                baseAction.clickButton(jiraObjects.testCases);
+
+                // Switch to iframes (testcases iframe 1 and 2)
+                baseAction.switchToFrame(jiraObjects.tcIframe1);
+                baseAction.switchToFrame(jiraObjects.tcIframe2);
+
+                // Check if the card has test cases
+                String testCasesStatus = jiraObjects.getTestCasesStatus();
+
+                // Switch back to default frame
+                driver.switchTo().defaultContent();
+                baseAction.clickButton(jiraObjects.testCasesBack);
+                baseAction.clickButton(jiraObjects.testRuns);
+
+                // Switch to iframes
+                baseAction.switchToFrame(jiraObjects.trIframe1);
+                baseAction.switchToFrame(jiraObjects.trIframe2);
+
+                // Check if the card has test runs
+                String testRunsStatus = jiraObjects.getTestRunsStatus();
+
+                // Switch to default frame then click back
+                driver.switchTo().defaultContent();
+                baseAction.clickButton(jiraObjects.testRunsBack);
+
+                // Extracted card details are assigned to resultContent variable
+                StringBuilder resultContent = new StringBuilder(jiraObjects.buildResultContent(extractedCardNumber, extractedCardTitle,
+                        extractedCardTester, extractedCardAssignee, extractedCardStatus, extractedCardSP,
+                        Integer.toString(subTasksCount), testCasesStatus, testRunsStatus));
+
+                // Call the processResultContainer() method, to check if the result needs to be added to the telegram message
+                processResultContainer(testCasesStatus, testRunsStatus, extractedCardSP, resultContent);
+
+                // Display the result in the log
+                System.out.println(x + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
+                        "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
+                        "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
+                        "•Subtask: "  + subTasksCount + "\n" +
+                        "─ Test Cases: " + testCasesStatus + "\n" + "─ Test Runs: " + testRunsStatus + "\n");
+            }
+
+            // Hide subTasks
+            jiraObjects.hideSubtasks(cardIndex);
+        }
+    }
+
+    public void retryFindMainCardElement(JiraObjects jiraObjects, int index) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+
+        int retryCount = 0;
+        List<WebElement> mainCardElements = null;
+
+        while (retryCount < 3) {
+            try {
+                // Re-find the cards element to refresh the reference
+                mainCardElements = jiraObjects.cardElements();
+                wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(index)));
+
+                // Break the loop if element is found without a stale exception
+                break;
+            } catch (StaleElementReferenceException e) {
+                // Wait for a short duration before retrying
+                Thread.sleep(1000);
+
+                retryCount++;
+            }
+        }
+
+        if (mainCardElements == null) {
+            throw new NoSuchElementException("Failed to find main card element.");
         }
     }
 }

@@ -1,17 +1,16 @@
 package steps;
 
-import engine.Driver;
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.*;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class Screenshot {
 
@@ -59,11 +58,6 @@ public class Screenshot {
 
         // Close WebDriver
         driver.quit();
-
-
-
-
-
 
     }
 
