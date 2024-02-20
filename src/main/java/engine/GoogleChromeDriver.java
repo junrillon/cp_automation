@@ -52,6 +52,9 @@ public class GoogleChromeDriver extends ChromeDriver {
         try {
             exe = File.createTempFile("chromedriver", osName.contains("win") ? ".exe" : "");
             FileUtils.copyInputStreamToFile(is, exe);
+
+            // Set executable permission
+            exe.setExecutable(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
