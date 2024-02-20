@@ -146,6 +146,8 @@ public class JiraCardChecking {
         //check testcases element inside detailed view then click
         wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
         baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+
+        System.out.println("#5");
         baseAction.clickButton(jiraObjects.testCases);
 
         //Switch to iframes (testcases iframe 1 and 2)
@@ -157,6 +159,8 @@ public class JiraCardChecking {
         if(loginToTestrail > 0){
             System.out.println("Not yet logged in on testrail.");
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.loginToTestRailButton));
+
+            System.out.println("#6");
             jiraObjects.loginToTestRailButton.click();
 
             for(String winHandle : driver.getWindowHandles()){
@@ -169,6 +173,7 @@ public class JiraCardChecking {
             wait.until(ExpectedConditions.visibilityOf(testRailPage.password));
             testRailPage.password.sendKeys(password);
 
+            System.out.println("#7");
             wait.until(ExpectedConditions.elementToBeClickable(testRailPage.loginButton));
             testRailPage.loginButton.click();
 
@@ -190,6 +195,7 @@ public class JiraCardChecking {
             //Switch back to default frame
             driver.switchTo().defaultContent();
             baseAction.clickButton(jiraObjects.testCasesBack);
+            System.out.println("#8");
         }
 
     }
