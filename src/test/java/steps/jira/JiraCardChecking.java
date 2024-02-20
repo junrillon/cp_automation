@@ -288,6 +288,7 @@ public class JiraCardChecking {
                     System.out.println(cardIndex + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                             "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                             "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
+                            "•Subtask: "  + subTasksCount + "\n" +
                             "─ Test Cases: " + testCasesStatus + "\n" + "─ Test Runs: " + testRunsStatus + "\n");
 
                     //Format the extracted card numbers and add it to the extractedCardNumbers array
@@ -297,6 +298,8 @@ public class JiraCardChecking {
                     //Call processSubTasks() method
                     processSubTasks(cardIndex);
 
+                    // Refind the card elements
+                    //retryFindMainCardElements(wait, mainCardElements, 5, i);
                     int retryCount = 0;
                     while (retryCount < 3) {
                         try {
@@ -317,8 +320,6 @@ public class JiraCardChecking {
                             retryCount++;
                         }
                     }
-
-
                 } else {
                     // Scroll to the next element if it exists
                     if (i < convertedIssueCount - 1) {
@@ -469,7 +470,7 @@ public class JiraCardChecking {
                 // Extracted card details are assigned to resultContent variable
                 StringBuilder resultContent = new StringBuilder(jiraObjects.buildResultContent(extractedCardNumber, extractedCardTitle,
                         extractedCardTester, extractedCardAssignee, extractedCardStatus, extractedCardSP,
-                        Integer.toString(subTasksCount), testCasesStatus, testRunsStatus));
+                        "0", testCasesStatus, testRunsStatus));
 
                 // Call the processResultContainer() method, to check if the result needs to be added to the telegram message
                 processResultContainer(testCasesStatus, testRunsStatus, extractedCardSP, resultContent);
@@ -478,7 +479,7 @@ public class JiraCardChecking {
                 System.out.println(x + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                         "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                         "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
-                        "•Subtask: "  + subTasksCount + "\n" +
+                        "•Subtask: 0 \n" +
                         "─ Test Cases: " + testCasesStatus + "\n" + "─ Test Runs: " + testRunsStatus + "\n");
             }
 
@@ -487,30 +488,20 @@ public class JiraCardChecking {
         }
     }
 
-    public void retryFindMainCardElement(JiraObjects jiraObjects, int index) throws InterruptedException {
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-
+    public void retryFindMainCardElements(WebDriverWait wait, List<WebElement> elements, int maxRetryCount, int index) throws InterruptedException {
         int retryCount = 0;
-        List<WebElement> mainCardElements = null;
 
-        while (retryCount < 3) {
+        while (retryCount < maxRetryCount) {
             try {
                 // Re-find the cards element to refresh the reference
-                mainCardElements = jiraObjects.cardElements();
-                wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(index)));
+                wait.until(ExpectedConditions.visibilityOf(elements.get(index)));
 
-                // Break the loop if element is found without a stale exception
-                break;
+                break; // Break the loop if element is found without a stale exception
             } catch (StaleElementReferenceException e) {
-                // Wait for a short duration before retrying
-                Thread.sleep(1000);
+                Thread.sleep(1000); // Wait for a short duration before retrying
 
                 retryCount++;
             }
-        }
-
-        if (mainCardElements == null) {
-            throw new NoSuchElementException("Failed to find main card element.");
         }
     }
 }
