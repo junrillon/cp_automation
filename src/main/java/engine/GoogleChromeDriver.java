@@ -31,7 +31,7 @@ public class GoogleChromeDriver extends ChromeDriver {
         options.setCapability("ignoreZoomSetting", true);
         options.setCapability("requireWindowFocus", false);
         options.setCapability("enablePersistentHover", false);
-        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, "executable/linux/chromedriver");
+        System.setProperty(ChromeDriverService.CHROME_DRIVER_EXE_PROPERTY, getExecutable());
         return options;
     }
 
