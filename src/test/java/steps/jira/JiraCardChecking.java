@@ -122,6 +122,8 @@ public class JiraCardChecking {
 
         String oldTab = driver.getWindowHandle();
 
+        System.out.println("#1");
+
         //Wait for the future sprint to be visible
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(jiraObjects.advanceSprintXpath)));
 
@@ -129,10 +131,15 @@ public class JiraCardChecking {
         WebElement firstCard = wait.until(ExpectedConditions.visibilityOfElementLocated
                 (By.xpath(jiraObjects.firstCard())));
 
+        System.out.println("#2");
+
         //Scroll into the element then click
         baseAction.scrollIntoView(firstCard);
+
+        System.out.println("#3");
         baseAction.clickButton(firstCard);
 
+        System.out.println("#4");
         //Wait for the card detailed view to be visible
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
 
