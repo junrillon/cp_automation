@@ -58,6 +58,7 @@ task jirachecker(type: JavaExec) {
     dependsOn assemble, testClasses
     mainClass = "steps.CucumberLauncher"
     classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    systemProperty 'webdriver.chrome.driver', 'src/main/resources/executable/chromedriver'
     args = [
             '--plugin', 'pretty',
             '--plugin', 'html:build/cucumber-report.html',
