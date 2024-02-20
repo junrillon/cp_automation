@@ -59,22 +59,8 @@ task jirachecker(type: JavaExec) {
     dependsOn assemble, testClasses
     mainClass = "steps.CucumberLauncher"
     classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    System.setProperty('webdriver.chrome.driver', 'src/main/resources/executable/linux/chromedriver')
 
-    doFirst {
-        String osName = System.getProperty('os.name').toLowerCase()
-        String chromeDriverPath
-
-        if (osName.contains('win')) {
-            chromeDriverPath = 'src/main/resources/executable/win/chromedriver.exe'
-        } else if (osName.contains('nix') || osName.contains('nux') || osName.contains('mac')) {
-            chromeDriverPath = 'src/main/resources/executable/linux/chromedriver'
-        } else {
-            throw new GradleException("Unsupported operating system: $osName")
-        }
-
-        // Set the system property for ChromeDriver using the appropriate path
-        System.setProperty('webdriver.chrome.driver', chromeDriverPath)
-    }
     args = [
             '--plugin', 'pretty',
             '--plugin', 'html:build/cucumber-report.html',
