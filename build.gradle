@@ -59,17 +59,19 @@ task jirachecker(type: JavaExec) {
     dependsOn assemble, testClasses
     mainClass = "steps.CucumberLauncher"
     classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+
     doFirst {
         // Set the system property for ChromeDriver using WebDriverManager
-        System.setProperty('webdriver.chrome.driver', WebDriverManager.chromedriver().seleniumServerStandaloneJar().getAbsolutePath())
+        def chromeDriverPath = WebDriverManager.chromedriver().seleniumServerStandaloneJar().getAbsolutePath()
+        systemProperty 'webdriver.chrome.driver', chromeDriverPath
     }
+
     args = [
             '--plugin', 'pretty',
             '--plugin', 'html:build/cucumber-report.html',
             '--glue', 'steps',
             '--dir0', 'src/test/resources/jira'
     ]
-
 }
 
 task poolSmokeTesting(type: JavaExec) {
