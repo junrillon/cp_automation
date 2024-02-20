@@ -54,7 +54,7 @@ public class GoogleChromeDriver extends ChromeDriver {
             FileUtils.copyInputStreamToFile(is, exe);
 
             // Set executable permission
-            exe.setExecutable(true);
+            //exe.setExecutable(true);
         } catch (IOException e) {
             e.printStackTrace();
         }
