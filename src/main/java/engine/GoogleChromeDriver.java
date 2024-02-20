@@ -36,17 +36,25 @@ public class GoogleChromeDriver extends ChromeDriver {
     }
 
     private static String getExecutable() {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("executable/win/chromedriver.exe");
+        String osName = System.getProperty("os.name").toLowerCase();
+        String executablePath;
+
+        if (osName.contains("win")) {
+            executablePath = "executable/win/chromedriver.exe";
+        } else if (osName.contains("nix") || osName.contains("nux") || osName.contains("mac")) {
+            executablePath = "executable/linux/chromedriver";
+        } else {
+            throw new UnsupportedOperationException("Unsupported operating system: " + osName);
+        }
+
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(executablePath);
         File exe = null;
         try {
-            exe = File.createTempFile("chromedriver", ".exe");
+            exe = File.createTempFile("chromedriver", osName.contains("win") ? ".exe" : "");
             FileUtils.copyInputStreamToFile(is, exe);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return Objects.requireNonNull(exe).getAbsolutePath();
     }
-
-
-
 }
