@@ -60,9 +60,10 @@ task jirachecker(type: JavaExec) {
     mainClass = "steps.CucumberLauncher"
     classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
 
+    def chromeDriverPath = WebDriverManager.chromedriver().seleniumServerStandaloneJar().getAbsolutePath()
+
     doFirst {
         // Set the system property for ChromeDriver using WebDriverManager
-        def chromeDriverPath = WebDriverManager.chromedriver().seleniumServerStandaloneJar().getAbsolutePath()
         systemProperty 'webdriver.chrome.driver', chromeDriverPath
     }
 
