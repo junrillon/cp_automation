@@ -109,7 +109,7 @@ public class JiraCardChecking {
     }
 
     @When("I check if already logged in on testrail")
-    public void iCheckIfAlreadyLoggedInOnTestrail(DataTable testrailCreds) {
+    public void iCheckIfAlreadyLoggedInOnTestrail(DataTable testrailCreds) throws InterruptedException {
         JiraObjects jiraObjects = new JiraObjects(driver);
         TestRailPage testRailPage = new TestRailPage(driver);
 
@@ -148,15 +148,18 @@ public class JiraCardChecking {
         baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
 
         System.out.println("#5");
+        Thread.sleep(3000);
         baseAction.clickButton(jiraObjects.testCases);
 
         //Switch to iframes (testcases iframe 1 and 2)
         baseAction.switchToFrame(jiraObjects.tcIframe1);
         baseAction.switchToFrame(jiraObjects.tcIframe2);
 
+        System.out.println("#5.1");
         //check if already logged in to testrail
         int loginToTestrail = jiraObjects.loginToTestRail.size();
         if(loginToTestrail > 0){
+            System.out.println("#5.2");
             System.out.println("Not yet logged in on testrail.");
             wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.loginToTestRailButton));
 

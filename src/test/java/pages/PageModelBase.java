@@ -344,10 +344,6 @@ public class PageModelBase {
         try {
             // Wait for the element to be visible and clickable
             wait.until(ExpectedConditions.visibilityOf(element));
-
-            //JavascriptExecutor executor = (JavascriptExecutor) driver;
-            //executor.executeScript("arguments[0].click();", element);
-
             wait.until(ExpectedConditions.elementToBeClickable(element)).click();
 
         } catch (NoSuchElementException e) {
