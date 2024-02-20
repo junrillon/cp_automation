@@ -36,7 +36,7 @@ public class GoogleChromeDriver extends ChromeDriver {
     }
 
     private static String getExecutable() {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("executable/chromedriver.exe");
+        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("executable/win/chromedriver.exe");
         File exe = null;
         try {
             exe = File.createTempFile("chromedriver", ".exe");
