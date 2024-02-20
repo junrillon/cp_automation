@@ -35,6 +35,7 @@ dependencies {
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.5.2'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.28'
     testImplementation 'io.github.bonigarcia:selenium-jupiter:4.3.3'
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.1.1'
     implementation 'org.telegram:telegrambots:6.5.0'
 
     // https://mvnrepository.com/artifact/com.sun.mail/javax.mail
@@ -58,7 +59,10 @@ task jirachecker(type: JavaExec) {
     dependsOn assemble, testClasses
     mainClass = "steps.CucumberLauncher"
     classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
-    systemProperty 'webdriver.chrome.driver', 'src/main/resources/executable/chromedriver'
+    doFirst {
+        // Set the system property for ChromeDriver using WebDriverManager
+        System.setProperty('webdriver.chrome.driver', WebDriverManager.chromedriver().seleniumServerStandaloneJar().getAbsolutePath())
+    }
     args = [
             '--plugin', 'pretty',
             '--plugin', 'html:build/cucumber-report.html',
