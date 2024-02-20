@@ -22,6 +22,9 @@ public class GoogleChromeDriver extends ChromeDriver {
 
     private static ChromeOptions getCaps() {
         ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless"); // Enable headless mode
+        options.addArguments("--no-sandbox"); // Required for running as root user
+        options.addArguments("--disable-dev-shm-usage"); // Avoids issues with /dev/shm size
         options.addArguments("-foreground");
         options.addArguments("start-maximized");
         options.setCapability(CapabilityType.ForSeleniumServer.ENSURING_CLEAN_SESSION, true);
