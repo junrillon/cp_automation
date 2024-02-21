@@ -256,6 +256,7 @@ public class JiraCardChecking {
                     String extractedCardAssignee = jiraObjects.getCardAssignee(cardIndex);
 
                     //Scroll into TestRail: Cases in detailed card view
+                    wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
                     System.out.println("Scroll in Development H2");
                     baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
 
