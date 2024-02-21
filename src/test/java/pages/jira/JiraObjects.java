@@ -405,8 +405,9 @@ public class JiraObjects{
         String perCard = perCard(position);
         String subTaskCardPosition = String.format(subTasks, subTaskIndex);
 
-        WebElement cardStatus = new WebDriverWait(driver, 20)
-                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + subTaskCardPosition + perCardStatus)));
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        WebElement cardStatus = wait.until(ExpectedConditions.visibilityOfElementLocated
+                (By.xpath(perCard + subTaskCardPosition + perCardStatus)));
 
         return cardStatus.getText();
     }

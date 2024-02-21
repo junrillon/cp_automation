@@ -429,7 +429,6 @@ public class JiraCardChecking {
                 String extractedCardNumber = jiraObjects.getCardNumber();
 
                 // Get subTask card title
-                baseAction.clickButton(subCard);
                 String extractedCardTitle = jiraObjects.getCardTitle();
 
                 // Get subTask card status
@@ -437,16 +436,13 @@ public class JiraCardChecking {
                 String extractedCardStatus = jiraObjects.getSubTaskStatus(cardIndex, x);
 
                 // Get subTask card tester
-                baseAction.clickButton(subCard);
                 String extractedCardTester = jiraObjects.getSubTaskTester(cardIndex, x);
                 extractedCardTester = jiraObjects.getFormattedTester(extractedCardTester);
 
                 // Get subTask card story points
-                baseAction.clickButton(subCard);
                 String extractedCardSP = jiraObjects.getSubTaskStoryPoints(cardIndex, x);
 
                 // Get subTask card assignee
-                baseAction.clickButton(subCard);
                 String extractedCardAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
 
                 // Scroll into TestRail: Cases in detailed card view
