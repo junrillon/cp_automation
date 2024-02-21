@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
@@ -23,27 +22,21 @@ public class JiraObjects{
      * Object repository
      */
     @FindBy(how = How.ID, using = "username")
-    @CacheLookup
     public WebElement usernameField;
 
     @FindBy(how = How.ID, using = "password")
-    @CacheLookup
     public WebElement passwordField;
 
     @FindBy(how = How.ID, using = "login-submit")
-    @CacheLookup
     public WebElement loginButton;
 
     @FindBy(how = How.XPATH, using = ".//header[@role='banner']")
-    @CacheLookup
     public WebElement homeBanner;
 
     @FindBy(how = How.XPATH, using = ".//div[@data-testid='home-page-content']")
-    @CacheLookup
     public WebElement homePage;
 
     @FindBy(how = How.XPATH, using = ".//span[contains(text(),'Backlog')]")
-    @CacheLookup
     public WebElement backlog;
 
     @FindBy(how = How.XPATH, using = ".//div[contains(@data-testid, 'software-backlog.detail-view.issue-wrapper.backlog-issue')]")
