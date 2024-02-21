@@ -19,7 +19,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class JiraCardChecking {
 
@@ -138,10 +137,9 @@ public class JiraCardChecking {
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
 
         //check testcases element inside detailed view then click
-        wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
         baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
 
-        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        //driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         baseAction.clickButton(jiraObjects.testCases);
 
         //Switch to iframes (testcases iframe 1 and 2)
@@ -234,6 +232,9 @@ public class JiraCardChecking {
 
                 if (!issueType.equalsIgnoreCase("bug") && !cardNumberExists) {
 
+                    //Get subtasks count
+                    subTasksCount = jiraObjects.subTaskCards(cardIndex).size();
+
                     //Get card status
                     String extractedCardStatus = jiraObjects.getCardStatus(cardIndex);
 
@@ -253,12 +254,10 @@ public class JiraCardChecking {
                     card.click();
                     String extractedCardAssignee = jiraObjects.getCardAssignee(cardIndex);
 
-                    //Scroll into TestRail: Cases in detailed card view
-                    wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
-                    System.out.println("Scroll in Development H2");
+                    //Scroll into TestRail: Cases in detailed card views
                     baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
 
-                    driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+                    //driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
                     baseAction.clickButton(jiraObjects.testCases);
 
                     //Switch to iframes (testcases iframe 1 and 2)
