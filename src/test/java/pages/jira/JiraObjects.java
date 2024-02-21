@@ -48,7 +48,7 @@ public class JiraObjects{
     @FindBy(how = How.XPATH, using = ".//h2[contains(text(), 'Sprint')]") //<-- details
     public WebElement sprintDisplayInsideCard;
 
-    @FindBy(how = How.XPATH, using = ".//h2[contains(text(), 'release')]") //<-- details
+    @FindBy(how = How.XPATH, using = ".//h2[contains(text(), 'Releases')]") //<-- details
     public WebElement releaseDisplayInsideCard;
     @FindBy(how = How.XPATH, using = ".//div[contains(text(), 'Open') and contains(., 'TestRail: Cases')]")
     public WebElement testCases;
