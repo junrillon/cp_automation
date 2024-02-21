@@ -268,7 +268,7 @@ public class JiraCardChecking {
                     String extractedCardAssignee = jiraObjects.getCardAssignee(cardIndex);
 
                     //Scroll into TestRail: Cases in detailed card view
-                    baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+                    baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
                     baseAction.clickButton(jiraObjects.testCases);
 
                     //Switch to iframes (testcases iframe 1 and 2)
@@ -457,7 +457,7 @@ public class JiraCardChecking {
                 String extractedCardAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
 
                 // Scroll into TestRail: Cases in detailed card view
-                baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+                baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
                 baseAction.clickButton(jiraObjects.testCases);
 
                 // Switch to iframes (testcases iframe 1 and 2)
