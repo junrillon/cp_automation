@@ -191,8 +191,6 @@ public class JiraCardChecking {
 
     }
 
-
-
     @When("I check cards in future sprint")
     public void iCheckCardsInFutureSprint() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, 20);
