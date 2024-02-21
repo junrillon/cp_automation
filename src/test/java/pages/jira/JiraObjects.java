@@ -195,10 +195,7 @@ public class JiraObjects{
         WebElement cardStatus = new WebDriverWait(driver, 20)
                 .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + perCardStatus)));
 
-        String extractedCardStatus = cardStatus.getText();
-        System.out.println("Card Status: " + extractedCardStatus);
-
-        return extractedCardStatus;
+        return cardStatus.getText();
     }
 
     public String getCardStoryPoints(int position){
@@ -207,10 +204,7 @@ public class JiraObjects{
         WebElement cardStoryPoints = new WebDriverWait(driver, 20)
                 .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(perCard + perCardStoryPoints)));
 
-        String extractedCardStoryPoints = cardStoryPoints.getText();
-        System.out.println("Card Story Points: " + extractedCardStoryPoints);
-
-        return extractedCardStoryPoints;
+        return cardStoryPoints.getText();
     }
 
 //    public List<WebElement> getCardTester(){
@@ -250,7 +244,6 @@ public class JiraObjects{
 
             if (!extractedCardAssignee.equals("Unassigned")) {
                 extractedCardAssignee = extractedCardAssignee.replace("Assignee: ", "");
-                System.out.println("Card Assignee: " + extractedCardAssignee);
 
                 return extractedCardAssignee;
             } else {
@@ -440,7 +433,6 @@ public class JiraObjects{
         try {
             List<WebElement> assignee = driver.findElements(By.xpath(perCard + subTaskCardPosition + perCardAssignee));
             String extractedCardAssignee = assignee.get(0).getAttribute("innerHTML");
-            System.out.println("Card Assignee: " + extractedCardAssignee);
 
             if (!extractedCardAssignee.equals("Unassigned")) {
                 extractedCardAssignee = extractedCardAssignee.replace("Assignee: ", "");

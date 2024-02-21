@@ -432,7 +432,7 @@ public class JiraCardChecking {
                 String extractedCardTitle = jiraObjects.getCardTitle();
 
                 // Get subTask card status
-                baseAction.clickButton(subCard);
+                baseAction.scrollIntoView1(subCard);
                 String extractedCardStatus = jiraObjects.getSubTaskStatus(cardIndex, x);
 
                 // Get subTask card tester
