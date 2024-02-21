@@ -138,6 +138,7 @@ public class JiraCardChecking {
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.cardDetailedView));
 
         //check testcases element inside detailed view then click
+        wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
         baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
 
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
