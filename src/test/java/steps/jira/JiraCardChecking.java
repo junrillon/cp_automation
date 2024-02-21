@@ -138,7 +138,7 @@ public class JiraCardChecking {
 
         //check testcases element inside detailed view then click
         wait.until(ExpectedConditions.visibilityOf(jiraObjects.testCases));
-        baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
+        baseAction.scrollIntoView(jiraObjects.releaseDisplayInsideCard);
 
         //driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         //Click test cases button
@@ -254,7 +254,7 @@ public class JiraCardChecking {
 
                     //Scroll into TestRail: Cases in detailed card views
                     wait.until(ExpectedConditions.visibilityOf(jiraObjects.testCases));
-                    baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
+                    baseAction.scrollIntoView(jiraObjects.releaseDisplayInsideCard);
 
                     //driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
                     //Click test cases button
@@ -447,7 +447,7 @@ public class JiraCardChecking {
 
                 // Scroll into TestRail: Cases in detailed card view
                 wait.until(ExpectedConditions.visibilityOf(jiraObjects.testCases));
-                baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
+                baseAction.scrollIntoView(jiraObjects.releaseDisplayInsideCard);
 
                 //Click test cases button
                 baseAction.clickButton(jiraObjects.testCases);
