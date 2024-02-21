@@ -139,7 +139,7 @@ public class JiraCardChecking {
 
         //check testcases element inside detailed view then click
         wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
-        baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
+        baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
 
         driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         baseAction.clickButton(jiraObjects.testCases);
@@ -256,7 +256,7 @@ public class JiraCardChecking {
                     //Scroll into TestRail: Cases in detailed card view
                     wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
                     System.out.println("Scroll in Development H2");
-                    baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
+                    baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
 
                     driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
                     baseAction.clickButton(jiraObjects.testCases);
@@ -447,7 +447,7 @@ public class JiraCardChecking {
                 String extractedCardAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
 
                 // Scroll into TestRail: Cases in detailed card view
-                baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
+                baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
                 baseAction.clickButton(jiraObjects.testCases);
 
                 // Switch to iframes (testcases iframe 1 and 2)
