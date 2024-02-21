@@ -15,9 +15,9 @@ Feature: Jira
     Then I send results in telegram
       | token                                          | chatId     |
       | 5266678102:AAFdXQxtUGGhRn14vWmXISQMZh2dK3dwkRg | -1001785446639 |
-
-    -643306593 ,-1001771171564, -1001785446639
-    file_id (lets go): CgACAgUAAx0CaZHu7AADjmIuqQ0Y6JP39b-ZmyXkgvcN_VWYAAKDBQACxjU5VdiUGEsONAH2IwQ
+#
+#    -643306593 ,-1001771171564, -1001785446639
+#    file_id (lets go): CgACAgUAAx0CaZHu7AADjmIuqQ0Y6JP39b-ZmyXkgvcN_VWYAAKDBQACxjU5VdiUGEsONAH2IwQ
 
 
 
