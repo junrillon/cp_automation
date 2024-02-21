@@ -19,6 +19,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class JiraCardChecking {
 
@@ -139,7 +140,7 @@ public class JiraCardChecking {
         //check testcases element inside detailed view then click
         baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
 
-        //driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         baseAction.clickButton(jiraObjects.testCases);
 
         //Switch to iframes (testcases iframe 1 and 2)
