@@ -212,7 +212,6 @@ public class JiraCardChecking {
                 WebElement cards = wait.until(ExpectedConditions.visibilityOf(mainCardElements.get(i)));
                 baseAction.scrollIntoView1(cards);
 
-                int subTasksCount = 0;
                 int cardIndex = i + 1;
 
                 //WebElement init for Card, then click
@@ -232,9 +231,6 @@ public class JiraCardChecking {
                 String issueType = jiraObjects.getCardIssueType();
 
                 if (!issueType.equalsIgnoreCase("bug") && !cardNumberExists) {
-
-                    //Get subtasks count
-                    subTasksCount = jiraObjects.subTaskCards(cardIndex).size();
 
                     //Get card status
                     String extractedCardStatus = jiraObjects.getCardStatus(cardIndex);
@@ -286,7 +282,7 @@ public class JiraCardChecking {
 
                     //Extracted card details are assigned to resultContent variable
                     resultContent = new StringBuilder((jiraObjects.buildResultContent(extractedCardNumber, extractedCardTitle,
-                            extractedCardTester, extractedCardAssignee, extractedCardStatus, extractedCardSP, String.valueOf(subTasksCount), testCasesStatus, testRunsStatus)));
+                            extractedCardTester, extractedCardAssignee, extractedCardStatus, extractedCardSP, testCasesStatus, testRunsStatus)));
 
                     //Call the processResultContainer() method, to check if the result is need to add in the telegram message
                     processResultContainer(testCasesStatus, testRunsStatus, extractedCardSP, resultContent);
@@ -295,7 +291,6 @@ public class JiraCardChecking {
                     System.out.println(cardIndex + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                             "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                             "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
-                            "•Subtask: "  + subTasksCount + "\n" +
                             "─ Test Cases: " + testCasesStatus + "\n" + "─ Test Runs: " + testRunsStatus + "\n");
 
                     //Format the extracted card numbers and add it to the extractedCardNumbers array
@@ -404,6 +399,7 @@ public class JiraCardChecking {
         }
     }
 
+
     public void processSubTasks(int cardIndex) {
         WebDriverWait wait = new WebDriverWait(driver, 20);
 
@@ -477,7 +473,7 @@ public class JiraCardChecking {
                 // Extracted card details are assigned to resultContent variable
                 StringBuilder resultContent = new StringBuilder(jiraObjects.buildResultContent(extractedCardNumber, extractedCardTitle,
                         extractedCardTester, extractedCardAssignee, extractedCardStatus, extractedCardSP,
-                        "0", testCasesStatus, testRunsStatus));
+                        testCasesStatus, testRunsStatus));
 
                 // Call the processResultContainer() method, to check if the result needs to be added to the telegram message
                 processResultContainer(testCasesStatus, testRunsStatus, extractedCardSP, resultContent);
@@ -486,7 +482,6 @@ public class JiraCardChecking {
                 System.out.println(x + ". (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                         "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                         "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
-                        "•Subtask: 0 \n" +
                         "─ Test Cases: " + testCasesStatus + "\n" + "─ Test Runs: " + testRunsStatus + "\n");
             }
 

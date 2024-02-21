@@ -350,12 +350,11 @@ public class JiraObjects{
     public String buildResultContent(String extractedCardNumber, String extractedCardTitle,
                                      String extractedCardTester, String extractedCardAssignee,
                                      String extractedCardStatus, String extractedCardSP,
-                                     String subTasksCount, String testCasesStatus, String testRunsStatus) {
+                                     String testCasesStatus, String testRunsStatus) {
         //⚠ \u2139\ufe0f
         return "\u2139\ufe0f (" + extractedCardNumber + ") " + extractedCardTitle + "\n" +
                 "•Tester: " + extractedCardTester + "  |  •" + extractedCardAssignee + "\n" +
                 "•Status: " + extractedCardStatus + " | •Story Points: " + extractedCardSP + "\n" +
-                "•Subtask: "  + subTasksCount + "\n" +
                 "- Test Cases: " + testCasesStatus + "\n" + "- Test Runs: " + testRunsStatus + "\n\n";
     }
 
