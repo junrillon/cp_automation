@@ -247,10 +247,10 @@ public class JiraObjects{
         try {
             List<WebElement> assignee = driver.findElements(By.xpath(perCard + perCardAssignee));
             String extractedCardAssignee = assignee.get(0).getAttribute("innerHTML");
-            System.out.println("Card Assignee: " + extractedCardAssignee);
 
             if (!extractedCardAssignee.equals("Unassigned")) {
                 extractedCardAssignee = extractedCardAssignee.replace("Assignee: ", "");
+                System.out.println("Card Assignee: " + extractedCardAssignee);
 
                 return extractedCardAssignee;
             } else {

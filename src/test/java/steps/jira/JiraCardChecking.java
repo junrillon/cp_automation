@@ -269,6 +269,7 @@ public class JiraCardChecking {
 
                     //Scroll into TestRail: Cases in detailed card view
                     baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
+                    Thread.sleep(2000);
                     baseAction.clickButton(jiraObjects.testCases);
 
                     //Switch to iframes (testcases iframe 1 and 2)
