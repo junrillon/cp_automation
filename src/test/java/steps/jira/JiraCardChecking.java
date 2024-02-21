@@ -419,7 +419,7 @@ public class JiraCardChecking {
                 int x = subTaskIndex + 1;
 
                 WebElement subCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(jiraObjects.perSubTask(cardIndex, x))));
-                baseAction.scrollIntoView(subCard);
+                baseAction.scrollIntoView1(subCard);
                 baseAction.clickButton(subCard);
 
                 // Wait for the card detailed view to be visible
@@ -429,16 +429,20 @@ public class JiraCardChecking {
                 String extractedCardNumber = jiraObjects.getCardNumber();
 
                 // Get subTask card title
+                baseAction.clickButton(subCard);
                 String extractedCardTitle = jiraObjects.getCardTitle();
 
                 // Get subTask card status
+                baseAction.clickButton(subCard);
                 String extractedCardStatus = jiraObjects.getSubTaskStatus(cardIndex, x);
 
                 // Get subTask card tester
+                baseAction.clickButton(subCard);
                 String extractedCardTester = jiraObjects.getSubTaskTester(cardIndex, x);
                 extractedCardTester = jiraObjects.getFormattedTester(extractedCardTester);
 
                 // Get subTask card story points
+                baseAction.clickButton(subCard);
                 String extractedCardSP = jiraObjects.getSubTaskStoryPoints(cardIndex, x);
 
                 // Get subTask card assignee
