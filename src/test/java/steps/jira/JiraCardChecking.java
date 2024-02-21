@@ -145,7 +145,7 @@ public class JiraCardChecking {
 
         //check testcases element inside detailed view then click
         wait.until(ExpectedConditions.elementToBeClickable(jiraObjects.testCases));
-        baseAction.scrollIntoView(jiraObjects.sprintDisplayInsideCard);
+        baseAction.scrollIntoView(jiraObjects.developmentDisplayInsideCard);
 
         System.out.println("#5");
         Thread.sleep(3000);
