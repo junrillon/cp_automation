@@ -141,6 +141,7 @@ public class JiraCardChecking {
         baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
 
         //driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        //Click test cases button
         baseAction.clickButton(jiraObjects.testCases);
 
         //Switch to iframes (testcases iframe 1 and 2)
@@ -256,6 +257,7 @@ public class JiraCardChecking {
                     baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
 
                     //driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
+                    //Click test cases button
                     baseAction.clickButton(jiraObjects.testCases);
 
                     //Switch to iframes (testcases iframe 1 and 2)
@@ -444,7 +446,10 @@ public class JiraCardChecking {
                 String extractedCardAssignee = jiraObjects.getSubTaskAssignee(cardIndex, x);
 
                 // Scroll into TestRail: Cases in detailed card view
+                wait.until(ExpectedConditions.visibilityOf(jiraObjects.testCases));
                 baseAction.scrollIntoView(jiraObjects.storyPointsDisplayInsideCard);
+
+                //Click test cases button
                 baseAction.clickButton(jiraObjects.testCases);
 
                 // Switch to iframes (testcases iframe 1 and 2)
